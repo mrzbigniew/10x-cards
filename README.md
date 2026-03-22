@@ -3,6 +3,7 @@
 ## Table of Contents
 
 - [Project Description](#project-description)
+- [Repository](#repository)
 - [Tech Stack](#tech-stack)
 - [Getting Started Locally](#getting-started-locally)
 - [Available Scripts](#available-scripts)
@@ -27,6 +28,19 @@ Additional product documentation:
 
 - [Product Requirements Document](./.ai/prd.md)
 - [Technology Overview](./.ai/tech-stack.md)
+
+## Repository
+
+The project repository is hosted on GitHub:
+
+- [github.com/mrzbigniew/10x-cards](https://github.com/mrzbigniew/10x-cards)
+
+Clone the project with Git:
+
+```bash
+git clone git@github.com:mrzbigniew/10x-cards.git
+cd 10x-cards
+```
 
 ## Tech Stack
 
