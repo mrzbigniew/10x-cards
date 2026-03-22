@@ -1,4 +1,4 @@
-# Moje fiszki
+# 10x-card
 
 ## Table of Contents
 

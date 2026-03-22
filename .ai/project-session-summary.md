@@ -1,6 +1,6 @@
 <conversation_summary>
 <decisions>
-1. Produkt MVP to webowa, responsywna aplikacja „Moje fiszki”, której celem jest ułatwienie generowania fiszek przez LLM, ręcznego tworzenia fiszek, zarządzania nimi oraz nauki z użyciem gotowego algorytmu powtórek.
+1. „10x-card” to responsywna aplikacja , której celem jest ułatwienie generowania fiszek przez LLM, ręcznego tworzenia fiszek, zarządzania nimi oraz nauki z użyciem gotowego algorytmu powtórek.
 2. Aplikacja ma być uniwersalna, bez zawężania do konkretnej grupy docelowej lub tematyki nauki.
 3. Zakres MVP obejmuje: rejestrację i logowanie użytkownika, aktywację konta e-mailem, reset hasła, zmianę hasła, CRUD fiszek, generowanie fiszek przez AI oraz sesję nauki z integracją z gotową biblioteką open-source do powtórek.
 4. Poza zakresem MVP pozostają: własny zaawansowany algorytm powtórek, import wielu formatów, współdzielenie zestawów, integracje z innymi platformami oraz aplikacje mobilne.
@@ -12,7 +12,7 @@
 10. UI aplikacji jest w języku polskim, a kandydaci na fiszki generowani przez model mają być w tym samym języku co wsad użytkownika.
 11. Strona główna i widok listy fiszek to ten sam ekran. W pierwszym etapie aplikacja pokazuje tylko listę fiszek, bez widoku kolekcji.
 12. W nagłówku znajdują się akcje: wylogowanie i zmiana hasła. E-mail użytkownika nie jest wyświetlany.
-13. W stopce ma znaleźć się napis „© {rok} Moje fiszki”, gdzie rok jest aktualny.
+13. W stopce ma znaleźć się napis „© {rok} 10x-card”, gdzie rok jest aktualny.
 14. Publicznie dostępne są tylko ekrany logowania, rejestracji i resetu hasła. Podgląd i modyfikacja fiszek są dostępne wyłącznie dla zalogowanego użytkownika.
 15. Po wylogowaniu użytkownik jest cicho przekierowywany na ekran logowania, a widoki chronione mają być dodatkowo zabezpieczone przed dostępem także przy użyciu przycisku „wstecz”.
 16. Każdy użytkownik ma własny zestaw fiszek. W pierwszej iteracji istnieje logicznie jeden zestaw, ale jego etykieta nie jest widoczna w UI.

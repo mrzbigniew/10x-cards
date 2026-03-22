@@ -1,7 +1,7 @@
-# Dokument wymagań produktu (PRD) - Moje fiszki
+# Dokument wymagań produktu (PRD) - 10x-card
 ## 1. Przegląd produktu
 ### 1.1 Cel produktu
-„Moje fiszki” to responsywna aplikacja webowa do tworzenia, zarządzania i nauki fiszek. Produkt ma skrócić czas potrzebny na przygotowanie materiałów do nauki poprzez połączenie ręcznego tworzenia fiszek z generowaniem kandydatów przez model językowy oraz prostą sesją nauki opartą na gotowej bibliotece open-source do powtórek.
+„10x-card” to responsywna aplikacja webowa do tworzenia, zarządzania i nauki fiszek. Produkt ma skrócić czas potrzebny na przygotowanie materiałów do nauki poprzez połączenie ręcznego tworzenia fiszek z generowaniem kandydatów przez model językowy oraz prostą sesją nauki opartą na gotowej bibliotece open-source do powtórek.
 
 ### 1.2 Wizja MVP
 MVP ma umożliwić użytkownikowi wykonanie pełnego podstawowego cyklu pracy:
@@ -67,7 +67,7 @@ Produkt odpowiada na te potrzeby przez:
 1. Po zalogowaniu użytkownik trafia na widok listy fiszek, który jest jednocześnie stroną główną aplikacji.
 2. Nagłówek widoku prywatnego musi zawierać akcje „Zmień hasło” i „Wyloguj”.
 3. Adres e-mail użytkownika nie jest prezentowany w nagłówku.
-4. Stopka musi zawierać napis „© {aktualny rok} Moje fiszki”.
+4. Stopka musi zawierać napis „© {aktualny rok} 10x-card”.
 5. Aplikacja musi być responsywna.
 
 ### 3.3 Lista fiszek
