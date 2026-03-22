@@ -165,4 +165,4 @@ This project is licensed under the `MIT License`.
 
 Copyright (c) 2024 `mrzbigniew`
 
-See the full license text in `[LICENSE](./LICENSE)`.
+See the full license text in [LICENSE](./LICENSE).
