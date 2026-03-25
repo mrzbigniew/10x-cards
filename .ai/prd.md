@@ -101,6 +101,7 @@ Produkt odpowiada na te potrzeby przez:
 12. Duplikaty treści są dozwolone.
 13. Po zapisaniu nowej fiszki modal musi się zamknąć, a lista musi się odświeżyć.
 14. Po zapisaniu edycji użytkownik musi pozostać na tej samej stronie listy.
+22. Fiszka zapisana w bazie danych utworzona ręcznie będzie posiadała w pollu source wartość `MANUAL` - utworzona manualnie
 
 ### 3.5 Usuwanie fiszek
 1. Usuwanie fiszki musi wymagać potwierdzenia w modalu.
@@ -117,20 +118,20 @@ Produkt odpowiada na te potrzeby przez:
 6. Po kliknięciu „Generuj” system musi wysłać wsad do backendu i zablokować przycisk do czasu odpowiedzi.
 7. Model powinien zwracać kandydatów na fiszki w tym samym języku, co wsad użytkownika.
 8. Odpowiedź AI musi zwracać kandydatów jako tymczasową listę, bez automatycznego zapisu do bazy.
-9. Każdy kandydat musi posiadać UUID nadane przez backend.
-10. Użytkownik musi móc edytować kandydata przed zapisem.
-11. Użytkownik musi móc odrzucić pojedynczego kandydata.
-12. Użytkownik musi móc zaakceptować całą pozostałą listę kandydatów.
-13. Użytkownik musi móc odrzucić całą listę i zamknąć modal bez zapisu.
-14. Przy pustej liście kandydatów przycisk akceptacji musi być nieaktywny.
-15. Reguły walidacji kandydatów AI muszą być identyczne jak dla fiszek tworzonych ręcznie.
-16. Jeśli co najmniej jeden kandydat narusza reguły treści lub limity, akceptacja całej listy musi być zablokowana do czasu poprawy lub odrzucenia niepoprawnych pozycji.
-17. Akceptacja listy musi zapisywać wszystkie pozostałe kandydaty atomowo.
-18. Po poprawnym zapisie kandydatów modal musi się zamknąć, a użytkownik musi trafić na pierwszą stronę listy przewiniętą do góry.
-19. Ponowne kliknięcie „Generuj” musi zastąpić bieżącą listę kandydatów nową listą bez możliwości odzyskania poprzedniej.
-20. Zamknięcie modala AI przez przycisk zamknięcia, klawisz ESC lub odświeżenie strony musi bezpowrotnie usuwać niezaakceptowanych kandydatów.
-21. Jeżeli odpowiedź modelu nie zawiera kandydatów, modal musi pokazać dedykowany stan „brak propozycji” z opcją ponowienia generowania lub zamknięcia modala.
-22. Przy długiej liście kandydatów kluczowe działania muszą pozostać wygodnie dostępne podczas przewijania.
+9. Użytkownik musi móc edytować kandydata przed zapisem.
+10. Użytkownik musi móc odrzucić pojedynczego kandydata.
+11. Użytkownik musi móc zaakceptować całą pozostałą listę kandydatów.
+12. Użytkownik musi móc odrzucić całą listę i zamknąć modal bez zapisu.
+13. Przy pustej liście kandydatów przycisk akceptacji musi być nieaktywny.
+14. Reguły walidacji kandydatów AI muszą być identyczne jak dla fiszek tworzonych ręcznie.
+15. Jeśli co najmniej jeden kandydat narusza reguły treści lub limity, akceptacja całej listy musi być zablokowana do czasu poprawy lub odrzucenia niepoprawnych pozycji.
+16. Akceptacja listy musi zapisywać wszystkie pozostałe kandydaty atomowo.
+17. Po poprawnym zapisie kandydatów modal musi się zamknąć, a użytkownik musi trafić na pierwszą stronę listy przewiniętą do góry.
+18. Ponowne kliknięcie „Generuj” musi zastąpić bieżącą listę kandydatów nową listą bez możliwości odzyskania poprzedniej.
+19. Zamknięcie modala AI przez przycisk zamknięcia, klawisz ESC lub odświeżenie strony musi bezpowrotnie usuwać niezaakceptowanych kandydatów.
+20. Jeżeli odpowiedź modelu nie zawiera kandydatów, modal musi pokazać dedykowany stan „brak propozycji” z opcją ponowienia generowania lub zamknięcia modala.
+21. Przy długiej liście kandydatów kluczowe działania muszą pozostać wygodnie dostępne podczas przewijania.
+22. Fiszka zapisana w bazie danych wygenerowana przez AI będzie posiadała w pollu source wartość `AI` - dla fiszki wygenerowanej prze AI, `AI_EDIT` - dla fiszki wygenerowanej przez AI ale zmienionej przez uzytkownika
 
 ### 3.7 Nauka
 1. Nauka musi być dostępna z poziomu listy fiszek przez przycisk „Rozpocznij”.
@@ -151,10 +152,9 @@ Produkt odpowiada na te potrzeby przez:
 ### 3.8 Logi i retencja danych związanych z AI
 1. System musi zapisywać log generowania AI do dedykowanej tabeli.
 2. Log musi zawierać pełną listę pierwotnie wygenerowanych kandydatów oraz dane potrzebne do późniejszej analizy jakości.
-3. Prompty do modelu muszą być przechowywane przez 30 dni wyłącznie w celu wykrywania nadużyć.
-4. Prompty nie mogą być wykorzystywane do dalszego uczenia modelu.
-5. Po usunięciu konta fiszki i logi generowania muszą zostać usunięte natychmiast.
-6. Po usunięciu konta prompty mogą pozostać przez 30 dni zgodnie z zasadą retencji.
+3. Prompty nie mogą być wykorzystywane do dalszego uczenia modelu.
+4. Po usunięciu konta fiszki i logi generowania muszą zostać usunięte natychmiast.
+5. W celu odróznienia fiszek stworzonych ręcznie lub wygenerowanych przez AI i lub wygenerowanych przez AI lecz zmodyfikowanych przez uzytkownika będą posiadały w pole identyfikujące ich pochodznie (source). Pole to może mieć 3 wartości, `MANUAL` - określa że fiszka zostałą utworzona ręcznie,  `AI` - fiszka zostałą wygenerowana przez AI i nie była modyfikowana, `AI_EDIT` - fiszka zostałą wygenerowana przez AI lecz byyła modyfikowana przez użytkownika.
 
 ### 3.9 Wymagania niefunkcjonalne i jakościowe
 1. Interfejs musi być spójny językowo i używać nazwy produktu „Moje fiszki”.
@@ -348,8 +348,7 @@ Poza zakresem MVP pozostają:
 1. Kliknięcie „Generuj” wysyła wsad do backendu.
 2. Przycisk „Generuj” jest zablokowany do czasu uzyskania odpowiedzi.
 3. Odpowiedź zwraca tymczasową listę kandydatów, która nie zapisuje się automatycznie do bazy.
-4. Każdy kandydat posiada UUID zwracane przez backend.
-5. Kandydaci są prezentowani w języku zgodnym z językiem wsadu użytkownika.
+4. Kandydaci są prezentowani w języku zgodnym z językiem wsadu użytkownika.
 
 ### US-015
 - ID: US-015
@@ -377,7 +376,6 @@ Poza zakresem MVP pozostają:
 - Opis: Jako użytkownik chcę zaakceptować poprawną listę kandydatów AI, abym mógł zapisać je jako własne fiszki.
 - Kryteria akceptacji:
 1. Akceptacja zapisuje wszystkie pozostałe kandydaty atomowo.
-2. Klient odsyła do backendu UUID zaakceptowanych kandydatów.
 3. Po poprawnym zapisie modal AI zamyka się.
 4. Po zapisie użytkownik trafia na pierwszą stronę listy fiszek.
 5. Lista po zapisie jest odświeżona i przewinięta do góry.
