@@ -84,12 +84,11 @@ export type FlashcardDTO = {
 /**
  * Command for creating a single flashcard (used in bulk create).
  * Omits DB-managed fields (id, timestamps, user_id).
- * Directly maps to Insert type but with stricter validation in API layer.
+ * Uses camelCase for API consistency; source is required.
  */
-export type FlashcardCreateCommand = Pick<
-  TablesInsert<'flashcards'>,
-  'front' | 'back' | 'source' | 'generation_id'
->;
+export type FlashcardCreateCommand = Pick<TablesInsert<'flashcards'>, 'front' | 'back' | 'source'> & {
+  generationId: TablesInsert<'flashcards'>['generation_id'];
+};
 
 /**
  * Bulk create command for POST /api/flashcards.
@@ -118,6 +117,11 @@ export type FlashcardResponse = ApiResponse<FlashcardDTO>;
  */
 export type FlashcardsListResponse = ApiListResponse<FlashcardDTO>;
 
+/**
+ * Bulk create flashcards response (POST /api/flashcards).
+ */
+export type BulkFlashcardsCreateResponse = ApiResponse<FlashcardDTO[]>;
+
 // ======================
 // AI Generation DTOs & Commands
 // ======================
@@ -128,7 +132,6 @@ export type FlashcardsListResponse = ApiListResponse<FlashcardDTO>;
  */
 export type GenerateCommand = {
   text: string;
-  model?: string;
 };
 
 /**

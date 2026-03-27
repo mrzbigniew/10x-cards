@@ -142,7 +142,7 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      source_type: "manual" | "ai" | "ai_edit"
+      source_type: "MANUAL" | "AI" | "AI_EDIT"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -273,7 +273,7 @@ export const Constants = {
   },
   public: {
     Enums: {
-      source_type: ["manual", "ai", "ai_edit"],
+      source_type: ["MANUAL", "AI", "AI_EDIT"],
     },
   },
 } as const
