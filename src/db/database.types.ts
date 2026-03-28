@@ -45,7 +45,6 @@ export type Database = {
           generated_count: number
           id: string
           model: string
-          prompt_text: string
           prompt_text_hash: string
           prompt_text_length: number
           raw_candidates: Json | null
@@ -61,7 +60,6 @@ export type Database = {
           generated_count?: number
           id?: string
           model: string
-          prompt_text: string
           prompt_text_hash: string
           prompt_text_length: number
           raw_candidates?: Json | null
@@ -77,7 +75,6 @@ export type Database = {
           generated_count?: number
           id?: string
           model?: string
-          prompt_text?: string
           prompt_text_hash?: string
           prompt_text_length?: number
           raw_candidates?: Json | null

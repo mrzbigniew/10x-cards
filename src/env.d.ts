@@ -15,7 +15,9 @@ interface ImportMetaEnv {
   readonly SUPABASE_URL: string;
   readonly SUPABASE_KEY: string;
   readonly OPENROUTER_API_KEY: string;
-  // more env variables...
+  readonly DEFAULT_OPENROUTER_MODEL: string;
+  readonly GENERATION_RATE_LIMIT_PER_HOUR: string;
+  readonly DEFAULT_USER_ID: string;
 }
 
 interface ImportMeta {
