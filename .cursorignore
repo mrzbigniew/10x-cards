@@ -1,0 +1,17 @@
+.env
+.env.*
+.claude/
+.vscode/
+.nvmrc
+.npmrc
+dist/
+.astro/
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+.dev.vars
+.wrangler/
+.DS_Store
+.idea/

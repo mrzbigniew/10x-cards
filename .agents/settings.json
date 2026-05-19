@@ -1,0 +1,20 @@
+{
+    "permissions": {
+      "deny": [
+        "Read(./.env)",
+        "Read(./.env.*)",
+        "Read(./build)",
+        "Read(./dist)",
+        "Read(./.astro)",
+        "Read(./node_modules)",
+        "Read(./npm-debug.log*)",
+        "Read(./yarn-debug.log*)",
+        "Read(./yarn-error.log*)",
+        "Read(./pnpm-debug.log*)",
+        "Read(./.dev.vars)",
+        "Read(./.wrangler/)",
+        "Read(./.DS_Store)",
+        "Read(./.idea/)"
+      ]
+    }
+  }
