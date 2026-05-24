@@ -51,9 +51,9 @@ Most of this is **manual, human-only setup** (account creation, dashboard config
 ### 0.3 Supabase project + auth config
 - [x] **Create a Supabase project** at supabase.com (free tier is fine for MVP). *(manual gate)*
 - [x] **Collect the two secrets** — `SUPABASE_URL` and anon `SUPABASE_KEY` collected.
-- [ ] **Configure Auth URLs** — dashboard → Authentication → URL Configuration: set **Site URL** and add a **Redirect URL** for `https://10x-cards.mr-zbigniew.workers.dev` (and `http://localhost:4321` for local dev). *(revisit after B5)*
-- [ ] **Email confirmation setting** — Authentication → Providers → Email: decide whether "Confirm email" is on.
-- [ ] **(Optional) Link the Supabase CLI** — not required for this deploy.
+- [x] **Configure Auth URLs** — dashboard → Authentication → URL Configuration: set **Site URL** and add a **Redirect URL** for `https://10x-cards.mr-zbigniew.workers.dev` (and `http://localhost:4321` for local dev). *(revisit after B5)*
+- [x] **Email confirmation setting** — Authentication → Providers → Email: decide whether "Confirm email" is on.
+- [x] **(Optional) Link the Supabase CLI** — not required for this deploy.
 
 ### 0.4 Prerequisite gate
 - [x] Confirm you now hold: Cloudflare account + Account ID + wrangler logged in; Supabase project + `SUPABASE_URL` + anon `SUPABASE_KEY`. Only then proceed to Phase A.
@@ -84,7 +84,7 @@ Workers Builds connects the GitHub repo directly to the `10x-cards` Worker (crea
 ## Phase C — Finalize the artifact
 
 - [x] **C1. Update this file** — completed 2026-05-24. Live URL: `https://10x-cards.mr-zbigniew.workers.dev`. Runtime secrets: `SUPABASE_URL`, `SUPABASE_KEY` (via `wrangler secret put`). Build vars: `SUPABASE_URL`, `SUPABASE_KEY` (dashboard). Auto-deploy: Workers Builds on push to `main`. Smoke test B5: homepage 200 ✓, auth guard 302 ✓. All phases complete.
-- [ ] **C2. (Optional) Correct `infrastructure.md`** "Getting Started" + Operational Story to the Workers model (`wrangler deploy` / `wrangler secret put`, drop `pages`; note auto-deploy is Workers Builds, not GitHub Actions), so the foundation contract stops prescribing the deprecated Pages path. Only edit if you want the contract clean.
+- [x] **C2. (Optional) Correct `infrastructure.md`** "Getting Started" + Operational Story to the Workers model (`wrangler deploy` / `wrangler secret put`, drop `pages`; note auto-deploy is Workers Builds, not GitHub Actions), so the foundation contract stops prescribing the deprecated Pages path. Only edit if you want the contract clean.
 
 ---
 
