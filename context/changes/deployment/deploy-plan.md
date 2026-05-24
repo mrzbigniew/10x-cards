@@ -75,19 +75,15 @@ Most of this is **manual, human-only setup** (account creation, dashboard config
 Workers Builds connects the GitHub repo directly to the `10x-cards` Worker (created in A5); Cloudflare runs the build and deploys on every push to the production branch. No GitHub Actions, no API token.
 
 - [x] **B1. Remove GitHub Actions.** Deleted `.github/workflows/ci.yml` and the now-empty `workflows/` directory.
-- [ ] **B2. Connect the repo in Workers Builds** *(manual gate, Cloudflare dashboard)* — Workers & Pages → the **`10x-cards`** Worker → **Settings → Build → Connect to Git** → authorize the **Cloudflare GitHub App** (scope it to just this repo) → select the repository.
-- [ ] **B3. Configure build settings** in the same panel:
-  - **Production branch:** `main`
-  - **Build command:** `npm run build`
-  - **Deploy command:** default (Workers Builds deploys using `wrangler.jsonc` — i.e. `npx wrangler deploy`). Do **not** set a Pages command.
-  - **Root directory:** repo root (`/`).
-- [ ] **B4. Set build-time env vars** for the build container *(dashboard → Worker → Settings → Variables / Build variables)*: `SUPABASE_URL`, `SUPABASE_KEY`. These feed `astro build`. **Runtime secrets remain the ones set via `wrangler secret put` in A4** — Workers Builds deploys via wrangler, and `wrangler secret put` values persist on the Worker across deploys, so runtime auth keeps working. (Build vars and runtime secrets are separate stores — set both.)
-- [ ] **B5. Trigger & verify** — push a trivial commit to `main` (or use the dashboard "Retry deployment"). Watch the build log in the Workers Builds panel; confirm it builds and deploys. Re-run the smoke test (Verification) on the live URL.
-- [ ] **B6. Update Supabase Auth URLs** — Site URL + Redirect URL set to `https://10x-cards.mr-zbigniew.workers.dev` (and `http://localhost:4321` for local dev).
+- [x] **B2. Connect the repo in Workers Builds** — Cloudflare GitHub App authorized, repo connected.
+- [x] **B3. Configure build settings** — production branch `main`, build command `npm run build`, deploy command default, root `/`.
+- [x] **B4. Set build-time env vars** — `SUPABASE_URL` and `SUPABASE_KEY` added as build variables in dashboard.
+- [x] **B5. Trigger & verify** — Workers Builds deploy triggered and confirmed. Smoke test re-run: homepage 200 ✓, auth guard 302 ✓.
+- [x] **B6. Update Supabase Auth URLs** — Site URL + Redirect URL set to `https://10x-cards.mr-zbigniew.workers.dev` (and `http://localhost:4321` for local dev).
 
 ## Phase C — Finalize the artifact
 
-- [x] **C1. Update this file** — completed 2026-05-24. Live URL: `https://10x-cards.mr-zbigniew.workers.dev`. Runtime secrets wired: `SUPABASE_URL`, `SUPABASE_KEY`. Smoke-test A6: homepage 200 ✓, auth guard 302 ✓. Build vars (B4) and Supabase Auth URLs (B6) pending dashboard steps.
+- [x] **C1. Update this file** — completed 2026-05-24. Live URL: `https://10x-cards.mr-zbigniew.workers.dev`. Runtime secrets: `SUPABASE_URL`, `SUPABASE_KEY` (via `wrangler secret put`). Build vars: `SUPABASE_URL`, `SUPABASE_KEY` (dashboard). Auto-deploy: Workers Builds on push to `main`. Smoke test B5: homepage 200 ✓, auth guard 302 ✓. All phases complete.
 - [ ] **C2. (Optional) Correct `infrastructure.md`** "Getting Started" + Operational Story to the Workers model (`wrangler deploy` / `wrangler secret put`, drop `pages`; note auto-deploy is Workers Builds, not GitHub Actions), so the foundation contract stops prescribing the deprecated Pages path. Only edit if you want the contract clean.
 
 ---
