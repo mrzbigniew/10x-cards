@@ -29,7 +29,7 @@ top_blocker: time
 
 | ID    | Change ID               | Outcome (user can …)                                                                    | Prerequisites     | PRD refs                                          | Status   |
 | ----- | ----------------------- | --------------------------------------------------------------------------------------- | ----------------- | ------------------------------------------------- | -------- |
-| F-01  | db-schema-rls           | (foundation) Supabase schema migrations + RLS in place for all app data                 | —                 | NFR (isolation, durability), FR-001, FR-002, FR-003, FR-005 | ready    |
+| F-01  | db-schema-rls           | (foundation) Supabase schema migrations + RLS in place for all app data                 | —                 | NFR (isolation, durability), FR-001, FR-002, FR-003, FR-005 | done     |
 | S-01  | first-gated-generation  | paste text, review AI proposals (accept/edit/reject, bulk actions), save to new deck    | F-01              | US-01, FR-006, FR-007, FR-008, FR-009, FR-013     | proposed |
 | S-02  | deck-management         | view deck list, create/rename a deck, delete with confirmation, save to existing deck   | F-01              | US-01, US-02, FR-009, FR-013, FR-017              | proposed |
 | S-05  | password-reset          | reset a forgotten password via email link and recover all decks + SR state              | F-01              | US-04, FR-004                                     | proposed |
@@ -71,7 +71,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Blockers:** —
 - **Unknowns:** SR library choice (ts-fsrs vs SM-2 variant) affects the shape of SR-state columns — Owner: implementation. Block: no (decide as the first act of F-01 implementation to avoid schema rework later).
 - **Risk:** sequenced first because every slice depends on it; the main risk is locking the SR-state column shape before the library is chosen — mitigated by deciding the library upfront within F-01.
-- **Status:** ready
+- **Status:** done
 
 ## Slices
 
