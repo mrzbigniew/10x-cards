@@ -20,4 +20,10 @@ export default defineConfig({
       SUPABASE_KEY: envField.string({ context: "server", access: "secret", optional: true }),
     },
   },
+  experimental: {
+    rustCompiler: true,
+  },
+  server: {
+    port: 8080 
+  }
 });
