@@ -278,24 +278,24 @@ This is the first migration in an empty migrations directory. No rollback strate
 
 #### Automated
 
-- [x] 1.1 Migration applies without errors: `npx supabase db reset`
-- [x] 1.2 All three tables exist (Studio or supabase status)
-- [x] 1.3 `npm run lint` passes
+- [x] 1.1 Migration applies without errors: `npx supabase db reset` — 5cc23b4
+- [x] 1.2 All three tables exist (Studio or supabase status) — 5cc23b4
+- [x] 1.3 `npm run lint` passes — 5cc23b4
 
 #### Manual
 
-- [x] 1.4 Tables visible in Studio with correct columns
-- [x] 1.5 RLS enabled on all three tables (confirmed in Studio)
-- [x] 1.6 Auto-trigger creates `card_sr_state` row on card insert
-- [x] 1.7 RLS isolation test: user B cannot read user A's decks
+- [x] 1.4 Tables visible in Studio with correct columns — 5cc23b4
+- [x] 1.5 RLS enabled on all three tables (confirmed in Studio) — 5cc23b4
+- [x] 1.6 Auto-trigger creates `card_sr_state` row on card insert — 5cc23b4
+- [x] 1.7 RLS isolation test: user B cannot read user A's decks — 5cc23b4
 
 ### Phase 2: TypeScript Type Generation
 
 #### Automated
 
-- [ ] 2.1 `src/lib/database.types.ts` exists and is non-empty
-- [ ] 2.2 `npm run lint` exits 0
+- [x] 2.1 `src/lib/database.types.ts` exists and is non-empty
+- [x] 2.2 `npm run lint` exits 0
 
 #### Manual
 
-- [ ] 2.3 `database.types.ts` contains `Tables` entries for all three tables
+- [x] 2.3 `database.types.ts` contains `Tables` entries for all three tables

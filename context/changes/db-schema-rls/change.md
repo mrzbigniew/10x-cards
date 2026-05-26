@@ -1,7 +1,7 @@
 ---
 change_id: db-schema-rls
 title: Supabase database schema migrations and RLS policies for all app data
-status: implementing
+status: impl_reviewed
 created: 2026-05-26
 updated: 2026-05-27
 archived_at: null
