@@ -293,9 +293,9 @@ This is the first migration in an empty migrations directory. No rollback strate
 
 #### Automated
 
-- [x] 2.1 `src/lib/database.types.ts` exists and is non-empty
-- [x] 2.2 `npm run lint` exits 0
+- [x] 2.1 `src/lib/database.types.ts` exists and is non-empty — f4804ae
+- [x] 2.2 `npm run lint` exits 0 — f4804ae
 
 #### Manual
 
-- [x] 2.3 `database.types.ts` contains `Tables` entries for all three tables
+- [x] 2.3 `database.types.ts` contains `Tables` entries for all three tables — f4804ae
