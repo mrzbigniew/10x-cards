@@ -31,7 +31,7 @@ top_blocker: time
 | ----- | ----------------------- | --------------------------------------------------------------------------------------- | ----------------- | ------------------------------------------------- | -------- |
 | F-01  | db-schema-rls           | (foundation) Supabase schema migrations + RLS in place for all app data                 | —                 | NFR (isolation, durability), FR-001, FR-002, FR-003, FR-005 | done     |
 | S-01  | first-gated-generation  | paste text, review AI proposals (accept/edit/reject, bulk actions), save to new deck    | F-01              | US-01, FR-006, FR-007, FR-008, FR-009, FR-013     | done     |
-| S-02  | deck-management         | view deck list, create/rename a deck, delete with confirmation, save to existing deck   | F-01              | US-01, US-02, FR-009, FR-013, FR-017              | proposed |
+| S-02  | deck-management         | view deck list, create/rename a deck, delete with confirmation, save to existing deck   | F-01              | US-01, US-02, FR-009, FR-013, FR-017              | done     |
 | S-05  | password-reset          | reset a forgotten password via email link and recover all decks + SR state              | F-01              | US-04, FR-004                                     | proposed |
 | S-04  | manual-card-crud        | add a card manually, edit any card (with optional SR reset), delete any card            | F-01, S-02        | US-02, US-05, FR-010, FR-011, FR-012              | proposed |
 | S-03  | review-session          | run a per-deck review, rate each due card (SR library scale), persist SR state          | F-01, S-01, S-02  | US-03, FR-014, FR-015, FR-016                     | proposed |
@@ -99,7 +99,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Blockers:** —
 - **Unknowns:** —
 - **Risk:** the typed-name delete confirmation is a specific UX piece (GitHub-style); if time is short, implement it as a plain text-input match without modal complexity — the PRD requires the behavior, not the visual treatment.
-- **Status:** proposed
+- **Status:** done
 
 ### S-05: Password reset
 
@@ -187,3 +187,4 @@ Foundations below assume these are present and do NOT re-scaffold them.
 
 - **F-01: (foundation) Supabase migration files are in place for `decks`, `cards`, and SR-state tables; RLS policies enforce per-user data isolation via `auth.uid()`; the app-level schema makes the already-scaffolded auth (FR-001..FR-003, FR-005) meaningful by protecting the data it gates.** — Archived 2026-05-30 → `context/archive/2026-05-26-db-schema-rls/`. Lesson: —.
 - **S-01: user can paste up to ~10,000 characters of plain text, trigger AI generation, see a list of proposed flashcards (question + answer), accept / edit inline / reject each proposal individually, bulk-accept or bulk-reject remaining undecided proposals, enter or accept an auto-proposed deck name, and save accepted cards to a newly created deck.** — Archived 2026-05-30 → `context/archive/2026-05-30-first-gated-generation/`. Lesson: —.
+- **S-02: user can view all their decks on a list page, create a new named deck independently, rename any deck, delete a deck with a typed-name hard confirmation (no undo), and choose an existing deck as the target when saving generation results (completing the FR-009 existing-deck path started in S-01).** — Archived 2026-05-30 → `context/archive/2026-05-30-deck-management/`. Lesson: —.
