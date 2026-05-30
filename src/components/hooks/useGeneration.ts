@@ -71,7 +71,7 @@ export function useGeneration() {
   }, []);
 
   const saveProposals = useCallback(
-    async (deckName: string) => {
+    async (saveTarget: { name: string } | { deckId: string }) => {
       setPhase("saving");
 
       const accepted = proposals
@@ -85,7 +85,7 @@ export function useGeneration() {
         const res = await fetch("/api/decks", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ name: deckName, cards: accepted }),
+          body: JSON.stringify({ ...saveTarget, cards: accepted }),
         });
 
         const data = (await res.json()) as { deckId?: string; error?: string };

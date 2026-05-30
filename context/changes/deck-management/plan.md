@@ -341,26 +341,26 @@ Update the `SaveDeckRequest` TypeScript type export to reflect both branches.
 
 #### Automated
 
-- [x] 2.1 TypeScript build passes after dashboard island changes
-- [x] 2.2 Linting passes
+- [x] 2.1 TypeScript build passes after dashboard island changes — 5434571
+- [x] 2.2 Linting passes — 5434571
 
 #### Manual
 
-- [x] 2.3 Dashboard shows welcome header + CTA + deck list
-- [x] 2.4 Create deck via "+ Nowy zestaw" form works without page reload
-- [x] 2.5 Inline rename saves on Enter, cancels on Escape
-- [x] 2.6 Typed-name delete modal prevents premature deletion
-- [x] 2.7 Two users see only their own decks
+- [x] 2.3 Dashboard shows welcome header + CTA + deck list — 5434571
+- [x] 2.4 Create deck via "+ Nowy zestaw" form works without page reload — 5434571
+- [x] 2.5 Inline rename saves on Enter, cancels on Escape — 5434571
+- [x] 2.6 Typed-name delete modal prevents premature deletion — 5434571
+- [x] 2.7 Two users see only their own decks — 5434571
 
 ### Phase 3: Generation Save Flow
 
 #### Automated
 
-- [ ] 3.1 TypeScript build passes after SaveDeckForm + hook changes
-- [ ] 3.2 Linting passes
+- [x] 3.1 TypeScript build passes after SaveDeckForm + hook changes
+- [x] 3.2 Linting passes
 
 #### Manual
 
-- [ ] 3.3 Save form shows deck picker with "Nowy zestaw" first
-- [ ] 3.4 Saving to new deck creates it and shows on dashboard
-- [ ] 3.5 Saving to existing deck increments its card count on dashboard
+- [x] 3.3 Save form shows deck picker with "Nowy zestaw" first
+- [x] 3.4 Saving to new deck creates it and shows on dashboard
+- [x] 3.5 Saving to existing deck increments its card count on dashboard

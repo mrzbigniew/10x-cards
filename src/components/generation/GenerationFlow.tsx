@@ -46,7 +46,7 @@ export function GenerationFlow() {
           text={text}
           proposals={proposals}
           isSaving={phase === "saving"}
-          onSave={(deckName) => void saveProposals(deckName)}
+          onSave={(target) => void saveProposals(target)}
         />
       </div>
     );

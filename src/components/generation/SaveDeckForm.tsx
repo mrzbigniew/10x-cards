@@ -1,17 +1,29 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import type { Proposal } from "@/components/hooks/useGeneration";
+import type { DeckWithCount } from "@/lib/services/decks";
 
 interface Props {
   text: string;
   proposals: Proposal[];
   isSaving: boolean;
-  onSave: (deckName: string) => void;
+  onSave: (target: { name: string } | { deckId: string }) => void;
 }
 
 export function SaveDeckForm({ text, proposals, isSaving, onSave }: Props) {
   const autoName = text.trim().replace(/\s+/g, " ").slice(0, 50);
-  const [deckName, setDeckName] = useState(autoName);
+  const [decks, setDecks] = useState<DeckWithCount[]>([]);
+  const [selectedDeckId, setSelectedDeckId] = useState<string>("new");
+  const [newDeckName, setNewDeckName] = useState(autoName);
   const [confirmSkip, setConfirmSkip] = useState(false);
+
+  useEffect(() => {
+    fetch("/api/decks")
+      .then((res) => (res.ok ? (res.json() as Promise<DeckWithCount[]>) : Promise.resolve([])))
+      .then(setDecks)
+      .catch(() => {
+        /* silently fall back to new-deck-only */
+      });
+  }, []);
 
   const acceptedCount = proposals.filter((p) => p.status === "accepted").length;
   const pendingCount = proposals.filter((p) => p.status === "pending").length;
@@ -22,27 +34,54 @@ export function SaveDeckForm({ text, proposals, isSaving, onSave }: Props) {
       setConfirmSkip(true);
       return;
     }
-    onSave(deckName.trim() || autoName);
+    if (selectedDeckId === "new") {
+      onSave({ name: newDeckName.trim() || autoName });
+    } else {
+      onSave({ deckId: selectedDeckId });
+    }
   }
 
   return (
     <div className="rounded-xl border border-white/10 bg-white/5 p-6">
-      <h3 className="mb-4 text-base font-semibold text-white">Zapisz do nowego zestawu</h3>
+      <h3 className="mb-4 text-base font-semibold text-white">Zapisz fiszki</h3>
 
       <div className="mb-4">
-        <label className="mb-1.5 block text-sm font-medium text-white/70">Nazwa zestawu</label>
-        <input
-          type="text"
-          value={deckName}
+        <label className="mb-1.5 block text-sm font-medium text-white/70">Zestaw</label>
+        <select
+          value={selectedDeckId}
           onChange={(e) => {
-            setDeckName(e.target.value);
+            setSelectedDeckId(e.target.value);
             setConfirmSkip(false);
           }}
-          maxLength={200}
-          className="w-full rounded-lg border border-white/20 bg-white/10 px-3 py-2 text-sm text-white placeholder-white/30 focus:border-purple-400/50 focus:outline-none"
-          placeholder="Nazwa zestawu"
-        />
+          className="w-full rounded-lg border border-white/20 bg-gray-900 px-3 py-2 text-sm text-white focus:border-purple-400/50 focus:outline-none"
+        >
+          <option value="new" className="bg-gray-900 text-white">
+            Nowy zestaw
+          </option>
+          {decks.map((d) => (
+            <option key={d.id} value={d.id} className="bg-gray-900 text-white">
+              {d.name} ({d.card_count} fiszek)
+            </option>
+          ))}
+        </select>
       </div>
+
+      {selectedDeckId === "new" && (
+        <div className="mb-4">
+          <label className="mb-1.5 block text-sm font-medium text-white/70">Nazwa zestawu</label>
+          <input
+            type="text"
+            value={newDeckName}
+            onChange={(e) => {
+              setNewDeckName(e.target.value);
+              setConfirmSkip(false);
+            }}
+            maxLength={200}
+            className="w-full rounded-lg border border-white/20 bg-white/10 px-3 py-2 text-sm text-white placeholder-white/30 focus:border-purple-400/50 focus:outline-none"
+            placeholder="Nazwa zestawu"
+          />
+        </div>
+      )}
 
       <div className="mb-4 text-sm text-white/60">
         {acceptedCount === 0 ? (
