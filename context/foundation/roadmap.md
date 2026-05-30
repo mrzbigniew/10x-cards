@@ -30,7 +30,7 @@ top_blocker: time
 | ID    | Change ID               | Outcome (user can …)                                                                    | Prerequisites     | PRD refs                                          | Status   |
 | ----- | ----------------------- | --------------------------------------------------------------------------------------- | ----------------- | ------------------------------------------------- | -------- |
 | F-01  | db-schema-rls           | (foundation) Supabase schema migrations + RLS in place for all app data                 | —                 | NFR (isolation, durability), FR-001, FR-002, FR-003, FR-005 | done     |
-| S-01  | first-gated-generation  | paste text, review AI proposals (accept/edit/reject, bulk actions), save to new deck    | F-01              | US-01, FR-006, FR-007, FR-008, FR-009, FR-013     | proposed |
+| S-01  | first-gated-generation  | paste text, review AI proposals (accept/edit/reject, bulk actions), save to new deck    | F-01              | US-01, FR-006, FR-007, FR-008, FR-009, FR-013     | done     |
 | S-02  | deck-management         | view deck list, create/rename a deck, delete with confirmation, save to existing deck   | F-01              | US-01, US-02, FR-009, FR-013, FR-017              | proposed |
 | S-05  | password-reset          | reset a forgotten password via email link and recover all decks + SR state              | F-01              | US-04, FR-004                                     | proposed |
 | S-04  | manual-card-crud        | add a card manually, edit any card (with optional SR reset), delete any card            | F-01, S-02        | US-02, US-05, FR-010, FR-011, FR-012              | proposed |
@@ -87,7 +87,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
   - Default action for proposals left undecided at save time (Open Question 5) — Owner: user. Block: no (ship with "skip undecided, warn" as default; adjust after user feedback).
   - Exact maximum input length (Open Question 3) — Owner: implementation. Block: no (~10,000 chars placeholder is workable).
 - **Risk:** AI response latency in Polish and the 75% acceptance rate are only observable after real usage; the product's primary success criterion cannot be validated until this slice ships — placing it first surfaces this risk as early as possible.
-- **Status:** proposed
+- **Status:** done
 
 ### S-02: Deck management
 
@@ -186,3 +186,4 @@ Foundations below assume these are present and do NOT re-scaffold them.
 ## Done
 
 - **F-01: (foundation) Supabase migration files are in place for `decks`, `cards`, and SR-state tables; RLS policies enforce per-user data isolation via `auth.uid()`; the app-level schema makes the already-scaffolded auth (FR-001..FR-003, FR-005) meaningful by protecting the data it gates.** — Archived 2026-05-30 → `context/archive/2026-05-26-db-schema-rls/`. Lesson: —.
+- **S-01: user can paste up to ~10,000 characters of plain text, trigger AI generation, see a list of proposed flashcards (question + answer), accept / edit inline / reject each proposal individually, bulk-accept or bulk-reject remaining undecided proposals, enter or accept an auto-proposed deck name, and save accepted cards to a newly created deck.** — Archived 2026-05-30 → `context/archive/2026-05-30-first-gated-generation/`. Lesson: —.
