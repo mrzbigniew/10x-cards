@@ -374,31 +374,31 @@ Wires `/generate` into the app navigation, documents secrets setup for local dev
 
 #### Automated
 
-- [x] 2.1 `npm run lint` passes
-- [x] 2.2 `npm run build` succeeds
+- [x] 2.1 `npm run lint` passes — a6ef452
+- [x] 2.2 `npm run build` succeeds — a6ef452
 
 #### Manual
 
-- [x] 2.3 `/generate` loads for authenticated user; redirects unauthenticated to signin
-- [x] 2.4 Text < 50 chars blocked with inline message
-- [x] 2.5 Loading spinner visible during generation
-- [x] 2.6 Proposals appear with accept / edit / reject per row
-- [x] 2.7 Inline textarea edit works; confirm marks accepted with edited text
-- [x] 2.8 Bulk accept and bulk reject work on pending proposals
-- [x] 2.9 Save with undecided proposals shows skip warning; second click proceeds
-- [x] 2.10 Successful save creates DB rows with `source = 'ai'`
-- [x] 2.11 AI error shows banner with text preserved
+- [x] 2.3 `/generate` loads for authenticated user; redirects unauthenticated to signin — a6ef452
+- [x] 2.4 Text < 50 chars blocked with inline message — a6ef452
+- [x] 2.5 Loading spinner visible during generation — a6ef452
+- [x] 2.6 Proposals appear with accept / edit / reject per row — a6ef452
+- [x] 2.7 Inline textarea edit works; confirm marks accepted with edited text — a6ef452
+- [x] 2.8 Bulk accept and bulk reject work on pending proposals — a6ef452
+- [x] 2.9 Save with undecided proposals shows skip warning; second click proceeds — a6ef452
+- [x] 2.10 Successful save creates DB rows with `source = 'ai'` — a6ef452
+- [x] 2.11 AI error shows banner with text preserved — a6ef452
 
 ### Phase 3: Navigation, Secrets Wiring, and E2E Verification
 
 #### Automated
 
-- [ ] 3.1 `npm run lint` passes
-- [ ] 3.2 `npm run build` succeeds
+- [x] 3.1 `npm run lint` passes
+- [x] 3.2 `npm run build` succeeds
 
 #### Manual
 
-- [ ] 3.3 Topbar "Generate" link visible and functional
-- [ ] 3.4 Dashboard CTA navigates to `/generate`
-- [ ] 3.5 Full happy-path E2E walkthrough passes
-- [ ] 3.6 Unauthenticated `/generate` visit redirects to signin
+- [x] 3.3 Topbar "Generate" link visible and functional
+- [x] 3.4 Dashboard CTA navigates to `/generate`
+- [x] 3.5 Full happy-path E2E walkthrough passes
+- [x] 3.6 Unauthenticated `/generate` visit redirects to signin
