@@ -7,9 +7,10 @@ interface Props {
   onConfirm: () => void;
   onCancel: () => void;
   isDeleting: boolean;
+  error?: string | null;
 }
 
-export function DeleteDeckModal({ isOpen, deckName, onConfirm, onCancel, isDeleting }: Props) {
+export function DeleteDeckModal({ isOpen, deckName, onConfirm, onCancel, isDeleting, error }: Props) {
   const [inputValue, setInputValue] = useState("");
 
   if (!isOpen) return null;
@@ -36,6 +37,8 @@ export function DeleteDeckModal({ isOpen, deckName, onConfirm, onCancel, isDelet
           placeholder={deckName}
           autoFocus
         />
+        {error && <p className="mb-3 text-sm text-red-400">{error}</p>}
+
         <div className="flex gap-3">
           <button
             onClick={onCancel}

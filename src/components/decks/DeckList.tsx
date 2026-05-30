@@ -14,6 +14,7 @@ export function DeckList() {
 
   const [deletingDeck, setDeletingDeck] = useState<DeckWithCount | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [deleteError, setDeleteError] = useState<string | null>(null);
 
   async function handleCreate(e: React.SyntheticEvent) {
     e.preventDefault();
@@ -35,11 +36,12 @@ export function DeckList() {
   async function handleDelete() {
     if (!deletingDeck) return;
     setIsDeleting(true);
+    setDeleteError(null);
     try {
       await deleteDeck(deletingDeck.id);
       setDeletingDeck(null);
-    } catch {
-      // keep modal open so user can retry
+    } catch (err) {
+      setDeleteError(err instanceof Error ? err.message : "Nie udało się usunąć zestawu");
     } finally {
       setIsDeleting(false);
     }
@@ -120,8 +122,10 @@ export function DeckList() {
         onConfirm={() => void handleDelete()}
         onCancel={() => {
           setDeletingDeck(null);
+          setDeleteError(null);
         }}
         isDeleting={isDeleting}
+        error={deleteError}
       />
     </div>
   );

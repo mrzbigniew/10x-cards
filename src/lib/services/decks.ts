@@ -85,7 +85,13 @@ export async function renameDeck(
   deckId: string,
   name: string,
 ): Promise<void> {
-  const { error } = await supabase.from("decks").update({ name }).eq("id", deckId).eq("user_id", userId);
+  const { error } = await supabase
+    .from("decks")
+    .update({ name })
+    .eq("id", deckId)
+    .eq("user_id", userId)
+    .select("id")
+    .single();
 
   if (error) {
     throw new Error(error.message);
@@ -93,7 +99,7 @@ export async function renameDeck(
 }
 
 export async function deleteDeck(supabase: SupabaseClientType, userId: string, deckId: string): Promise<void> {
-  const { error } = await supabase.from("decks").delete().eq("id", deckId).eq("user_id", userId);
+  const { error } = await supabase.from("decks").delete().eq("id", deckId).eq("user_id", userId).select("id").single();
 
   if (error) {
     throw new Error(error.message);
@@ -106,6 +112,17 @@ export async function appendCardsToDeck(
   deckId: string,
   cards: { front: string; back: string }[],
 ): Promise<void> {
+  const { error: deckError } = await supabase
+    .from("decks")
+    .select("id")
+    .eq("id", deckId)
+    .eq("user_id", userId)
+    .single();
+
+  if (deckError) {
+    throw new Error("Deck not found or access denied");
+  }
+
   if (cards.length === 0) return;
 
   const { error } = await supabase.from("cards").insert(

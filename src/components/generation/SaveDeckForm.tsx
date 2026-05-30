@@ -17,12 +17,18 @@ export function SaveDeckForm({ text, proposals, isSaving, onSave }: Props) {
   const [confirmSkip, setConfirmSkip] = useState(false);
 
   useEffect(() => {
+    let cancelled = false;
     fetch("/api/decks")
       .then((res) => (res.ok ? (res.json() as Promise<DeckWithCount[]>) : Promise.resolve([])))
-      .then(setDecks)
+      .then((data) => {
+        if (!cancelled) setDecks(data);
+      })
       .catch(() => {
         /* silently fall back to new-deck-only */
       });
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   const acceptedCount = proposals.filter((p) => p.status === "accepted").length;
