@@ -326,31 +326,31 @@ Update the `SaveDeckRequest` TypeScript type export to reflect both branches.
 
 #### Automated
 
-- [x] 1.1 TypeScript build passes after schema + service + API changes
-- [x] 1.2 Linting passes
+- [x] 1.1 TypeScript build passes after schema + service + API changes — 9c86d2c
+- [x] 1.2 Linting passes — 9c86d2c
 
 #### Manual
 
-- [x] 1.3 GET /api/decks returns deck list with card_count
-- [x] 1.4 POST /api/decks with deckId appends cards to existing deck
-- [x] 1.5 PATCH /api/decks/:id renames deck
-- [x] 1.6 DELETE /api/decks/:id removes deck and cascades cards
-- [x] 1.7 All endpoints return 401 without a valid session
+- [x] 1.3 GET /api/decks returns deck list with card_count — 9c86d2c
+- [x] 1.4 POST /api/decks with deckId appends cards to existing deck — 9c86d2c
+- [x] 1.5 PATCH /api/decks/:id renames deck — 9c86d2c
+- [x] 1.6 DELETE /api/decks/:id removes deck and cascades cards — 9c86d2c
+- [x] 1.7 All endpoints return 401 without a valid session — 9c86d2c
 
 ### Phase 2: Deck List on Dashboard
 
 #### Automated
 
-- [ ] 2.1 TypeScript build passes after dashboard island changes
-- [ ] 2.2 Linting passes
+- [x] 2.1 TypeScript build passes after dashboard island changes
+- [x] 2.2 Linting passes
 
 #### Manual
 
-- [ ] 2.3 Dashboard shows welcome header + CTA + deck list
-- [ ] 2.4 Create deck via "+ Nowy zestaw" form works without page reload
-- [ ] 2.5 Inline rename saves on Enter, cancels on Escape
-- [ ] 2.6 Typed-name delete modal prevents premature deletion
-- [ ] 2.7 Two users see only their own decks
+- [x] 2.3 Dashboard shows welcome header + CTA + deck list
+- [x] 2.4 Create deck via "+ Nowy zestaw" form works without page reload
+- [x] 2.5 Inline rename saves on Enter, cancels on Escape
+- [x] 2.6 Typed-name delete modal prevents premature deletion
+- [x] 2.7 Two users see only their own decks
 
 ### Phase 3: Generation Save Flow
 
