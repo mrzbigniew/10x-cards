@@ -26,12 +26,9 @@ export class GenerationError extends Error {
 
 export async function generateProposals(text: string): Promise<{ front: string; back: string }[]> {
   if (!OPENROUTER_API_KEY) {
-    throw new GenerationError("AI generation is not configured. OPENROUTER_API_KEY is missing.");
+    throw new GenerationError("Generowanie AI nie jest skonfigurowane. Skontaktuj się z administratorem.");
   }
 
-  // OPENROUTER_API_KEY narrowed to string above; eslint-disable needed because
-  // astro:env/server virtual module types are not resolved by the ESLint type checker.
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const apiKey: string = OPENROUTER_API_KEY;
 
   const client = new OpenAI({
@@ -51,23 +48,25 @@ export async function generateProposals(text: string): Promise<{ front: string; 
     content = response.choices[0]?.message?.content ?? "";
   } catch (err) {
     const message = err instanceof Error ? err.message : "Unknown error from AI provider";
-    throw new GenerationError(`AI request failed: ${message}`);
+    throw new GenerationError(`Żądanie do AI nie powiodło się: ${message}`);
   }
 
   let parsed: unknown;
   try {
     parsed = JSON.parse(content);
   } catch {
-    throw new GenerationError("AI returned malformed JSON. Please try again.");
+    throw new GenerationError("AI zwróciło nieprawidłową odpowiedź. Spróbuj ponownie.");
   }
 
   const result = z.array(ProposalSchema).safeParse(parsed);
   if (!result.success) {
-    throw new GenerationError("AI response did not match expected format. Please try again.");
+    throw new GenerationError("AI zwróciło nieoczekiwany format odpowiedzi. Spróbuj ponownie.");
   }
 
   if (result.data.length === 0) {
-    throw new GenerationError("AI returned no flashcard proposals. Try with a longer or more detailed text.");
+    throw new GenerationError(
+      "AI nie zwróciło żadnych propozycji. Spróbuj z dłuższym lub bardziej szczegółowym tekstem.",
+    );
   }
 
   return result.data;

@@ -359,35 +359,35 @@ Wires `/generate` into the app navigation, documents secrets setup for local dev
 
 #### Automated
 
-- [x] 1.1 `npm run lint` passes
-- [x] 1.2 `npm run build` compiles without TypeScript errors
+- [x] 1.1 `npm run lint` passes — d9736d6
+- [x] 1.2 `npm run build` compiles without TypeScript errors — d9736d6
 
 #### Manual
 
-- [ ] 1.3 `POST /api/generate` returns 400 on too-short text
-- [ ] 1.4 `POST /api/generate` returns 200 with proposals for valid authenticated request
-- [ ] 1.5 `POST /api/generate` returns 401 without auth cookie
-- [ ] 1.6 `POST /api/decks` returns 401 without auth
-- [ ] 1.7 Valid deck save creates rows in `decks` and `cards` tables
+- [x] 1.3 `POST /api/generate` returns 400 on too-short text — d9736d6
+- [x] 1.4 `POST /api/generate` returns 200 with proposals for valid authenticated request — d9736d6
+- [x] 1.5 `POST /api/generate` returns 401 without auth cookie — d9736d6
+- [x] 1.6 `POST /api/decks` returns 401 without auth — d9736d6
+- [x] 1.7 Valid deck save creates rows in `decks` and `cards` tables — d9736d6
 
 ### Phase 2: Frontend — /generate Page and React Component Tree
 
 #### Automated
 
-- [ ] 2.1 `npm run lint` passes
-- [ ] 2.2 `npm run build` succeeds
+- [x] 2.1 `npm run lint` passes
+- [x] 2.2 `npm run build` succeeds
 
 #### Manual
 
-- [ ] 2.3 `/generate` loads for authenticated user; redirects unauthenticated to signin
-- [ ] 2.4 Text < 50 chars blocked with inline message
-- [ ] 2.5 Loading spinner visible during generation
-- [ ] 2.6 Proposals appear with accept / edit / reject per row
-- [ ] 2.7 Inline textarea edit works; confirm marks accepted with edited text
-- [ ] 2.8 Bulk accept and bulk reject work on pending proposals
-- [ ] 2.9 Save with undecided proposals shows skip warning; second click proceeds
-- [ ] 2.10 Successful save creates DB rows with `source = 'ai'`
-- [ ] 2.11 AI error shows banner with text preserved
+- [x] 2.3 `/generate` loads for authenticated user; redirects unauthenticated to signin
+- [x] 2.4 Text < 50 chars blocked with inline message
+- [x] 2.5 Loading spinner visible during generation
+- [x] 2.6 Proposals appear with accept / edit / reject per row
+- [x] 2.7 Inline textarea edit works; confirm marks accepted with edited text
+- [x] 2.8 Bulk accept and bulk reject work on pending proposals
+- [x] 2.9 Save with undecided proposals shows skip warning; second click proceeds
+- [x] 2.10 Successful save creates DB rows with `source = 'ai'`
+- [x] 2.11 AI error shows banner with text preserved
 
 ### Phase 3: Navigation, Secrets Wiring, and E2E Verification
 
