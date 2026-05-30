@@ -393,12 +393,12 @@ Wires `/generate` into the app navigation, documents secrets setup for local dev
 
 #### Automated
 
-- [x] 3.1 `npm run lint` passes
-- [x] 3.2 `npm run build` succeeds
+- [x] 3.1 `npm run lint` passes — a2b7f58
+- [x] 3.2 `npm run build` succeeds — a2b7f58
 
 #### Manual
 
-- [x] 3.3 Topbar "Generate" link visible and functional
-- [x] 3.4 Dashboard CTA navigates to `/generate`
-- [x] 3.5 Full happy-path E2E walkthrough passes
-- [x] 3.6 Unauthenticated `/generate` visit redirects to signin
+- [x] 3.3 Topbar "Generate" link visible and functional — a2b7f58
+- [x] 3.4 Dashboard CTA navigates to `/generate` — a2b7f58
+- [x] 3.5 Full happy-path E2E walkthrough passes — a2b7f58
+- [x] 3.6 Unauthenticated `/generate` visit redirects to signin — a2b7f58
