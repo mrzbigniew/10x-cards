@@ -356,11 +356,11 @@ Update the `SaveDeckRequest` TypeScript type export to reflect both branches.
 
 #### Automated
 
-- [x] 3.1 TypeScript build passes after SaveDeckForm + hook changes
-- [x] 3.2 Linting passes
+- [x] 3.1 TypeScript build passes after SaveDeckForm + hook changes — c0e7787
+- [x] 3.2 Linting passes — c0e7787
 
 #### Manual
 
-- [x] 3.3 Save form shows deck picker with "Nowy zestaw" first
-- [x] 3.4 Saving to new deck creates it and shows on dashboard
-- [x] 3.5 Saving to existing deck increments its card count on dashboard
+- [x] 3.3 Save form shows deck picker with "Nowy zestaw" first — c0e7787
+- [x] 3.4 Saving to new deck creates it and shows on dashboard — c0e7787
+- [x] 3.5 Saving to existing deck increments its card count on dashboard — c0e7787
