@@ -1,7 +1,8 @@
 import { defineMiddleware } from "astro:middleware";
 import { createClient } from "@/lib/supabase";
 
-const PROTECTED_ROUTES = ["/dashboard"];
+const PROTECTED_ROUTES = ["/dashboard", "/generate"];
+const PROTECTED_API_ROUTES = ["/api/generate", "/api/decks"];
 
 export const onRequest = defineMiddleware(async (context, next) => {
   const supabase = createClient(context.request.headers, context.cookies);
@@ -13,6 +14,12 @@ export const onRequest = defineMiddleware(async (context, next) => {
     context.locals.user = user ?? null;
   } else {
     context.locals.user = null;
+  }
+
+  if (PROTECTED_API_ROUTES.some((route) => context.url.pathname.startsWith(route))) {
+    if (!context.locals.user) {
+      return Response.json({ error: "Unauthorized" }, { status: 401 });
+    }
   }
 
   if (PROTECTED_ROUTES.some((route) => context.url.pathname.startsWith(route))) {
