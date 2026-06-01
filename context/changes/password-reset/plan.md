@@ -280,11 +280,11 @@ No schema changes. No data migration required. Existing sessions and user data a
 
 #### Automated
 
-- [x] 3.1 TypeScript compilation passes
-- [x] 3.2 Lint passes
+- [x] 3.1 TypeScript compilation passes — 0727804
+- [x] 3.2 Lint passes — 0727804
 
 #### Manual
 
-- [x] 3.3 "Forgot password?" link visible on sign-in page, right-aligned below password field
-- [x] 3.4 Link navigates to `/auth/forgot-password`
-- [x] 3.5 Existing sign-in flow unaffected
+- [x] 3.3 "Forgot password?" link visible on sign-in page, right-aligned below password field — 0727804
+- [x] 3.4 Link navigates to `/auth/forgot-password` — 0727804
+- [x] 3.5 Existing sign-in flow unaffected — 0727804
