@@ -249,32 +249,32 @@ No schema changes. No data migration required. Existing sessions and user data a
 
 #### Automated
 
-- [x] 1.1 TypeScript compilation passes (`npx tsc --noEmit`)
-- [x] 1.2 Lint passes (`npm run lint`)
+- [x] 1.1 TypeScript compilation passes (`npx tsc --noEmit`) — 9468b48
+- [x] 1.2 Lint passes (`npm run lint`) — 9468b48
 
 #### Manual
 
-- [x] 1.3 `/auth/forgot-password` renders without error for signed-out user
-- [x] 1.4 Submitting any email → `/auth/forgot-password-sent` with spam hint
-- [x] 1.5 Inbucket shows recovery email for registered address
-- [x] 1.6 Non-existent email → same `/auth/forgot-password-sent` (neutral behavior)
+- [x] 1.3 `/auth/forgot-password` renders without error for signed-out user — 9468b48
+- [x] 1.4 Submitting any email → `/auth/forgot-password-sent` with spam hint — 9468b48
+- [x] 1.5 Inbucket shows recovery email for registered address — 9468b48
+- [x] 1.6 Non-existent email → same `/auth/forgot-password-sent` (neutral behavior) — 9468b48
 
 ### Phase 2: Reset Flow
 
 #### Automated
 
-- [ ] 2.1 TypeScript compilation passes
-- [ ] 2.2 Lint passes
+- [x] 2.1 TypeScript compilation passes
+- [x] 2.2 Lint passes
 
 #### Manual
 
-- [ ] 2.3 Clicking Inbucket link → `/auth/reset-password` with password form
-- [ ] 2.4 Valid new password → redirects to `/dashboard`, user signed in, decks intact
-- [ ] 2.5 Mismatched passwords → client-side validation error (no submission)
-- [ ] 2.6 Password under 6 chars → client-side validation error
-- [ ] 2.7 Re-used reset link → `/auth/forgot-password?error=Link+expired+or+already+used`
-- [ ] 2.8 `/auth/reset-password` with no code and no session → forgot-password redirect
-- [ ] 2.9 Sign-in with old password fails; new password succeeds
+- [x] 2.3 Clicking Inbucket link → `/auth/reset-password` with password form
+- [x] 2.4 Valid new password → redirects to `/dashboard`, user signed in, decks intact
+- [x] 2.5 Mismatched passwords → client-side validation error (no submission)
+- [x] 2.6 Password under 6 chars → client-side validation error
+- [x] 2.7 Re-used reset link → `/auth/forgot-password?error=Link+expired+or+already+used`
+- [x] 2.8 `/auth/reset-password` with no code and no session → forgot-password redirect
+- [x] 2.9 Sign-in with old password fails; new password succeeds
 
 ### Phase 3: Sign-in Integration
 
