@@ -336,32 +336,32 @@ Converts the dashboard from a vertical list to a 360×150px card grid with a 3-d
 
 #### Automated
 
-- [x] 2.1 TypeScript type-check passes
-- [x] 2.2 No lint errors
+- [x] 2.1 TypeScript type-check passes — de53c86
+- [x] 2.2 No lint errors — de53c86
 
 #### Manual
 
-- [x] 2.3 /deck/<id> shows deck name, breadcrumb, and card list
-- [x] 2.4 Unauthenticated visit to /deck/<id> redirects to /auth/signin
-- [x] 2.5 Add card modal validates and adds card to list on submit
-- [x] 2.6 Edit card: SR checkbox starts unchecked; save without checkbox updates content only; save with checkbox resets card_sr_state
-- [x] 2.7 Delete card: inline confirm works; last card leaves empty state; deck page remains
-- [x] 2.8 Breadcrumb navigates back to /dashboard
-- [x] 2.9 Deck rename from detail header persists
+- [x] 2.3 /deck/<id> shows deck name, breadcrumb, and card list — de53c86
+- [x] 2.4 Unauthenticated visit to /deck/<id> redirects to /auth/signin — de53c86
+- [x] 2.5 Add card modal validates and adds card to list on submit — de53c86
+- [x] 2.6 Edit card: SR checkbox starts unchecked; save without checkbox updates content only; save with checkbox resets card_sr_state — de53c86
+- [x] 2.7 Delete card: inline confirm works; last card leaves empty state; deck page remains — de53c86
+- [x] 2.8 Breadcrumb navigates back to /dashboard — de53c86
+- [x] 2.9 Deck rename from detail header persists — de53c86
 
 ### Phase 3: Dashboard Redesign
 
 #### Automated
 
-- [ ] 3.1 TypeScript type-check passes
-- [ ] 3.2 No lint errors
+- [x] 3.1 TypeScript type-check passes
+- [x] 3.2 No lint errors
 
 #### Manual
 
-- [ ] 3.3 Dashboard shows responsive card grid at 1440px, 1024px, 768px
-- [ ] 3.4 Each deck card shows name + card count
-- [ ] 3.5 3-dot dropdown toggles and closes on outside click
-- [ ] 3.6 Edit navigates to /deck/<id>
-- [ ] 3.7 Delete opens typed-name modal; deck deleted on confirmation
-- [ ] 3.8 No inline rename input on dashboard
-- [ ] 3.9 Full end-to-end flow verified (dashboard → add card → edit card → delete card → back)
+- [x] 3.3 Dashboard shows responsive card grid at 1440px, 1024px, 768px
+- [x] 3.4 Each deck card shows name + card count
+- [x] 3.5 3-dot dropdown toggles and closes on outside click
+- [x] 3.6 Edit navigates to /deck/<id>
+- [x] 3.7 Delete opens typed-name modal; deck deleted on confirmation
+- [x] 3.8 No inline rename input on dashboard
+- [x] 3.9 Full end-to-end flow verified (dashboard → add card → edit card → delete card → back)

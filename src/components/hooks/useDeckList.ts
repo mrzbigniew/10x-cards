@@ -56,24 +56,6 @@ export function useDeckList() {
     [refresh],
   );
 
-  const renameDeck = useCallback(
-    async (id: string, name: string) => {
-      const prevName = decks.find((d) => d.id === id)?.name;
-      setDecks((prev) => prev.map((d) => (d.id === id ? { ...d, name } : d)));
-      const res = await fetch(`/api/decks/${id}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name }),
-      });
-      if (!res.ok) {
-        const data = (await res.json()) as { error?: string };
-        setDecks((prev) => prev.map((d) => (d.id === id ? { ...d, name: prevName ?? d.name } : d)));
-        throw new Error(data.error ?? "Failed to rename deck");
-      }
-    },
-    [decks],
-  );
-
   const deleteDeck = useCallback(
     async (id: string) => {
       const res = await fetch(`/api/decks/${id}`, { method: "DELETE" });
@@ -86,5 +68,5 @@ export function useDeckList() {
     [refresh],
   );
 
-  return { decks, loading, error, createDeck, renameDeck, deleteDeck };
+  return { decks, loading, error, createDeck, deleteDeck };
 }

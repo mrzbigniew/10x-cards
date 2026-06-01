@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { useDeckList } from "@/components/hooks/useDeckList";
 import type { DeckWithCount } from "@/components/hooks/useDeckList";
-import { DeckRow } from "@/components/decks/DeckRow";
+import { DeckCard } from "@/components/decks/DeckRow";
 import { DeleteDeckModal } from "@/components/decks/DeleteDeckModal";
 
 export function DeckList() {
-  const { decks, loading, error, createDeck, renameDeck, deleteDeck } = useDeckList();
+  const { decks, loading, error, createDeck, deleteDeck } = useDeckList();
 
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [newDeckName, setNewDeckName] = useState("");
@@ -48,7 +48,7 @@ export function DeckList() {
   }
 
   return (
-    <div className="mt-8 w-full max-w-lg">
+    <div className="mt-8 w-full max-w-5xl">
       <div className="mb-4 flex items-center justify-between">
         <h2 className="text-base font-semibold text-white/80">Twoje zestawy</h2>
         {!showCreateForm && (
@@ -109,9 +109,9 @@ export function DeckList() {
       )}
 
       {!loading && decks.length > 0 && (
-        <div className="flex flex-col gap-2">
+        <div className="grid grid-cols-[repeat(auto-fill,minmax(360px,1fr))] gap-4">
           {decks.map((deck) => (
-            <DeckRow key={deck.id} deck={deck} onRename={renameDeck} onDeleteRequest={setDeletingDeck} />
+            <DeckCard key={deck.id} deck={deck} onDeleteRequest={setDeletingDeck} />
           ))}
         </div>
       )}
