@@ -1,10 +1,13 @@
 ---
 import Layout from "@/layouts/Layout.astro";
 import { GenerationFlow } from "@/components/generation/GenerationFlow";
+import Topbar from "@/components/Topbar.astro";
 ---
 
 <Layout title="Generate Flashcards">
-  <div class="bg-cosmic flex min-h-screen items-center justify-center p-4">
+  <div class="bg-cosmic flex min-h-screen flex-col p-4">
+    <Topbar />
+  <div class="flex flex-1 items-center justify-center">
     <div class="rounded-2xl border border-white/10 bg-white/10 p-8 text-center text-white backdrop-blur-xl">
       <div class="mx-auto max-w-3xl py-8">
         <div class="mb-8">
@@ -16,5 +19,6 @@ import { GenerationFlow } from "@/components/generation/GenerationFlow";
         <GenerationFlow client:load />
       </div>
     </div>
+  </div>
   </div>
 </Layout>

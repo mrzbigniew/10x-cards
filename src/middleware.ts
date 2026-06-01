@@ -1,8 +1,9 @@
 import { defineMiddleware } from "astro:middleware";
 import { createClient } from "@/lib/supabase";
 
-const PROTECTED_ROUTES = ["/dashboard", "/generate"];
-const PROTECTED_API_ROUTES = ["/api/generate", "/api/decks"];
+// Routes accessible without authentication
+const PUBLIC_ROUTES = ["/auth/signin", "/auth/signup", "/auth/confirm-email"];
+const PUBLIC_API_ROUTES = ["/api/auth"];
 
 export const onRequest = defineMiddleware(async (context, next) => {
   const supabase = createClient(context.request.headers, context.cookies);
@@ -16,14 +17,20 @@ export const onRequest = defineMiddleware(async (context, next) => {
     context.locals.user = null;
   }
 
-  if (PROTECTED_API_ROUTES.some((route) => context.url.pathname.startsWith(route))) {
-    if (!context.locals.user) {
-      return Response.json({ error: "Unauthorized" }, { status: 401 });
-    }
+  const { pathname } = context.url;
+
+  // Allow public API routes through without auth
+  if (PUBLIC_API_ROUTES.some((route) => pathname.startsWith(route))) {
+    return next();
   }
 
-  if (PROTECTED_ROUTES.some((route) => context.url.pathname.startsWith(route))) {
+  // Require auth for all non-public pages
+  if (!PUBLIC_ROUTES.some((route) => pathname.startsWith(route))) {
     if (!context.locals.user) {
+      // Return 401 for API calls, redirect to sign-in for page requests
+      if (pathname.startsWith("/api/")) {
+        return Response.json({ error: "Unauthorized" }, { status: 401 });
+      }
       return context.redirect("/auth/signin");
     }
   }
