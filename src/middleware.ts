@@ -2,7 +2,14 @@ import { defineMiddleware } from "astro:middleware";
 import { createClient } from "@/lib/supabase";
 
 // Routes accessible without authentication
-const PUBLIC_ROUTES = ["/auth/signin", "/auth/signup", "/auth/confirm-email"];
+const PUBLIC_ROUTES = [
+  "/auth/signin",
+  "/auth/signup",
+  "/auth/confirm-email",
+  "/auth/forgot-password",
+  "/auth/forgot-password-sent",
+  "/auth/reset-password",
+];
 const PUBLIC_API_ROUTES = ["/api/auth"];
 
 export const onRequest = defineMiddleware(async (context, next) => {
