@@ -263,28 +263,28 @@ No schema changes. No data migration required. Existing sessions and user data a
 
 #### Automated
 
-- [x] 2.1 TypeScript compilation passes
-- [x] 2.2 Lint passes
+- [x] 2.1 TypeScript compilation passes — 5a0c619
+- [x] 2.2 Lint passes — 5a0c619
 
 #### Manual
 
-- [x] 2.3 Clicking Inbucket link → `/auth/reset-password` with password form
-- [x] 2.4 Valid new password → redirects to `/dashboard`, user signed in, decks intact
-- [x] 2.5 Mismatched passwords → client-side validation error (no submission)
-- [x] 2.6 Password under 6 chars → client-side validation error
-- [x] 2.7 Re-used reset link → `/auth/forgot-password?error=Link+expired+or+already+used`
-- [x] 2.8 `/auth/reset-password` with no code and no session → forgot-password redirect
-- [x] 2.9 Sign-in with old password fails; new password succeeds
+- [x] 2.3 Clicking Inbucket link → `/auth/reset-password` with password form — 5a0c619
+- [x] 2.4 Valid new password → redirects to `/dashboard`, user signed in, decks intact — 5a0c619
+- [x] 2.5 Mismatched passwords → client-side validation error (no submission) — 5a0c619
+- [x] 2.6 Password under 6 chars → client-side validation error — 5a0c619
+- [x] 2.7 Re-used reset link → `/auth/forgot-password?error=Link+expired+or+already+used` — 5a0c619
+- [x] 2.8 `/auth/reset-password` with no code and no session → forgot-password redirect — 5a0c619
+- [x] 2.9 Sign-in with old password fails; new password succeeds — 5a0c619
 
 ### Phase 3: Sign-in Integration
 
 #### Automated
 
-- [ ] 3.1 TypeScript compilation passes
-- [ ] 3.2 Lint passes
+- [x] 3.1 TypeScript compilation passes
+- [x] 3.2 Lint passes
 
 #### Manual
 
-- [ ] 3.3 "Forgot password?" link visible on sign-in page, right-aligned below password field
-- [ ] 3.4 Link navigates to `/auth/forgot-password`
-- [ ] 3.5 Existing sign-in flow unaffected
+- [x] 3.3 "Forgot password?" link visible on sign-in page, right-aligned below password field
+- [x] 3.4 Link navigates to `/auth/forgot-password`
+- [x] 3.5 Existing sign-in flow unaffected
