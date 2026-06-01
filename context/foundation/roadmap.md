@@ -3,7 +3,7 @@ project: "10xCards"
 version: 1
 status: draft
 created: 2026-05-25
-updated: 2026-05-30
+updated: 2026-06-01
 prd_version: 1
 main_goal: speed
 top_blocker: time
@@ -33,7 +33,7 @@ top_blocker: time
 | S-01  | first-gated-generation  | paste text, review AI proposals (accept/edit/reject, bulk actions), save to new deck    | F-01              | US-01, FR-006, FR-007, FR-008, FR-009, FR-013     | done     |
 | S-02  | deck-management         | view deck list, create/rename a deck, delete with confirmation, save to existing deck   | F-01              | US-01, US-02, FR-009, FR-013, FR-017              | done     |
 | S-05  | password-reset          | reset a forgotten password via email link and recover all decks + SR state              | F-01              | US-04, FR-004                                     | proposed |
-| S-04  | manual-card-crud        | add a card manually, edit any card (with optional SR reset), delete any card            | F-01, S-02        | US-02, US-05, FR-010, FR-011, FR-012              | proposed |
+| S-04  | manual-card-crud        | add a card manually, edit any card (with optional SR reset), delete any card            | F-01, S-02        | US-02, US-05, FR-010, FR-011, FR-012              | done     |
 | S-03  | review-session          | run a per-deck review, rate each due card (SR library scale), persist SR state          | F-01, S-01, S-02  | US-03, FR-014, FR-015, FR-016                     | proposed |
 
 ## Streams
@@ -124,7 +124,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Blockers:** —
 - **Unknowns:** —
 - **Risk:** the SR-reset checkbox must default to unchecked (FR-011 explicit requirement); a wrong default would silently destroy SR progress on every minor edit — verify the checkbox default in the first implementation pass.
-- **Status:** proposed
+- **Status:** done
 
 ### S-03: Review session
 
@@ -188,3 +188,4 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **F-01: (foundation) Supabase migration files are in place for `decks`, `cards`, and SR-state tables; RLS policies enforce per-user data isolation via `auth.uid()`; the app-level schema makes the already-scaffolded auth (FR-001..FR-003, FR-005) meaningful by protecting the data it gates.** — Archived 2026-05-30 → `context/archive/2026-05-26-db-schema-rls/`. Lesson: —.
 - **S-01: user can paste up to ~10,000 characters of plain text, trigger AI generation, see a list of proposed flashcards (question + answer), accept / edit inline / reject each proposal individually, bulk-accept or bulk-reject remaining undecided proposals, enter or accept an auto-proposed deck name, and save accepted cards to a newly created deck.** — Archived 2026-05-30 → `context/archive/2026-05-30-first-gated-generation/`. Lesson: —.
 - **S-02: user can view all their decks on a list page, create a new named deck independently, rename any deck, delete a deck with a typed-name hard confirmation (no undo), and choose an existing deck as the target when saving generation results (completing the FR-009 existing-deck path started in S-01).** — Archived 2026-05-30 → `context/archive/2026-05-30-deck-management/`. Lesson: —.
+- **S-04: user can add a flashcard manually (non-empty question + answer) to any of their decks, edit any card's question or answer with an unchecked-by-default "reset SR state" checkbox for heavy rephrasing, and delete any card with no undo — the deck remains even if its last card is deleted.** — Archived 2026-06-01 → `context/archive/2026-06-01-manual-card-crud/`. Lesson: —.
