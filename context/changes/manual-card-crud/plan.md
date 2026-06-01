@@ -138,11 +138,11 @@ Creates the `/deck/[id]` page with full card CRUD. The deck detail page is reach
 
 #### 1. Middleware protection
 
-**File**: `src/middleware.ts` (modify)
+**File**: `src/middleware.ts` (no change needed)
 
-**Intent**: Add `/deck` to the protected-routes list so unauthenticated visits redirect to sign-in.
+**Intent**: Confirm `/deck` is protected so unauthenticated visits redirect to sign-in.
 
-**Contract**: Locate the `PROTECTED_ROUTES` array (or equivalent guard check) and add `'/deck'` alongside `'/dashboard'`. The existing matching logic should cover all `/deck/...` subpaths with this addition.
+**Contract**: No change needed — the middleware uses a `PUBLIC_ROUTES` allowlist and protects all non-public routes by default. Confirm `/deck` is not in `PUBLIC_ROUTES` (it isn't). All `/deck/...` subpaths are automatically protected.
 
 #### 2. Deck detail Astro page
 
@@ -239,7 +239,7 @@ Converts the dashboard from a vertical list to a 360×150px card grid with a 3-d
 
 #### 1. DeckList layout to card grid
 
-**File**: `src/components/DeckList.tsx` (modify)
+**File**: `src/components/decks/DeckList.tsx` (modify)
 
 **Intent**: Change the container's layout from a vertical stack to a responsive card grid. The rest of DeckList (fetching, error state, create-deck form) is unchanged.
 
@@ -247,7 +247,7 @@ Converts the dashboard from a vertical list to a 360×150px card grid with a 3-d
 
 #### 2. DeckRow → DeckCard
 
-**File**: `src/components/DeckRow.tsx` (modify in-place; rename export to `DeckCard`)
+**File**: `src/components/decks/DeckRow.tsx` (modify in-place; rename export to `DeckCard`)
 
 **Intent**: Reshape from a list row to a 360×150px card with a 3-dot dropdown. Remove all inline rename UI.
 
@@ -328,9 +328,10 @@ Converts the dashboard from a vertical list to a 360×150px card grid with a 3-d
 
 - [x] 1.3 GET /api/decks/<id> returns { deck, cards } for authenticated user — c621001
 - [x] 1.4 POST /api/decks/<id>/cards inserts card with source='manual' — c621001
-- [x] 1.5 PATCH /api/decks/<id>/cards/<cardId> updates content; with resetSR:true resets card_sr_state — c621001
-- [x] 1.6 DELETE /api/decks/<id>/cards/<cardId> removes card; deck survives — c621001
-- [x] 1.7 All endpoints return 401 when unauthenticated — c621001
+- [x] 1.5 PATCH /api/decks/<id>/cards/<cardId> with resetSR:false updates content; card_sr_state unchanged — c621001
+- [x] 1.6 PATCH /api/decks/<id>/cards/<cardId> with resetSR:true resets card_sr_state to FSRS defaults — c621001
+- [x] 1.7 DELETE /api/decks/<id>/cards/<cardId> removes card; deck survives — c621001
+- [x] 1.8 All endpoints return 401 when unauthenticated — c621001
 
 ### Phase 2: Deck Detail Page + Card Management UI
 
