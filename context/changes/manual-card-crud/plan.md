@@ -353,15 +353,15 @@ Converts the dashboard from a vertical list to a 360×150px card grid with a 3-d
 
 #### Automated
 
-- [x] 3.1 TypeScript type-check passes
-- [x] 3.2 No lint errors
+- [x] 3.1 TypeScript type-check passes — 47848e1
+- [x] 3.2 No lint errors — 47848e1
 
 #### Manual
 
-- [x] 3.3 Dashboard shows responsive card grid at 1440px, 1024px, 768px
-- [x] 3.4 Each deck card shows name + card count
-- [x] 3.5 3-dot dropdown toggles and closes on outside click
-- [x] 3.6 Edit navigates to /deck/<id>
-- [x] 3.7 Delete opens typed-name modal; deck deleted on confirmation
-- [x] 3.8 No inline rename input on dashboard
-- [x] 3.9 Full end-to-end flow verified (dashboard → add card → edit card → delete card → back)
+- [x] 3.3 Dashboard shows responsive card grid at 1440px, 1024px, 768px — 47848e1
+- [x] 3.4 Each deck card shows name + card count — 47848e1
+- [x] 3.5 3-dot dropdown toggles and closes on outside click — 47848e1
+- [x] 3.6 Edit navigates to /deck/<id> — 47848e1
+- [x] 3.7 Delete opens typed-name modal; deck deleted on confirmation — 47848e1
+- [x] 3.8 No inline rename input on dashboard — 47848e1
+- [x] 3.9 Full end-to-end flow verified (dashboard → add card → edit card → delete card → back) — 47848e1

@@ -1,7 +1,7 @@
 ---
 change_id: manual-card-crud
 title: Manual flashcard CRUD — add, edit (with SR-reset option), delete cards in any deck
-status: implementing
+status: implemented
 created: 2026-06-01
 updated: 2026-06-01
 archived_at: null
