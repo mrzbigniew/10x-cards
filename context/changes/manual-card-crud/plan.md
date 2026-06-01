@@ -336,18 +336,18 @@ Converts the dashboard from a vertical list to a 360×150px card grid with a 3-d
 
 #### Automated
 
-- [ ] 2.1 TypeScript type-check passes
-- [ ] 2.2 No lint errors
+- [x] 2.1 TypeScript type-check passes
+- [x] 2.2 No lint errors
 
 #### Manual
 
-- [ ] 2.3 /deck/<id> shows deck name, breadcrumb, and card list
-- [ ] 2.4 Unauthenticated visit to /deck/<id> redirects to /auth/signin
-- [ ] 2.5 Add card modal validates and adds card to list on submit
-- [ ] 2.6 Edit card: SR checkbox starts unchecked; save without checkbox updates content only; save with checkbox resets card_sr_state
-- [ ] 2.7 Delete card: inline confirm works; last card leaves empty state; deck page remains
-- [ ] 2.8 Breadcrumb navigates back to /dashboard
-- [ ] 2.9 Deck rename from detail header persists
+- [x] 2.3 /deck/<id> shows deck name, breadcrumb, and card list
+- [x] 2.4 Unauthenticated visit to /deck/<id> redirects to /auth/signin
+- [x] 2.5 Add card modal validates and adds card to list on submit
+- [x] 2.6 Edit card: SR checkbox starts unchecked; save without checkbox updates content only; save with checkbox resets card_sr_state
+- [x] 2.7 Delete card: inline confirm works; last card leaves empty state; deck page remains
+- [x] 2.8 Breadcrumb navigates back to /dashboard
+- [x] 2.9 Deck rename from detail header persists
 
 ### Phase 3: Dashboard Redesign
 
