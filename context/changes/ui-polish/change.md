@@ -1,7 +1,7 @@
 ---
 change_id: ui-polish
 title: UI polish — branded header, dashboard intro, bulk deck reset, flip-card review, dark/light toggle
-status: implementing
+status: implemented
 created: 2026-06-02
 updated: 2026-06-03
 archived_at: null

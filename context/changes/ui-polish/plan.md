@@ -490,11 +490,11 @@ Import `cn` from `@/lib/utils`.
 
 #### Automated
 
-- [x] 4.1 Type checking passes: `npm run typecheck`
+- [x] 4.1 Type checking passes: `npm run typecheck` — 3440b4f
 
 #### Manual
 
-- [ ] 4.2 Review card flips in 3D on click
-- [ ] 4.3 Rating buttons active only after flip animation completes
-- [ ] 4.4 Rating labels show "Raz jeszcze / Trudna / Dobra / Łatwa"
-- [ ] 4.5 No English strings visible in review session flow
+- [x] 4.2 Review card flips in 3D on click — 3440b4f
+- [x] 4.3 Rating buttons active only after flip animation completes — 3440b4f
+- [x] 4.4 Rating labels show "Raz jeszcze / Trudna / Dobra / Łatwa" — 3440b4f
+- [x] 4.5 No English strings visible in review session flow — 3440b4f
