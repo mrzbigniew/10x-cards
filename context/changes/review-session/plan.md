@@ -329,25 +329,25 @@ No automated test runner exists in the repo yet (introduced in Module 3), so ver
 
 #### Automated
 
-- [x] 2.1 Type checking passes: `npx astro check`
-- [x] 2.2 Linting passes: `npm run lint`
+- [x] 2.1 Type checking passes: `npx astro check` — 4316a0a
+- [x] 2.2 Linting passes: `npm run lint` — 4316a0a
 
 #### Manual
 
-- [ ] 2.3 `applyRating` updates `card_sr_state` and appends one `review_logs` row
-- [ ] 2.4 Reset path matches `createEmptyCard()` output incl. `learning_steps = 0`
+- [x] 2.3 `applyRating` updates `card_sr_state` and appends one `review_logs` row — 4316a0a
+- [x] 2.4 Reset path matches `createEmptyCard()` output incl. `learning_steps = 0` — 4316a0a
 
 ### Phase 3: API Routes
 
 #### Automated
 
-- [ ] 3.1 Type checking passes: `npx astro check`
-- [ ] 3.2 Linting passes: `npm run lint`
+- [x] 3.1 Type checking passes: `npx astro check`
+- [x] 3.2 Linting passes: `npm run lint`
 
 #### Manual
 
-- [ ] 3.3 `GET review` returns due-only cards; `[]` when none; `400` bad/missing `due_before`; `401` unauth
-- [ ] 3.4 `POST` rating updates state and returns fresh SR; `rating:0` → `400`
+- [x] 3.3 `GET review` returns due-only cards; `[]` when none; `400` bad/missing `due_before`; `401` unauth
+- [x] 3.4 `POST` rating updates state and returns fresh SR; `rating:0` → `400`
 
 ### Phase 4: Review-Session UI
 
