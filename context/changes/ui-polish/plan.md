@@ -463,28 +463,28 @@ Import `cn` from `@/lib/utils`.
 
 #### Automated
 
-- [x] 2.1 Type checking passes: `npm run typecheck`
+- [x] 2.1 Type checking passes: `npm run typecheck` — 2e1ba14
 
 #### Manual
 
-- [x] 2.2 Welcome card gone; short Polish intro paragraph visible on dashboard
-- [x] 2.3 "+" card appears as first tile in deck grid
-- [x] 2.4 Clicking "+" opens create-deck modal; deck created successfully
-- [x] 2.5 Deck grid card surfaces use CSS-variable classes in both light and dark mode
+- [x] 2.2 Welcome card gone; short Polish intro paragraph visible on dashboard — 2e1ba14
+- [x] 2.3 "+" card appears as first tile in deck grid — 2e1ba14
+- [x] 2.4 Clicking "+" opens create-deck modal; deck created successfully — 2e1ba14
+- [x] 2.5 Deck grid card surfaces use CSS-variable classes in both light and dark mode — 2e1ba14
 
 ### Phase 3: Per-deck bulk SR-state reset
 
 #### Automated
 
-- [ ] 3.1 Type checking passes: `npm run typecheck`
-- [ ] 3.2 `POST /api/decks/[id]/reset-progress` returns 200 for valid deck
+- [x] 3.1 Type checking passes: `npm run typecheck`
+- [x] 3.2 `POST /api/decks/[id]/reset-progress` returns 200 for valid deck
 
 #### Manual
 
-- [ ] 3.3 "Resetuj postępy" visible in each deck dropdown (between "Edytuj" and "Usuń")
-- [ ] 3.4 Confirmation modal shows correct card count and deck name
-- [ ] 3.5 Confirming reset makes all deck cards due in the next review session
-- [ ] 3.6 No English strings visible in dropdown or modal
+- [x] 3.3 "Resetuj postępy" visible in each deck dropdown (between "Edytuj" and "Usuń")
+- [x] 3.4 Confirmation modal shows correct card count and deck name
+- [x] 3.5 Confirming reset makes all deck cards due in the next review session
+- [x] 3.6 No English strings visible in dropdown or modal
 
 ### Phase 4: Flip-card review + Polish labels
 

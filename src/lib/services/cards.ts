@@ -61,6 +61,31 @@ export async function resetCardSRState(supabase: SupabaseClientType, userId: str
   }
 }
 
+export async function resetDeckProgress(
+  supabase: SupabaseClientType,
+  userId: string,
+  deckId: string,
+): Promise<void> {
+  const { data, error: fetchError } = await supabase
+    .from("cards")
+    .select("id")
+    .eq("deck_id", deckId)
+    .eq("user_id", userId);
+
+  if (fetchError) throw new Error(fetchError.message);
+  if (!data || data.length === 0) return;
+
+  const cardIds = data.map((c) => c.id);
+
+  const { error } = await supabase
+    .from("card_sr_state")
+    .update(fsrsCardToDbUpdate(createEmptyCard(new Date())))
+    .in("card_id", cardIds)
+    .eq("user_id", userId);
+
+  if (error) throw new Error(error.message);
+}
+
 export async function updateCard(
   supabase: SupabaseClientType,
   userId: string,

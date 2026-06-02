@@ -1,12 +1,13 @@
-import { Play, Trash2 } from "lucide-react";
+import { Play, RotateCcw, Trash2 } from "lucide-react";
 import type { DeckWithCount } from "@/components/hooks/useDeckList";
 
 interface Props {
   deck: DeckWithCount;
   onDeleteRequest: (deck: DeckWithCount) => void;
+  onResetProgressRequest: (deck: DeckWithCount) => void;
 }
 
-export function DeckCard({ deck, onDeleteRequest }: Props) {
+export function DeckCard({ deck, onDeleteRequest, onResetProgressRequest }: Props) {
   return (
     <div className="relative flex min-h-[150px] w-full flex-col justify-between rounded-xl border border-border bg-card p-4 backdrop-blur-sm transition-shadow hover:shadow-md">
       <a href={`/deck/${deck.id}`} className="absolute inset-0 z-0 rounded-xl" aria-label={deck.name} />
@@ -26,6 +27,13 @@ export function DeckCard({ deck, onDeleteRequest }: Props) {
         >
           <Play className="size-4" />
         </a>
+        <button
+          onClick={() => onResetProgressRequest(deck)}
+          title="Resetuj postępy"
+          className="rounded-lg p-2 text-foreground/50 transition-colors hover:bg-accent hover:text-foreground"
+        >
+          <RotateCcw className="size-4" />
+        </button>
         <button
           onClick={() => onDeleteRequest(deck)}
           title="Usuń"

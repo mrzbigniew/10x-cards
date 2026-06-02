@@ -5,9 +5,10 @@ import type { DeckWithCount } from "@/components/hooks/useDeckList";
 import { DeckCard } from "@/components/decks/DeckRow";
 import { DeleteDeckModal } from "@/components/decks/DeleteDeckModal";
 import { CreateDeckModal } from "@/components/decks/CreateDeckModal";
+import { ResetProgressModal } from "@/components/decks/ResetProgressModal";
 
 export function DeckList() {
-  const { decks, loading, error, createDeck, deleteDeck } = useDeckList();
+  const { decks, loading, error, createDeck, deleteDeck, resetDeckProgress } = useDeckList();
 
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [creating, setCreating] = useState(false);
@@ -16,6 +17,10 @@ export function DeckList() {
   const [deletingDeck, setDeletingDeck] = useState<DeckWithCount | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
   const [deleteError, setDeleteError] = useState<string | null>(null);
+
+  const [resettingDeck, setResettingDeck] = useState<DeckWithCount | null>(null);
+  const [isResetting, setIsResetting] = useState(false);
+  const [resetError, setResetError] = useState<string | null>(null);
 
   async function handleCreate(name: string) {
     setCreating(true);
@@ -44,6 +49,20 @@ export function DeckList() {
     }
   }
 
+  async function handleReset() {
+    if (!resettingDeck) return;
+    setIsResetting(true);
+    setResetError(null);
+    try {
+      await resetDeckProgress(resettingDeck.id);
+      setResettingDeck(null);
+    } catch (err) {
+      setResetError(err instanceof Error ? err.message : "Nie udało się zresetować postępów");
+    } finally {
+      setIsResetting(false);
+    }
+  }
+
   return (
     <div className="mt-8 w-full max-w-5xl">
       <div className="mb-4">
@@ -63,7 +82,7 @@ export function DeckList() {
             <span className="mt-2 text-sm text-muted-foreground">Nowy zestaw</span>
           </button>
           {decks.map((deck) => (
-            <DeckCard key={deck.id} deck={deck} onDeleteRequest={setDeletingDeck} />
+            <DeckCard key={deck.id} deck={deck} onDeleteRequest={setDeletingDeck} onResetProgressRequest={setResettingDeck} />
           ))}
         </div>
       )}
@@ -83,6 +102,16 @@ export function DeckList() {
         onCancel={() => { setDeletingDeck(null); setDeleteError(null); }}
         isDeleting={isDeleting}
         error={deleteError}
+      />
+
+      <ResetProgressModal
+        isOpen={resettingDeck !== null}
+        deckName={resettingDeck?.name ?? ""}
+        cardCount={resettingDeck?.card_count ?? 0}
+        onConfirm={() => void handleReset()}
+        onCancel={() => { setResettingDeck(null); setResetError(null); }}
+        isResetting={isResetting}
+        error={resetError}
       />
     </div>
   );
