@@ -44,6 +44,7 @@ export type Database = {
           id: string
           lapses: number
           last_review: string | null
+          learning_steps: number
           reps: number
           scheduled_days: number
           stability: number
@@ -60,6 +61,7 @@ export type Database = {
           id?: string
           lapses?: number
           last_review?: string | null
+          learning_steps?: number
           reps?: number
           scheduled_days?: number
           stability?: number
@@ -76,6 +78,7 @@ export type Database = {
           id?: string
           lapses?: number
           last_review?: string | null
+          learning_steps?: number
           reps?: number
           scheduled_days?: number
           stability?: number
@@ -157,6 +160,65 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      review_logs: {
+        Row: {
+          card_id: string
+          created_at: string
+          difficulty: number
+          due: string
+          elapsed_days: number
+          id: string
+          last_elapsed_days: number
+          learning_steps: number
+          rating: number
+          review: string
+          scheduled_days: number
+          stability: number
+          state: number
+          user_id: string
+        }
+        Insert: {
+          card_id: string
+          created_at?: string
+          difficulty: number
+          due: string
+          elapsed_days: number
+          id?: string
+          last_elapsed_days: number
+          learning_steps: number
+          rating: number
+          review: string
+          scheduled_days: number
+          stability: number
+          state: number
+          user_id: string
+        }
+        Update: {
+          card_id?: string
+          created_at?: string
+          difficulty?: number
+          due?: string
+          elapsed_days?: number
+          id?: string
+          last_elapsed_days?: number
+          learning_steps?: number
+          rating?: number
+          review?: string
+          scheduled_days?: number
+          stability?: number
+          state?: number
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "review_logs_card_id_fkey"
+            columns: ["card_id"]
+            isOneToOne: false
+            referencedRelation: "cards"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {
@@ -299,3 +361,4 @@ export const Constants = {
     Enums: {},
   },
 } as const
+

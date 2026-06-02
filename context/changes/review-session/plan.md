@@ -315,10 +315,10 @@ No automated test runner exists in the repo yet (introduced in Module 3), so ver
 
 #### Automated
 
-- [ ] 1.1 Migration applies cleanly to the local stack
-- [ ] 1.2 `gen-types` adds `learning_steps` + `review_logs` to database.types.ts
-- [ ] 1.3 Type checking passes: `npx astro check`
-- [ ] 1.4 Linting passes: `npm run lint`
+- [x] 1.1 Migration applies cleanly to the local stack
+- [x] 1.2 `gen-types` adds `learning_steps` + `review_logs` to database.types.ts
+- [x] 1.3 Type checking passes: `npx astro check`
+- [x] 1.4 Linting passes: `npm run lint`
 
 #### Manual
 
