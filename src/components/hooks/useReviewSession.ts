@@ -26,7 +26,7 @@ export function useReviewSession(deckId: string) {
         const res = await fetch(`/api/decks/${deckId}/review?due_before=${encodeURIComponent(dueBefore)}`);
         if (!res.ok) {
           const d = (await res.json()) as { error?: string };
-          throw new Error(d.error ?? "Failed to load due cards");
+          throw new Error(d.error ?? "Nie udało się załadować kart");
         }
         const data = (await res.json()) as { cards: DueCard[] };
         if (!cancelled) {
@@ -34,7 +34,7 @@ export function useReviewSession(deckId: string) {
           setTotalInitial(data.cards.length);
         }
       } catch (err) {
-        if (!cancelled) setError(err instanceof Error ? err.message : "Failed to load due cards");
+        if (!cancelled) setError(err instanceof Error ? err.message : "Nie udało się załadować kart");
       } finally {
         if (!cancelled) setLoading(false);
       }
@@ -64,7 +64,7 @@ export function useReviewSession(deckId: string) {
         });
         if (!res.ok) {
           const d = (await res.json()) as { error?: string };
-          throw new Error(d.error ?? "Failed to submit rating");
+          throw new Error(d.error ?? "Nie udało się przesłać oceny");
         }
         const data = (await res.json()) as { sr: RatingResult };
 
@@ -83,7 +83,7 @@ export function useReviewSession(deckId: string) {
         }
         setShowAnswer(false);
       } catch (err) {
-        setError(err instanceof Error ? err.message : "Failed to submit rating");
+        setError(err instanceof Error ? err.message : "Nie udało się przesłać oceny");
       } finally {
         setSubmitting(false);
       }

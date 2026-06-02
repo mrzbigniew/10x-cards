@@ -476,21 +476,21 @@ Import `cn` from `@/lib/utils`.
 
 #### Automated
 
-- [x] 3.1 Type checking passes: `npm run typecheck`
-- [x] 3.2 `POST /api/decks/[id]/reset-progress` returns 200 for valid deck
+- [x] 3.1 Type checking passes: `npm run typecheck` — 64dcdab
+- [x] 3.2 `POST /api/decks/[id]/reset-progress` returns 200 for valid deck — 64dcdab
 
 #### Manual
 
-- [x] 3.3 "Resetuj postępy" visible in each deck dropdown (between "Edytuj" and "Usuń")
-- [x] 3.4 Confirmation modal shows correct card count and deck name
-- [x] 3.5 Confirming reset makes all deck cards due in the next review session
-- [x] 3.6 No English strings visible in dropdown or modal
+- [x] 3.3 "Resetuj postępy" visible in each deck dropdown (between "Edytuj" and "Usuń") — 64dcdab
+- [x] 3.4 Confirmation modal shows correct card count and deck name — 64dcdab
+- [x] 3.5 Confirming reset makes all deck cards due in the next review session — 64dcdab
+- [x] 3.6 No English strings visible in dropdown or modal — 64dcdab
 
 ### Phase 4: Flip-card review + Polish labels
 
 #### Automated
 
-- [ ] 4.1 Type checking passes: `npm run typecheck`
+- [x] 4.1 Type checking passes: `npm run typecheck`
 
 #### Manual
 

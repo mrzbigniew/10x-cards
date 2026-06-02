@@ -1,5 +1,7 @@
+import { useState, useEffect } from "react";
 import { useReviewSession } from "@/components/hooks/useReviewSession";
 import { RatingButtons } from "@/components/review/RatingButtons";
+import { cn } from "@/lib/utils";
 
 interface Props {
   deckId: string;
@@ -20,6 +22,10 @@ export function ReviewSession({ deckId }: Props) {
     reveal,
     rate,
   } = useReviewSession(deckId);
+
+  const [flipped, setFlipped] = useState(false);
+
+  useEffect(() => { setFlipped(false); }, [current?.id]);
 
   if (loading) {
     return <p className="text-sm text-muted-foreground">Ładowanie…</p>;
@@ -73,24 +79,29 @@ export function ReviewSession({ deckId }: Props) {
         </a>
         <span>Pozostało: {remaining + 1}</span>
       </div>
-      <div className="rounded-xl border border-border bg-card p-6 backdrop-blur-sm">
-        <p className="text-lg font-semibold text-foreground">{current.front}</p>
-        {showAnswer ? (
-          <>
+      <div className="[perspective:1200px]">
+        <div
+          className={cn("flip-card-inner", flipped && "flipped")}
+          onTransitionEnd={() => { if (flipped) reveal(); }}
+        >
+          {/* Front face */}
+          <div
+            className="flip-card-face rounded-xl border border-border bg-card p-6 backdrop-blur-sm cursor-pointer"
+            onClick={() => { if (!showAnswer && !submitting) setFlipped(true); }}
+          >
+            <p className="text-lg font-semibold text-foreground">{current.front}</p>
+            <p className="mt-4 text-xs text-muted-foreground">Kliknij, aby odsłonić odpowiedź</p>
+          </div>
+          {/* Back face */}
+          <div className="flip-card-face flip-card-back rounded-xl border border-border bg-card p-6 backdrop-blur-sm">
+            <p className="text-lg font-semibold text-foreground">{current.front}</p>
             <hr className="my-4 border-border" />
             <p className="text-base text-foreground/80">{current.back}</p>
             <div className="mt-6">
-              <RatingButtons onRate={rate} disabled={submitting} />
+              <RatingButtons onRate={rate} disabled={submitting || !showAnswer} />
             </div>
-          </>
-        ) : (
-          <button
-            onClick={reveal}
-            className="mt-4 rounded-lg border border-purple-500/40 bg-purple-600/20 px-4 py-2 text-sm font-medium text-purple-600 transition-colors hover:bg-purple-600/30 dark:text-purple-300"
-          >
-            Pokaż odpowiedź
-          </button>
-        )}
+          </div>
+        </div>
       </div>
     </div>
   );
