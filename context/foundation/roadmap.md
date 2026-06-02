@@ -37,6 +37,8 @@ top_blocker: time
 | S-03  | review-session          | run a per-deck review, rate each due card (SR library scale), persist SR state          | F-01, S-01, S-02  | US-03, FR-014, FR-015, FR-016                     | done     |
 | S-06  | ui-polish               | use a branded shared header, a redesigned dashboard intro, bulk-reset a deck's progress, and a flip-card review | F-01, S-02, S-03, S-04 | FR-011, FR-015, UX refinement | done     |
 | F-02  | i18n-foundation         | (foundation) i18n infrastructure in place, enabling localized UI slices       | —                 | —                                                 | proposed |
+| S-07  | modal-generate-flashcards | user can open flashcard generation in a modal without leaving the page       | S-01, S-06        | UX refinement                                     | proposed |
+| S-08  | modal-review-session    | user can run a review session in a modal without leaving the deck list        | S-03, S-06        | UX refinement                                     | proposed |
 
 ## Streams
 
@@ -174,6 +176,30 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Risk:** the bulk reset is irreversible and operates on a whole deck, so an accidental trigger destroys more SR progress than the single-card reset — mitigated by the confirmation dialog (chosen over one-click) showing the affected card count. The flip animation is the only visually novel piece; if the 3D transform proves fiddly across viewports, fall back to a simpler reveal transition without blocking the rest of the slice.
 - **Status:** done
 
+### S-07: Generate flashcards in modal
+
+- **Outcome:** user can open the flashcard generation flow in a modal dialog, paste text, review AI proposals, and save to a deck without navigating away from the current page
+- **Change ID:** modal-generate-flashcards
+- **PRD refs:** UX refinement
+- **Prerequisites:** S-01, S-06
+- **Parallel with:** S-08
+- **Blockers:** —
+- **Unknowns:** —
+- **Risk:** moving a multi-step generation flow into a modal may hit height/scroll constraints on smaller viewports; fall back to a full-page sheet/drawer if modal becomes too cramped.
+- **Status:** proposed
+
+### S-08: Review session in modal
+
+- **Outcome:** user can start and complete a training/review session in a modal dialog, rating each due card and seeing the summary without leaving the deck list page
+- **Change ID:** modal-review-session
+- **PRD refs:** UX refinement
+- **Prerequisites:** S-03, S-06
+- **Parallel with:** S-07
+- **Blockers:** —
+- **Unknowns:** —
+- **Risk:** embedding the full review loop (question → flip → rate) inside a modal may introduce focus-trap and keyboard navigation issues; verify keyboard-only navigation before shipping.
+- **Status:** proposed
+
 ## Backlog Handoff
 
 | Roadmap ID | Change ID               | Suggested issue title                                                       | Ready for `/10x-plan` | Notes                         |
@@ -186,6 +212,8 @@ Foundations below assume these are present and do NOT re-scaffold them.
 | S-03       | review-session          | Review session: SR-scheduled cards, rating loop, state persistence          | no                    | Needs S-01 + S-02 done        |
 | S-06       | ui-polish               | UI polish: branded header + dark/light toggle, dashboard intro, per-deck bulk reset, flip-card review | no                    | Needs S-02 + S-03 + S-04 done |
 | F-02       | i18n-foundation         | Set up i18n infrastructure: library, locale files, language switcher        | yes                   | Run /10x-plan i18n-foundation |
+| S-07       | modal-generate-flashcards | Move flashcard generation flow into a modal dialog                        | yes                   | Run /10x-plan modal-generate-flashcards |
+| S-08       | modal-review-session    | Move training/review session into a modal dialog                            | yes                   | Run /10x-plan modal-review-session |
 
 ## Open Roadmap Questions
 
