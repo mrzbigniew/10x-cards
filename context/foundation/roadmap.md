@@ -34,7 +34,7 @@ top_blocker: time
 | S-02  | deck-management         | view deck list, create/rename a deck, delete with confirmation, save to existing deck   | F-01              | US-01, US-02, FR-009, FR-013, FR-017              | done     |
 | S-05  | password-reset          | reset a forgotten password via email link and recover all decks + SR state              | F-01              | US-04, FR-004                                     | done     |
 | S-04  | manual-card-crud        | add a card manually, edit any card (with optional SR reset), delete any card            | F-01, S-02        | US-02, US-05, FR-010, FR-011, FR-012              | done     |
-| S-03  | review-session          | run a per-deck review, rate each due card (SR library scale), persist SR state          | F-01, S-01, S-02  | US-03, FR-014, FR-015, FR-016                     | proposed |
+| S-03  | review-session          | run a per-deck review, rate each due card (SR library scale), persist SR state          | F-01, S-01, S-02  | US-03, FR-014, FR-015, FR-016                     | done     |
 | S-06  | ui-polish               | use a branded shared header, a redesigned dashboard intro, bulk-reset a deck's progress, and a flip-card review | F-01, S-02, S-03, S-04 | FR-011, FR-015, UX refinement | proposed |
 | S-07  | polish-localization     | read every user-facing string in the app in Polish                                       | F-01, S-02, S-03, S-04, S-06 | NFR (Polish-only UI)                              | proposed |
 
@@ -140,7 +140,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Unknowns:**
   - Daily-load cap (Open Question 7) — show all due cards or cap at N per session? Owner: implementation. Block: no (ship uncapped first; add cap in v2 if needed).
 - **Risk:** SR algorithm correctness is a guardrail (NFR): a bug in "due ≤ today" logic fails silently and the student doesn't notice until cards are meaningfully delayed or lost — use the chosen library's own test suite to validate due-date computation before integrating.
-- **Status:** proposed
+- **Status:** done
 
 ### S-06: UI polish
 
@@ -231,3 +231,4 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **S-02: user can view all their decks on a list page, create a new named deck independently, rename any deck, delete a deck with a typed-name hard confirmation (no undo), and choose an existing deck as the target when saving generation results (completing the FR-009 existing-deck path started in S-01).** — Archived 2026-05-30 → `context/archive/2026-05-30-deck-management/`. Lesson: —.
 - **S-04: user can add a flashcard manually (non-empty question + answer) to any of their decks, edit any card's question or answer with an unchecked-by-default "reset SR state" checkbox for heavy rephrasing, and delete any card with no undo — the deck remains even if its last card is deleted.** — Archived 2026-06-01 → `context/archive/2026-06-01-manual-card-crud/`. Lesson: —.
 - **S-05: user can request a password reset, receive an email link, click it once within 24 h, set a new password, and sign in to find all existing decks and SR state intact; submitting a non-existent email returns the same neutral message as a valid one.** — Archived 2026-06-02 → `context/archive/2026-06-01-password-reset/`. Lesson: —.
+- **S-03: user can navigate to a deck, start a review session for cards due today (or overdue), see each card's question → reveal answer → rate recall using the SR library's native scale (e.g. Again / Hard / Good / Easy), have each rating persisted immediately after it is given, and reach a session-end summary; if no cards are due, a "0 due" screen explains the situation.** — Archived 2026-06-02 → `context/archive/2026-06-02-review-session/`. Lesson: —.
