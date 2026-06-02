@@ -322,8 +322,8 @@ No automated test runner exists in the repo yet (introduced in Module 3), so ver
 
 #### Manual
 
-- [ ] 1.5 `review_logs` RLS rejects non-owner insert, accepts owner
-- [ ] 1.6 Existing `card_sr_state` rows show `learning_steps = 0`
+- [x] 1.5 `review_logs` RLS rejects non-owner insert, accepts owner
+- [x] 1.6 Existing `card_sr_state` rows show `learning_steps = 0`
 
 ### Phase 2: SR Service Layer
 
@@ -341,26 +341,26 @@ No automated test runner exists in the repo yet (introduced in Module 3), so ver
 
 #### Automated
 
-- [x] 3.1 Type checking passes: `npx astro check`
-- [x] 3.2 Linting passes: `npm run lint`
+- [x] 3.1 Type checking passes: `npx astro check` — ac58ff5
+- [x] 3.2 Linting passes: `npm run lint` — ac58ff5
 
 #### Manual
 
-- [x] 3.3 `GET review` returns due-only cards; `[]` when none; `400` bad/missing `due_before`; `401` unauth
-- [x] 3.4 `POST` rating updates state and returns fresh SR; `rating:0` → `400`
+- [x] 3.3 `GET review` returns due-only cards; `[]` when none; `400` bad/missing `due_before`; `401` unauth — ac58ff5
+- [x] 3.4 `POST` rating updates state and returns fresh SR; `rating:0` → `400` — ac58ff5
 
 ### Phase 4: Review-Session UI
 
 #### Automated
 
-- [ ] 4.1 Type checking passes: `npx astro check`
-- [ ] 4.2 Linting passes: `npm run lint`
-- [ ] 4.3 Production build succeeds: `npm run build`
+- [x] 4.1 Type checking passes: `npx astro check`
+- [x] 4.2 Linting passes: `npm run lint`
+- [x] 4.3 Production build succeeds: `npm run build`
 
 #### Manual
 
-- [ ] 4.4 Full reveal→rate→persist loop works; each rating writes `card_sr_state` + `review_logs`
-- [ ] 4.5 Again re-queues within session; Hard/Good/Easy removes; summary accurate
-- [ ] 4.6 "0 due" screen shows when nothing due
-- [ ] 4.7 Review CTAs appear and navigate from deck page and dashboard deck card
-- [ ] 4.8 No regressions in deck/card CRUD
+- [x] 4.4 Full reveal→rate→persist loop works; each rating writes `card_sr_state` + `review_logs`
+- [x] 4.5 Again re-queues within session; Hard/Good/Easy removes; summary accurate
+- [x] 4.6 "0 due" screen shows when nothing due
+- [x] 4.7 Review CTAs appear and navigate from deck page and dashboard deck card
+- [x] 4.8 No regressions in deck/card CRUD
