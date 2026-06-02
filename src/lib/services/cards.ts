@@ -1,4 +1,6 @@
+import { createEmptyCard } from "ts-fsrs";
 import type { createClient } from "@/lib/supabase";
+import { fsrsCardToDbUpdate } from "@/lib/services/sr";
 
 type SupabaseClientType = NonNullable<ReturnType<typeof createClient>>;
 
@@ -50,17 +52,7 @@ export async function addCard(
 export async function resetCardSRState(supabase: SupabaseClientType, userId: string, cardId: string): Promise<void> {
   const { error } = await supabase
     .from("card_sr_state")
-    .update({
-      state: 0,
-      due: new Date().toISOString(),
-      stability: 0,
-      difficulty: 0,
-      elapsed_days: 0,
-      scheduled_days: 0,
-      reps: 0,
-      lapses: 0,
-      last_review: null,
-    })
+    .update(fsrsCardToDbUpdate(createEmptyCard(new Date())))
     .eq("card_id", cardId)
     .eq("user_id", userId);
 
