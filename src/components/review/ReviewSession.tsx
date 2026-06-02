@@ -16,6 +16,7 @@ export function ReviewSession({ deckId }: Props) {
     totalInitial,
     finished,
     showAnswer,
+    submitting,
     reveal,
     rate,
   } = useReviewSession(deckId);
@@ -81,7 +82,7 @@ export function ReviewSession({ deckId }: Props) {
             <hr className="my-4 border-white/10" />
             <p className="text-base text-white/80">{current.back}</p>
             <div className="mt-6">
-              <RatingButtons onRate={rate} />
+              <RatingButtons onRate={rate} disabled={submitting} />
             </div>
           </>
         ) : (

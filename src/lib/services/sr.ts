@@ -77,6 +77,7 @@ export async function loadDueCards(
     .select("*, cards!inner(id, front, back)")
     .eq("user_id", userId)
     .lte("due", dueBefore)
+    // .eq on the embed acts as a JOIN condition — filters to this deck only (PostgREST embedded filter)
     .eq("cards.deck_id", deckId)
     .order("due");
 
@@ -122,7 +123,8 @@ export async function applyRating(
   if (updateError) throw new Error(updateError.message);
 
   // Best-effort: log insert failure is non-fatal — SR state is already persisted
-  await supabase.from("review_logs").insert(reviewLogToDbInsert(result.log, cardId, userId));
+  const { error: logError } = await supabase.from("review_logs").insert(reviewLogToDbInsert(result.log, cardId, userId));
+  if (logError) console.error("[review_logs] insert failed:", logError.message);
 
   return update;
 }

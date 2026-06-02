@@ -37,7 +37,7 @@
   - Tradeoff: Doesn't fix the unmount risk; leaves dual state in place. Only cleans up the dead destructure.
   - Confidence: MEDIUM — still two separate booleans; race survives.
   - Blind spot: The unmount case is low-probability but not impossible.
-- **Decision**: PENDING
+- **Decision**: FIXED via Fix A — removed local `pending` from RatingButtons, added `disabled` prop, wired `submitting` from ReviewSession.
 
 ### F2 — cards.ts has CRLF line endings on disk (autocrlf artifact)
 
@@ -47,7 +47,7 @@
 - **Location**: src/lib/services/cards.ts (all lines)
 - **Detail**: The file is stored correctly with LF in git (confirmed via `git show 4316a0a:src/lib/services/cards.ts`), but the working-copy version has CRLF endings — introduced when git stash pop triggered core.autocrlf during Phase 3 verification. Prettier reports 89 "Delete ␍" errors when linting cards.ts directly. `npx astro check` and `npm run build` are unaffected; only the prettier/eslint pass is broken.
 - **Fix**: `npx eslint --fix src/lib/services/cards.ts` — strips CRLF → LF. No content change since git-stored version is already correct.
-- **Decision**: PENDING
+- **Decision**: FIXED — ran eslint --fix; no remaining lint errors.
 
 ### F3 — Silent review_logs insert failure has no server-side observability
 
@@ -57,7 +57,7 @@
 - **Location**: src/lib/services/sr.ts:125
 - **Detail**: Best-effort log insert is intentional per plan ("log failure non-fatal"). But the error is completely swallowed — a systematic failure (RLS misconfiguration, schema mismatch) would be invisible until someone notices missing review history.
 - **Fix**: `const { error: logError } = await supabase.from("review_logs").insert(...); if (logError) console.error("[review_logs] insert failed:", logError.message);`
-- **Decision**: PENDING
+- **Decision**: FIXED — added console.error guard after review_logs insert.
 
 ### F4 — Dead `submitting` destructure in ReviewSession.tsx
 
@@ -67,7 +67,7 @@
 - **Location**: src/components/review/ReviewSession.tsx:20
 - **Detail**: `submitting` is destructured from useReviewSession but never referenced in JSX. If F1 is fixed via Fix A, this variable becomes load-bearing and the dead code is resolved automatically. If F1 is fixed via Fix B, `submitting` should be removed from the destructure.
 - **Fix**: Resolve via F1 Fix A (wire submitting → RatingButtons disabled), or drop from the destructure if Fix B is chosen.
-- **Decision**: PENDING
+- **Decision**: FIXED — resolved automatically by F1 Fix A.
 
 ### F5 — PostgREST cross-deck filter has no explanatory comment
 
@@ -77,4 +77,4 @@
 - **Location**: src/lib/services/sr.ts:80
 - **Detail**: `.eq("cards.deck_id", deckId)` filters the embedded resource — correct PostgREST INNER JOIN filter, confirmed working during manual verification. A future reader or Supabase client upgrade might not know this filter is load-bearing for deck scoping. The user_id check prevents cross-user leakage, but cross-deck within the same user is only blocked here.
 - **Fix**: Add comment: `// .eq on the embed acts as a JOIN condition — filters to this deck only (PostgREST embedded filter).`
-- **Decision**: PENDING
+- **Decision**: FIXED — comment added at sr.ts:80.
