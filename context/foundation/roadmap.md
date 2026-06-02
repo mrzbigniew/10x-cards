@@ -35,6 +35,8 @@ top_blocker: time
 | S-05  | password-reset          | reset a forgotten password via email link and recover all decks + SR state              | F-01              | US-04, FR-004                                     | done     |
 | S-04  | manual-card-crud        | add a card manually, edit any card (with optional SR reset), delete any card            | F-01, S-02        | US-02, US-05, FR-010, FR-011, FR-012              | done     |
 | S-03  | review-session          | run a per-deck review, rate each due card (SR library scale), persist SR state          | F-01, S-01, S-02  | US-03, FR-014, FR-015, FR-016                     | proposed |
+| S-06  | ui-polish               | use a branded shared header, a redesigned dashboard intro, bulk-reset a deck's progress, and a flip-card review | F-01, S-02, S-03, S-04 | FR-011, FR-015, UX refinement | proposed |
+| S-07  | polish-localization     | read every user-facing string in the app in Polish                                       | F-01, S-02, S-03, S-04, S-06 | NFR (Polish-only UI)                              | proposed |
 
 ## Streams
 
@@ -45,6 +47,7 @@ Navigation aid — groups items that share a Prerequisites chain. Canonical orde
 | A      | Core generation loop     | `F-01` → `S-01` → `S-03` | North-star path; S-03 joins Stream B at S-02 (requires S-02 complete before S-03 can run).       |
 | B      | Deck and card management | `S-02` → `S-04`          | Requires F-01 (Stream A head); provides the deck context that both S-03 (Stream A) and S-04 need. |
 | C      | Auth completeness        | `S-05`                   | Requires F-01 (Stream A head); independent of A and B; runs in parallel with S-01 and S-02.      |
+| D      | UX polish & localization | `S-06` → `S-07`          | Cross-cutting refinement; requires the deck (S-02/S-04) and review (S-03) surfaces to already exist before they can be polished. S-07 translates last so S-06's new UI strings are localized in the same pass. |
 
 ## Baseline
 
@@ -139,6 +142,42 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Risk:** SR algorithm correctness is a guardrail (NFR): a bug in "due ≤ today" logic fails silently and the student doesn't notice until cards are meaningfully delayed or lost — use the chosen library's own test suite to validate due-date computation before integrating.
 - **Status:** proposed
 
+### S-06: UI polish
+
+- **Outcome:** across the whole app the user sees a single branded header — a clickable "10xCards" mark (icon + wordmark) that links to the dashboard, with the old standalone "Dashboard" link gone, the "Generuj fiszki" + "Wyloguj" actions kept but enlarged, and a dark/light mode toggle switch; on the dashboard the old "Dashboard" welcome card is replaced by a short intro paragraph followed by a primary "Nowy zestaw" button; each deck offers a "Resetuj postępy" action (behind a confirmation dialog) that resets the SR state of every card in that deck; and the review card flips with a 3D animation on click to reveal its answer (no separate "Show answer" button).
+- **Change ID:** ui-polish
+- **PRD refs:** FR-011 (SR-state reset, here generalized to a per-deck bulk reset), FR-015 (reveal-answer step of the review loop, re-skinned as a flip), plus general UX refinement with no new FR.
+- **Prerequisites:** F-01, S-02, S-03, S-04 (this slice polishes surfaces those slices created; it adds no new domain capability).
+- **Parallel with:** S-05 (independent of the auth-completeness track).
+- **Unlocks:** S-07 (localization translates this slice's new UI strings in the same pass).
+- **Scope detail (the four changes):**
+  1. **Shared header** — rework the existing `Topbar.astro` so every page renders the same header. Add a clickable brand (`lucide` icon + "10xCards") linking to `/dashboard`; remove the standalone "Dashboard" nav link; keep "Generuj fiszki" and the sign-out action but make them visually larger/more prominent.
+  2. **Dashboard intro** — on `dashboard.astro`, remove the "Dashboard" welcome card/heading; replace with a short intro text block and, directly below it, a primary "Nowy zestaw" button that opens the existing new-deck flow.
+  3. **Per-deck bulk reset** — add a "Resetuj postępy" item to each deck's menu (`DeckRow.tsx`) that resets SR progress for all cards in the deck. Guard with a confirmation dialog ("Zresetować postępy dla N fiszek? Nie można cofnąć"). Reuse `resetCardSRState()` (`src/lib/services/cards.ts`) via a new batch endpoint (e.g. `POST /api/decks/[id]/reset-progress`).
+  4. **Flip-card review** — give the review card a 3D flip animation; clicking the card reveals the answer (replacing the "Show answer" button). Rating buttons appear after the flip.
+  5. **Dark/light mode toggle** — add a toggle switch (sun/moon icon) to the shared header that switches between dark and light themes. Persist the preference to `localStorage`; default to the OS-level `prefers-color-scheme`. Use Tailwind's `dark:` variant strategy (class-based, set on `<html>`).
+- **Blockers:** —
+- **Unknowns:**
+  - Bulk reset implementation shape — loop `resetCardSRState` per card vs a single batched DB update. Owner: implementation. Block: no (correctness identical; pick the simpler path first).
+- **Risk:** the bulk reset is irreversible and operates on a whole deck, so an accidental trigger destroys more SR progress than the single-card reset — mitigated by the confirmation dialog (chosen over one-click) showing the affected card count. The flip animation is the only visually novel piece; if the 3D transform proves fiddly across viewports, fall back to a simpler reveal transition without blocking the rest of the slice.
+- **Status:** proposed
+
+### S-07: Polish localization
+
+- **Outcome:** every user-facing string in the app reads in Polish — auth pages (signin/signup), the review session ("Show answer", "Again/Hard/Good/Easy", progress, session summary), deck detail, card-row actions, modals, empty states, and toasts — with no remaining English text on any surface the student sees. All strings are extracted to a single centralized translations file; components reference translation keys rather than inline string literals.
+- **Change ID:** polish-localization
+- **PRD refs:** NFR (Polish-only UI — see Parked "Internationalization").
+- **Prerequisites:** F-01, S-02, S-03, S-04, S-06 (translates last so the new header, dashboard-intro, bulk-reset, and flip-card strings introduced in S-06 are localized in the same pass, avoiding a second translation sweep).
+- **Parallel with:** S-05 (independent of the auth-completeness track).
+- **Scope detail (the two changes):**
+  1. **Centralized translations file** — create `src/lib/i18n/pl.ts` (or equivalent) that exports a flat or nested key→string map covering every user-facing string in the app. No runtime i18n framework; a typed constant object is sufficient.
+  2. **Full Polish UI** — replace every inline English string across all pages and components with a reference to the corresponding key from the translations file. Sweep every surface systematically (auth pages, dashboard, deck list, deck detail, card rows, review session, modals, toasts, empty states, error messages).
+- **Blockers:** —
+- **Unknowns:**
+  - Flat vs. nested key structure — a flat object (`"deck.delete.confirm"`) is easiest to grep and refactor; a nested object is more readable. Owner: implementation. Block: no (either works; decide at implementation start).
+- **Risk:** the main risk is missing a string on a low-traffic surface (an error toast, an empty state) — mitigated by sweeping every page and component systematically rather than spot-fixing visible screens. A secondary risk is key naming inconsistency if multiple people touch the file; establish a simple prefix convention (e.g. `auth.*`, `deck.*`, `card.*`, `review.*`) at the start.
+- **Status:** proposed
+
 ## Backlog Handoff
 
 | Roadmap ID | Change ID               | Suggested issue title                                                       | Ready for `/10x-plan` | Notes                         |
@@ -149,6 +188,8 @@ Foundations below assume these are present and do NOT re-scaffold them.
 | S-05       | password-reset          | Password reset: forgot-password + email link + new-password pages           | no                    | Needs F-01 done               |
 | S-04       | manual-card-crud        | Manual flashcard CRUD: add / edit (SR-reset option) / delete                | no                    | Needs S-02 done               |
 | S-03       | review-session          | Review session: SR-scheduled cards, rating loop, state persistence          | no                    | Needs S-01 + S-02 done        |
+| S-06       | ui-polish               | UI polish: branded header + dark/light toggle, dashboard intro, per-deck bulk reset, flip-card review | no                    | Needs S-02 + S-03 + S-04 done |
+| S-07       | polish-localization     | Polish localization: extract all strings to `src/lib/i18n/pl.ts` + translate every user-facing string to Polish | no                    | Needs S-06 done               |
 
 ## Open Roadmap Questions
 
