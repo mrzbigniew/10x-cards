@@ -76,12 +76,6 @@ export function DeckDetailHeader({ deck, onRename }: Props) {
           )}
           {renameError && <p className="mt-1 text-sm text-destructive">{renameError}</p>}
         </div>
-        <a
-          href={`/deck/${deck.id}/review`}
-          className="shrink-0 rounded-lg border border-purple-500/40 bg-purple-600/20 px-3 py-1.5 text-sm font-medium text-purple-600 transition-colors hover:bg-purple-600/30 dark:text-purple-300"
-        >
-          Powtórz
-        </a>
       </div>
     </div>
   );
