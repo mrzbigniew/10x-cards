@@ -9,7 +9,7 @@ interface Props {
 
 export function CardList({ cards, onUpdate, onDelete }: Props) {
   if (cards.length === 0) {
-    return <p className="text-sm text-white/40">No cards yet — add your first card.</p>;
+    return <p className="text-sm text-muted-foreground">Brak fiszek — dodaj pierwszą fiszkę.</p>;
   }
 
   return (

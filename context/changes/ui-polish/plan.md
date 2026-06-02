@@ -447,30 +447,30 @@ Import `cn` from `@/lib/utils`.
 
 #### Automated
 
-- [x] 1.1 Type checking passes: `npm run typecheck`
-- [x] 1.2 Dev server starts without errors
+- [x] 1.1 Type checking passes: `npm run typecheck` — cc0702f
+- [x] 1.2 Dev server starts without errors — cc0702f
 
 #### Manual
 
-- [x] 1.3 Dark/light toggle switches cosmic background and header surface
-- [x] 1.4 Theme preference persists after hard refresh
-- [x] 1.5 OS dark/light preference applied on first visit
-- [x] 1.6 "10xCards" brand mark appears with icon, links to `/dashboard`
-- [x] 1.7 "Dashboard" nav link absent; "Wyloguj" signs out correctly
-- [x] 1.8 No English strings visible in the header
+- [x] 1.3 Dark/light toggle switches cosmic background and header surface — cc0702f
+- [x] 1.4 Theme preference persists after hard refresh — cc0702f
+- [x] 1.5 OS dark/light preference applied on first visit — cc0702f
+- [x] 1.6 "10xCards" brand mark appears with icon, links to `/dashboard` — cc0702f
+- [x] 1.7 "Dashboard" nav link absent; "Wyloguj" signs out correctly — cc0702f
+- [x] 1.8 No English strings visible in the header — cc0702f
 
 ### Phase 2: Dashboard intro + "+" deck card
 
 #### Automated
 
-- [ ] 2.1 Type checking passes: `npm run typecheck`
+- [x] 2.1 Type checking passes: `npm run typecheck`
 
 #### Manual
 
-- [ ] 2.2 Welcome card gone; short Polish intro paragraph visible on dashboard
-- [ ] 2.3 "+" card appears as first tile in deck grid
-- [ ] 2.4 Clicking "+" opens create-deck modal; deck created successfully
-- [ ] 2.5 Deck grid card surfaces use CSS-variable classes in both light and dark mode
+- [x] 2.2 Welcome card gone; short Polish intro paragraph visible on dashboard
+- [x] 2.3 "+" card appears as first tile in deck grid
+- [x] 2.4 Clicking "+" opens create-deck modal; deck created successfully
+- [x] 2.5 Deck grid card surfaces use CSS-variable classes in both light and dark mode
 
 ### Phase 3: Per-deck bulk SR-state reset
 

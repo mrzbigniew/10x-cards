@@ -36,32 +36,28 @@ export function ProposalRow({ proposal, onUpdate }: Props) {
       className={cn(
         "rounded-lg border p-4 transition-colors",
         isAccepted && "border-green-500/40 bg-green-500/10",
-        isRejected && "border-white/5 bg-white/2 opacity-50",
-        !isAccepted && !isRejected && "border-white/10 bg-white/5",
+        isRejected && "border-border bg-card opacity-50",
+        !isAccepted && !isRejected && "border-border bg-card",
       )}
     >
       {isEditing ? (
         <div className="space-y-3">
           <div>
-            <label className="mb-1 block text-xs font-medium text-white/50">Pytanie (przód)</label>
+            <label className="mb-1 block text-xs font-medium text-muted-foreground">Pytanie (przód)</label>
             <textarea
-              className="w-full rounded border border-white/20 bg-white/10 px-3 py-2 text-sm text-white placeholder-white/30 focus:border-purple-400/50 focus:outline-none"
+              className="w-full rounded border border-border bg-input px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary/50 focus:outline-none"
               rows={2}
               value={editFront}
-              onChange={(e) => {
-                setEditFront(e.target.value);
-              }}
+              onChange={(e) => setEditFront(e.target.value)}
             />
           </div>
           <div>
-            <label className="mb-1 block text-xs font-medium text-white/50">Odpowiedź (tył)</label>
+            <label className="mb-1 block text-xs font-medium text-muted-foreground">Odpowiedź (tył)</label>
             <textarea
-              className="w-full rounded border border-white/20 bg-white/10 px-3 py-2 text-sm text-white placeholder-white/30 focus:border-purple-400/50 focus:outline-none"
+              className="w-full rounded border border-border bg-input px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary/50 focus:outline-none"
               rows={2}
               value={editBack}
-              onChange={(e) => {
-                setEditBack(e.target.value);
-              }}
+              onChange={(e) => setEditBack(e.target.value)}
             />
           </div>
           <div className="flex gap-2">
@@ -74,7 +70,7 @@ export function ProposalRow({ proposal, onUpdate }: Props) {
             </button>
             <button
               onClick={handleCancelEdit}
-              className="rounded border border-white/20 px-3 py-1 text-xs text-white/70 transition-colors hover:text-white"
+              className="rounded border border-border px-3 py-1 text-xs text-foreground/70 transition-colors hover:text-foreground"
             >
               Anuluj
             </button>
@@ -83,10 +79,10 @@ export function ProposalRow({ proposal, onUpdate }: Props) {
       ) : (
         <div className="flex items-start gap-4">
           <div className="min-w-0 flex-1 space-y-1">
-            <p className={cn("text-sm font-medium text-white", isRejected && "line-through")}>
+            <p className={cn("text-sm font-medium text-foreground", isRejected && "line-through")}>
               {proposal.editedFront ?? proposal.front}
             </p>
-            <p className={cn("text-sm text-white/60", isRejected && "line-through")}>
+            <p className={cn("text-sm text-muted-foreground", isRejected && "line-through")}>
               {proposal.editedBack ?? proposal.back}
             </p>
           </div>
@@ -94,9 +90,7 @@ export function ProposalRow({ proposal, onUpdate }: Props) {
             <div className="flex shrink-0 gap-1.5">
               {!isAccepted && (
                 <button
-                  onClick={() => {
-                    onUpdate(proposal.id, { status: "accepted" });
-                  }}
+                  onClick={() => onUpdate(proposal.id, { status: "accepted" })}
                   className="rounded bg-green-600/70 px-2.5 py-1 text-xs font-medium text-white transition-colors hover:bg-green-500"
                 >
                   Akceptuj
@@ -104,15 +98,13 @@ export function ProposalRow({ proposal, onUpdate }: Props) {
               )}
               <button
                 onClick={handleEdit}
-                className="rounded border border-white/20 px-2.5 py-1 text-xs text-white/70 transition-colors hover:text-white"
+                className="rounded border border-border px-2.5 py-1 text-xs text-foreground/70 transition-colors hover:text-foreground"
               >
                 Edytuj
               </button>
               <button
-                onClick={() => {
-                  onUpdate(proposal.id, { status: "rejected" });
-                }}
-                className="rounded border border-red-500/30 px-2.5 py-1 text-xs text-red-400/80 transition-colors hover:border-red-400 hover:text-red-300"
+                onClick={() => onUpdate(proposal.id, { status: "rejected" })}
+                className="rounded border border-destructive/30 px-2.5 py-1 text-xs text-destructive/80 transition-colors hover:border-destructive hover:text-destructive"
               >
                 Odrzuć
               </button>
@@ -120,10 +112,8 @@ export function ProposalRow({ proposal, onUpdate }: Props) {
           )}
           {isRejected && (
             <button
-              onClick={() => {
-                onUpdate(proposal.id, { status: "pending" });
-              }}
-              className="shrink-0 text-xs text-white/40 transition-colors hover:text-white/70"
+              onClick={() => onUpdate(proposal.id, { status: "pending" })}
+              className="shrink-0 text-xs text-muted-foreground transition-colors hover:text-foreground"
             >
               Cofnij
             </button>

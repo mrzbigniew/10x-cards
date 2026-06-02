@@ -48,24 +48,22 @@ export function SaveDeckForm({ text, proposals, isSaving, onSave }: Props) {
   }
 
   return (
-    <div className="rounded-xl border border-white/10 bg-white/5 p-6">
-      <h3 className="mb-4 text-base font-semibold text-white">Zapisz fiszki</h3>
+    <div className="rounded-xl border border-border bg-card p-6">
+      <h3 className="mb-4 text-base font-semibold text-foreground">Zapisz fiszki</h3>
 
       <div className="mb-4">
-        <label className="mb-1.5 block text-sm font-medium text-white/70">Zestaw</label>
+        <label className="mb-1.5 block text-sm font-medium text-foreground/70">Zestaw</label>
         <select
           value={selectedDeckId}
           onChange={(e) => {
             setSelectedDeckId(e.target.value);
             setConfirmSkip(false);
           }}
-          className="w-full rounded-lg border border-white/20 bg-gray-900 px-3 py-2 text-sm text-white focus:border-purple-400/50 focus:outline-none"
+          className="w-full rounded-lg border border-border bg-input px-3 py-2 text-sm text-foreground focus:border-primary/50 focus:outline-none"
         >
-          <option value="new" className="bg-gray-900 text-white">
-            Nowy zestaw
-          </option>
+          <option value="new">Nowy zestaw</option>
           {decks.map((d) => (
-            <option key={d.id} value={d.id} className="bg-gray-900 text-white">
+            <option key={d.id} value={d.id}>
               {d.name} ({d.card_count} fiszek)
             </option>
           ))}
@@ -74,7 +72,7 @@ export function SaveDeckForm({ text, proposals, isSaving, onSave }: Props) {
 
       {selectedDeckId === "new" && (
         <div className="mb-4">
-          <label className="mb-1.5 block text-sm font-medium text-white/70">Nazwa zestawu</label>
+          <label className="mb-1.5 block text-sm font-medium text-foreground/70">Nazwa zestawu</label>
           <input
             type="text"
             value={newDeckName}
@@ -83,24 +81,24 @@ export function SaveDeckForm({ text, proposals, isSaving, onSave }: Props) {
               setConfirmSkip(false);
             }}
             maxLength={200}
-            className="w-full rounded-lg border border-white/20 bg-white/10 px-3 py-2 text-sm text-white placeholder-white/30 focus:border-purple-400/50 focus:outline-none"
+            className="w-full rounded-lg border border-border bg-input px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary/50 focus:outline-none"
             placeholder="Nazwa zestawu"
           />
         </div>
       )}
 
-      <div className="mb-4 text-sm text-white/60">
+      <div className="mb-4 text-sm text-muted-foreground">
         {acceptedCount === 0 ? (
-          <span className="text-amber-400/80">Zaakceptuj przynajmniej jedną propozycję, aby zapisać.</span>
+          <span className="text-amber-500">Zaakceptuj przynajmniej jedną propozycję, aby zapisać.</span>
         ) : (
           <span>
-            Liczba fiszek do zapisania: <span className="font-medium text-white">{acceptedCount}</span>
+            Liczba fiszek do zapisania: <span className="font-medium text-foreground">{acceptedCount}</span>
           </span>
         )}
       </div>
 
       {confirmSkip && pendingCount > 0 && (
-        <div className="mb-4 rounded-lg border border-amber-500/30 bg-amber-500/10 px-4 py-3 text-sm text-amber-300">
+        <div className="mb-4 rounded-lg border border-amber-500/30 bg-amber-500/10 px-4 py-3 text-sm text-amber-600 dark:text-amber-300">
           {pendingCount} nierozpatrzona propozycja{pendingCount === 1 ? "" : `(${pendingCount})`} zostanie pominięta.
           Kliknij &bdquo;Zapisz zestaw&rdquo; ponownie, aby potwierdzić.
         </div>

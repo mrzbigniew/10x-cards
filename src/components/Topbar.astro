@@ -16,9 +16,6 @@ const { user } = Astro.locals;
   {
     user ? (
       <div class="flex items-center gap-3">
-        <a href="/generate" class="font-medium text-foreground/80 transition-colors hover:text-foreground">
-          Generuj fiszki
-        </a>
         <form method="POST" action="/api/auth/signout">
           <button type="submit" class="font-medium text-foreground/60 transition-colors hover:text-foreground">
             Wyloguj

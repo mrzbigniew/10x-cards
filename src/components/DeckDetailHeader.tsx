@@ -29,7 +29,7 @@ export function DeckDetailHeader({ deck, onRename }: Props) {
       await onRename(trimmed);
       setRenameError(null);
     } catch (err) {
-      setRenameError(err instanceof Error ? err.message : "Failed to rename deck");
+      setRenameError(err instanceof Error ? err.message : "Nie udało się zmienić nazwy zestawu");
     } finally {
       setEditing(false);
     }
@@ -45,9 +45,9 @@ export function DeckDetailHeader({ deck, onRename }: Props) {
     <div className="mb-6">
       <a
         href="/dashboard"
-        className="mb-4 inline-flex items-center gap-1 text-sm text-white/50 transition-colors hover:text-white/80"
+        className="mb-4 inline-flex items-center gap-1 text-sm text-muted-foreground transition-colors hover:text-foreground"
       >
-        ← Dashboard
+        ← Pulpit
       </a>
       <div className="mt-2 flex items-start justify-between gap-4">
         <div className="flex-1">
@@ -56,33 +56,31 @@ export function DeckDetailHeader({ deck, onRename }: Props) {
               ref={inputRef}
               type="text"
               value={draftName}
-              onChange={(e) => {
-                setDraftName(e.target.value);
-              }}
+              onChange={(e) => setDraftName(e.target.value)}
               onBlur={() => void commitRename()}
               onKeyDown={(e) => {
                 if (e.key === "Enter") void commitRename();
                 if (e.key === "Escape") cancelEdit();
               }}
               maxLength={200}
-              className="w-full rounded border border-purple-400/50 bg-white/10 px-3 py-1 text-2xl font-bold text-white focus:outline-none"
+              className="w-full rounded border border-primary/50 bg-input px-3 py-1 text-2xl font-bold text-foreground focus:outline-none"
             />
           ) : (
             <button
               onClick={startEdit}
-              title="Click to rename"
-              className="block text-left text-2xl font-bold text-white transition-colors hover:text-purple-300"
+              title="Kliknij, aby zmienić nazwę"
+              className="block text-left text-2xl font-bold text-foreground transition-colors hover:text-purple-500"
             >
               {deck.name}
             </button>
           )}
-          {renameError && <p className="mt-1 text-sm text-red-400">{renameError}</p>}
+          {renameError && <p className="mt-1 text-sm text-destructive">{renameError}</p>}
         </div>
         <a
           href={`/deck/${deck.id}/review`}
-          className="shrink-0 rounded-lg border border-purple-500/40 bg-purple-600/20 px-3 py-1.5 text-sm font-medium text-purple-300 transition-colors hover:bg-purple-600/30"
+          className="shrink-0 rounded-lg border border-purple-500/40 bg-purple-600/20 px-3 py-1.5 text-sm font-medium text-purple-600 transition-colors hover:bg-purple-600/30 dark:text-purple-300"
         >
-          Review
+          Powtórz
         </a>
       </div>
     </div>

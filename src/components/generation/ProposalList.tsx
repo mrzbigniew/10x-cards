@@ -16,8 +16,8 @@ export function ProposalList({ proposals, onUpdate, onBulkAccept, onBulkReject }
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <h2 className="text-lg font-semibold text-white">Propozycje fiszek</h2>
-          <span className="rounded-full bg-white/10 px-2.5 py-0.5 text-xs text-white/60">
+          <h2 className="text-lg font-semibold text-foreground">Propozycje fiszek</h2>
+          <span className="rounded-full bg-muted px-2.5 py-0.5 text-xs text-muted-foreground">
             {acceptedCount} zaakceptowanych · {pendingCount} oczekujących
           </span>
         </div>

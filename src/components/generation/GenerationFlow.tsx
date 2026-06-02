@@ -21,11 +21,11 @@ export function GenerationFlow() {
     return (
       <div className="py-16 text-center">
         <div className="mb-3 text-4xl">✓</div>
-        <h2 className="mb-2 text-xl font-semibold text-white">Zestaw zapisany!</h2>
-        <p className="mb-6 text-sm text-white/60">Twoje fiszki są gotowe do nauki.</p>
+        <h2 className="mb-2 text-xl font-semibold text-foreground">Zestaw zapisany!</h2>
+        <p className="mb-6 text-sm text-muted-foreground">Twoje fiszki są gotowe do nauki.</p>
         <a
           href="/dashboard"
-          className="text-sm text-purple-300 transition-colors hover:text-purple-100 hover:underline"
+          className="text-sm text-purple-500 transition-colors hover:text-purple-400 hover:underline"
         >
           Przejdź do panelu
         </a>

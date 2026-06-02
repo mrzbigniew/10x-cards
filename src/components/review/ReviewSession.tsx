@@ -22,20 +22,20 @@ export function ReviewSession({ deckId }: Props) {
   } = useReviewSession(deckId);
 
   if (loading) {
-    return <p className="text-sm text-white/40">Loading…</p>;
+    return <p className="text-sm text-muted-foreground">Ładowanie…</p>;
   }
 
   if (error) {
-    return <p className="text-sm text-red-400">{error}</p>;
+    return <p className="text-sm text-destructive">{error}</p>;
   }
 
   if (finished && totalInitial === 0) {
     return (
       <div className="text-center">
-        <p className="text-xl font-semibold text-white/80">No cards due today</p>
-        <p className="mt-2 text-sm text-white/50">All cards are scheduled for a future date.</p>
-        <a href={`/deck/${deckId}`} className="mt-6 inline-block text-sm text-purple-400 hover:text-purple-300">
-          ← Back to deck
+        <p className="text-xl font-semibold text-foreground/80">Brak kart na dziś</p>
+        <p className="mt-2 text-sm text-muted-foreground">Wszystkie karty zaplanowane są na przyszłe daty.</p>
+        <a href={`/deck/${deckId}`} className="mt-6 inline-block text-sm text-purple-500 hover:text-purple-400">
+          ← Powrót do zestawu
         </a>
       </div>
     );
@@ -44,19 +44,19 @@ export function ReviewSession({ deckId }: Props) {
   if (finished) {
     return (
       <div className="text-center">
-        <p className="text-xl font-semibold text-white">Session complete!</p>
-        <p className="mt-3 text-sm text-white/60">
-          Cards reviewed: <span className="text-white">{reviewedCount}</span>
+        <p className="text-xl font-semibold text-foreground">Sesja zakończona!</p>
+        <p className="mt-3 text-sm text-muted-foreground">
+          Przejrzane karty: <span className="font-medium text-foreground">{reviewedCount}</span>
         </p>
-        <p className="mt-1 text-sm text-white/60">
-          Again ratings: <span className="text-white">{againCount}</span>
+        <p className="mt-1 text-sm text-muted-foreground">
+          Oceny &ldquo;Raz jeszcze&rdquo;: <span className="font-medium text-foreground">{againCount}</span>
         </p>
         <div className="mt-6 flex justify-center gap-6">
-          <a href={`/deck/${deckId}`} className="text-sm text-purple-400 hover:text-purple-300">
-            ← Back to deck
+          <a href={`/deck/${deckId}`} className="text-sm text-purple-500 hover:text-purple-400">
+            ← Powrót do zestawu
           </a>
-          <a href="/dashboard" className="text-sm text-purple-400 hover:text-purple-300">
-            Dashboard
+          <a href="/dashboard" className="text-sm text-purple-500 hover:text-purple-400">
+            Pulpit
           </a>
         </div>
       </div>
@@ -67,20 +67,18 @@ export function ReviewSession({ deckId }: Props) {
 
   return (
     <div>
-      <div className="mb-4 flex items-center justify-between text-sm text-white/50">
-        <a href={`/deck/${deckId}`} className="hover:text-white/80">
-          ← Back
+      <div className="mb-4 flex items-center justify-between text-sm text-muted-foreground">
+        <a href={`/deck/${deckId}`} className="hover:text-foreground">
+          ← Wróć
         </a>
-        <span>
-          {remaining + 1} card{remaining + 1 !== 1 ? "s" : ""} remaining
-        </span>
+        <span>Pozostało: {remaining + 1}</span>
       </div>
-      <div className="rounded-xl border border-white/10 bg-white/5 p-6 backdrop-blur-sm">
-        <p className="text-lg font-semibold text-white">{current.front}</p>
+      <div className="rounded-xl border border-border bg-card p-6 backdrop-blur-sm">
+        <p className="text-lg font-semibold text-foreground">{current.front}</p>
         {showAnswer ? (
           <>
-            <hr className="my-4 border-white/10" />
-            <p className="text-base text-white/80">{current.back}</p>
+            <hr className="my-4 border-border" />
+            <p className="text-base text-foreground/80">{current.back}</p>
             <div className="mt-6">
               <RatingButtons onRate={rate} disabled={submitting} />
             </div>
@@ -88,9 +86,9 @@ export function ReviewSession({ deckId }: Props) {
         ) : (
           <button
             onClick={reveal}
-            className="mt-4 rounded-lg border border-purple-500/40 bg-purple-600/20 px-4 py-2 text-sm font-medium text-purple-300 transition-colors hover:bg-purple-600/30"
+            className="mt-4 rounded-lg border border-purple-500/40 bg-purple-600/20 px-4 py-2 text-sm font-medium text-purple-600 transition-colors hover:bg-purple-600/30 dark:text-purple-300"
           >
-            Show answer
+            Pokaż odpowiedź
           </button>
         )}
       </div>
