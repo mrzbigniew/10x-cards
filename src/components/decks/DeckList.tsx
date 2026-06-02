@@ -50,7 +50,7 @@ export function DeckList() {
   return (
     <div className="mt-8 w-full max-w-5xl">
       <div className="mb-4 flex items-center justify-between">
-        <h2 className="text-base font-semibold text-white/80">Twoje zestawy</h2>
+        <h2 className="text-base font-semibold text-foreground/80">Twoje zestawy</h2>
         {!showCreateForm && (
           <button
             onClick={() => {
@@ -75,7 +75,7 @@ export function DeckList() {
             maxLength={200}
             autoFocus
             placeholder="Nazwa zestawu"
-            className="flex-1 rounded-lg border border-white/20 bg-white/10 px-3 py-2 text-sm text-white placeholder-white/30 focus:border-purple-400/50 focus:outline-none"
+            className="flex-1 rounded-lg border border-border bg-input px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary/50 focus:outline-none"
           />
           <button
             type="submit"
@@ -91,7 +91,7 @@ export function DeckList() {
               setNewDeckName("");
               setCreateError(null);
             }}
-            className="rounded-lg border border-white/20 bg-white/10 px-3 py-2 text-sm text-white/60 transition-colors hover:bg-white/20"
+            className="rounded-lg border border-border bg-card px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-accent"
           >
             Anuluj
           </button>
@@ -100,12 +100,12 @@ export function DeckList() {
 
       {createError && <p className="mb-3 text-sm text-red-400">{createError}</p>}
 
-      {loading && <p className="text-sm text-white/40">Ładowanie zestawów…</p>}
+      {loading && <p className="text-sm text-muted-foreground">Ładowanie zestawów…</p>}
 
-      {error && <p className="text-sm text-red-400">{error}</p>}
+      {error && <p className="text-sm text-destructive">{error}</p>}
 
       {!loading && !error && decks.length === 0 && (
-        <p className="text-sm text-white/40">Nie masz jeszcze żadnych zestawów. Utwórz pierwszy!</p>
+        <p className="text-sm text-muted-foreground">Nie masz jeszcze żadnych zestawów. Utwórz pierwszy!</p>
       )}
 
       {!loading && decks.length > 0 && (

@@ -1,40 +1,41 @@
 ---
+import { BrainCircuit } from "lucide-react";
+import ThemeToggle from "./ThemeToggle";
+
 const { user } = Astro.locals;
 ---
 
 <div
-  class="mb-4 flex items-center justify-between rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-sm text-white/80"
+  class="mb-4 flex items-center justify-between rounded-xl border border-border bg-card px-5 py-3 text-base text-foreground"
 >
+  <a href="/dashboard" class="flex items-center gap-2 font-semibold text-foreground hover:opacity-80">
+    <BrainCircuit className="size-6" />
+    10xCards
+  </a>
+
   {
     user ? (
-      <>
-        <span class="text-blue-100/70">{user.email}</span>
-        <div class="flex items-center gap-3">
-          <a href="/dashboard" class="text-purple-300 transition-colors hover:text-purple-100 hover:underline">
-            Dashboard
-          </a>
-          <a href="/generate" class="text-purple-300 transition-colors hover:text-purple-100 hover:underline">
-            Generuj fiszki
-          </a>
-          <form method="POST" action="/api/auth/signout">
-            <button type="submit" class="text-purple-300 transition-colors hover:text-purple-100 hover:underline">
-              Sign out
-            </button>
-          </form>
-        </div>
-      </>
+      <div class="flex items-center gap-3">
+        <a href="/generate" class="font-medium text-foreground/80 transition-colors hover:text-foreground">
+          Generuj fiszki
+        </a>
+        <form method="POST" action="/api/auth/signout">
+          <button type="submit" class="font-medium text-foreground/60 transition-colors hover:text-foreground">
+            Wyloguj
+          </button>
+        </form>
+        <ThemeToggle client:load />
+      </div>
     ) : (
-      <>
-        <span class="text-blue-100/70">Not signed in</span>
-        <div class="flex gap-3">
-          <a href="/auth/signin" class="text-purple-300 transition-colors hover:text-purple-100 hover:underline">
-            Sign in
-          </a>
-          <a href="/auth/signup" class="text-purple-300 transition-colors hover:text-purple-100 hover:underline">
-            Sign up
-          </a>
-        </div>
-      </>
+      <div class="flex items-center gap-3">
+        <a href="/auth/signin" class="font-medium text-foreground/80 transition-colors hover:text-foreground">
+          Zaloguj się
+        </a>
+        <a href="/auth/signup" class="font-medium text-foreground/80 transition-colors hover:text-foreground">
+          Zarejestruj się
+        </a>
+        <ThemeToggle client:load />
+      </div>
     )
   }
 </div>

@@ -5,6 +5,9 @@
 
 :root {
   --radius: 0.625rem;
+  --cosmic-from: #e8eeff;
+  --cosmic-via: #ede8ff;
+  --cosmic-to: #e8eeff;
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
   --card: oklch(1 0 0);
@@ -39,6 +42,9 @@
 }
 
 .dark {
+  --cosmic-from: #0a0e1a;
+  --cosmic-via: #0f1529;
+  --cosmic-to: #0a0e1a;
   --background: oklch(0.145 0 0);
   --foreground: oklch(0.985 0 0);
   --card: oklch(0.205 0 0);
@@ -111,7 +117,7 @@
 }
 
 @utility bg-cosmic {
-  background-image: linear-gradient(to bottom, #0a0e1a, #0f1529, #0a0e1a);
+  background-image: linear-gradient(to bottom, var(--cosmic-from), var(--cosmic-via), var(--cosmic-to));
 }
 
 @layer base {
@@ -121,4 +127,23 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+
+.flip-card-inner {
+  transform-style: preserve-3d;
+  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  min-height: 220px;
+}
+.flip-card-inner.flipped {
+  transform: rotateY(180deg);
+}
+.flip-card-face {
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  position: absolute;
+  inset: 0;
+}
+.flip-card-back {
+  transform: rotateY(180deg);
 }

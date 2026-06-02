@@ -24,10 +24,10 @@ export function DeckCard({ deck, onDeleteRequest }: Props) {
   }, [dropdownOpen]);
 
   return (
-    <div className="relative flex min-h-[150px] w-full flex-col justify-between rounded-xl border border-white/10 bg-white/5 p-4 backdrop-blur-sm">
+    <div className="relative flex min-h-[150px] w-full flex-col justify-between rounded-xl border border-border bg-card p-4 backdrop-blur-sm">
       <div>
-        <p className="line-clamp-2 text-lg font-semibold text-white">{deck.name}</p>
-        <p className="mt-1 text-sm text-white/60">
+        <p className="line-clamp-2 text-lg font-semibold text-foreground">{deck.name}</p>
+        <p className="mt-1 text-sm text-muted-foreground">
           {deck.card_count} {deck.card_count === 1 ? "fiszka" : "fiszek"}
         </p>
       </div>
@@ -37,7 +37,7 @@ export function DeckCard({ deck, onDeleteRequest }: Props) {
           onClick={() => {
             setDropdownOpen((o) => !o);
           }}
-          className="rounded p-1 text-white/40 transition-colors hover:bg-white/10 hover:text-white"
+          className="rounded p-1 text-foreground/40 transition-colors hover:bg-accent hover:text-foreground"
           title="Opcje"
         >
           <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
@@ -45,10 +45,10 @@ export function DeckCard({ deck, onDeleteRequest }: Props) {
           </svg>
         </button>
         {dropdownOpen && (
-          <div className="absolute top-8 right-0 z-10 min-w-[120px] rounded-lg border border-white/10 bg-[#0f0c1a] py-1 shadow-xl">
+          <div className="absolute top-8 right-0 z-10 min-w-[120px] rounded-lg border border-border bg-popover py-1 shadow-xl">
             <a
               href={`/deck/${deck.id}/review`}
-              className="flex w-full items-center gap-2 px-3 py-2 text-sm text-white/80 transition-colors hover:bg-white/10 hover:text-white"
+              className="flex w-full items-center gap-2 px-3 py-2 text-sm text-foreground/80 transition-colors hover:bg-accent hover:text-foreground"
             >
               <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
                 <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" />
@@ -58,23 +58,23 @@ export function DeckCard({ deck, onDeleteRequest }: Props) {
                   clipRule="evenodd"
                 />
               </svg>
-              Review
+              Powtórz
             </a>
             <a
               href={`/deck/${deck.id}`}
-              className="flex w-full items-center gap-2 px-3 py-2 text-sm text-white/80 transition-colors hover:bg-white/10 hover:text-white"
+              className="flex w-full items-center gap-2 px-3 py-2 text-sm text-foreground/80 transition-colors hover:bg-accent hover:text-foreground"
             >
               <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
                 <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
               </svg>
-              Edit
+              Edytuj
             </a>
             <button
               onClick={() => {
                 setDropdownOpen(false);
                 onDeleteRequest(deck);
               }}
-              className="flex w-full items-center gap-2 px-3 py-2 text-sm text-red-400/80 transition-colors hover:bg-white/10 hover:text-red-300"
+              className="flex w-full items-center gap-2 px-3 py-2 text-sm text-red-400/80 transition-colors hover:bg-accent hover:text-red-300"
             >
               <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
                 <path
@@ -83,7 +83,7 @@ export function DeckCard({ deck, onDeleteRequest }: Props) {
                   clipRule="evenodd"
                 />
               </svg>
-              Delete
+              Usuń
             </button>
           </div>
         )}
