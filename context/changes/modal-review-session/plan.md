@@ -299,29 +299,29 @@ No database changes. No new API endpoints. Existing `useReviewSession` hook and 
 
 #### Automated
 
-- [x] 2.1 Type check passes: `npm run typecheck`
-- [x] 2.2 Lint passes: `npm run lint`
+- [x] 2.1 Type check passes: `npm run typecheck` — a0ef85d
+- [x] 2.2 Lint passes: `npm run lint` — a0ef85d
 
 #### Manual
 
-- [x] 2.3 Play button opens modal for deck with due cards
-- [x] 2.4 Play button shows toast (no modal) for deck with 0 due cards; toast auto-dismisses
-- [x] 2.5 Full review loop works in modal (flip → rate all four ratings → again-requeue → summary)
-- [x] 2.6 "Zamknij" on summary closes the modal
-- [x] 2.7 Deck list refreshes after session completes
-- [x] 2.8 Mid-session close guard works; "Anuluj" resumes session; "Zamknij" closes modal
-- [x] 2.9 No guard when closing from summary or before first card rated
-- [x] 2.10 Re-opening modal starts a fresh session (no stale state)
+- [x] 2.3 Play button opens modal for deck with due cards — a0ef85d
+- [x] 2.4 Play button shows toast (no modal) for deck with 0 due cards; toast auto-dismisses — a0ef85d
+- [x] 2.5 Full review loop works in modal (flip → rate all four ratings → again-requeue → summary) — a0ef85d
+- [x] 2.6 "Zamknij" on summary closes the modal — a0ef85d
+- [x] 2.7 Deck list refreshes after session completes — a0ef85d
+- [x] 2.8 Mid-session close guard works; "Anuluj" resumes session; "Zamknij" closes modal — a0ef85d
+- [x] 2.9 No guard when closing from summary or before first card rated — a0ef85d
+- [x] 2.10 Re-opening modal starts a fresh session (no stale state) — a0ef85d
 
 ### Phase 3: Route Retirement
 
 #### Automated
 
-- [ ] 3.1 Type check passes: `npm run typecheck`
-- [ ] 3.2 Lint passes: `npm run lint`
+- [x] 3.1 Type check passes: `npm run typecheck`
+- [x] 3.2 Lint passes: `npm run lint`
 
 #### Manual
 
-- [ ] 3.3 `/deck/{id}/review` URL returns 404 in browser
-- [ ] 3.4 No broken links visible in app
-- [ ] 3.5 Full happy-path smoke test: deck list → Play → session → Zamknij → back on deck list
+- [x] 3.3 `/deck/{id}/review` URL returns 404 in browser
+- [x] 3.4 No broken links visible in app
+- [x] 3.5 Full happy-path smoke test: deck list → Play → session → Zamknij → back on deck list

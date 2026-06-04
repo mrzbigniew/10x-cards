@@ -6,7 +6,7 @@ interface Props {
   onDeleteRequest: (deck: DeckWithCount) => void;
   onResetProgressRequest: (deck: DeckWithCount) => void;
   onGenerateRequest?: (deck: DeckWithCount) => void;
-  onReviewRequest?: (deck: DeckWithCount) => void;
+  onReviewRequest: (deck: DeckWithCount) => void;
 }
 
 export function DeckCard({ deck, onDeleteRequest, onResetProgressRequest, onGenerateRequest, onReviewRequest }: Props) {
@@ -22,25 +22,15 @@ export function DeckCard({ deck, onDeleteRequest, onResetProgressRequest, onGene
       </div>
 
       <div className="relative z-10 flex items-center justify-end gap-1">
-        {onReviewRequest ? (
-          <button
-            onClick={() => {
-              onReviewRequest(deck);
-            }}
-            title="Powtórz"
-            className="rounded-lg p-2 text-green-600 transition-colors hover:bg-green-500/10 hover:text-green-500"
-          >
-            <Play className="size-4" />
-          </button>
-        ) : (
-          <a
-            href={`/deck/${deck.id}/review`}
-            title="Powtórz"
-            className="rounded-lg p-2 text-green-600 transition-colors hover:bg-green-500/10 hover:text-green-500"
-          >
-            <Play className="size-4" />
-          </a>
-        )}
+        <button
+          onClick={() => {
+            onReviewRequest(deck);
+          }}
+          title="Powtórz"
+          className="rounded-lg p-2 text-green-600 transition-colors hover:bg-green-500/10 hover:text-green-500"
+        >
+          <Play className="size-4" />
+        </button>
         {onGenerateRequest && (
           <button
             onClick={() => {
