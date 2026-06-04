@@ -298,31 +298,31 @@ No data migration. The `/generate` route is replaced with a 301 redirect; no cli
 
 #### Automated
 
-- [x] 1.1 TypeScript compilation passes: `npm run typecheck`
-- [x] 1.2 Linting passes: `npm run lint`
+- [x] 1.1 TypeScript compilation passes: `npm run typecheck` — 608546a
+- [x] 1.2 Linting passes: `npm run lint` — 608546a
 
 #### Manual
 
-- [x] 1.3 Modal renders with scrollable layout when `isOpen={true}`
-- [x] 1.4 × button shows close guard during reviewing phase
-- [x] 1.5 Escape key triggers close guard in reviewing phase
-- [x] 1.6 ✓ screen appears ~1.5 s then modal closes after successful save
-- [x] 1.7 State resets on re-open (text empty, phase `input`)
+- [x] 1.3 Modal renders with scrollable layout when `isOpen={true}` — 608546a
+- [x] 1.4 × button shows close guard during reviewing phase — 608546a
+- [x] 1.5 Escape key triggers close guard in reviewing phase — 608546a
+- [x] 1.6 ✓ screen appears ~1.5 s then modal closes after successful save — 608546a
+- [x] 1.7 State resets on re-open (text empty, phase `input`) — 608546a
 
 ### Phase 2: Dashboard + DeckList Entry Points
 
 #### Automated
 
-- [ ] 2.1 TypeScript compilation passes: `npm run typecheck`
-- [ ] 2.2 Linting passes: `npm run lint`
+- [x] 2.1 TypeScript compilation passes: `npm run typecheck`
+- [x] 2.2 Linting passes: `npm run lint`
 
 #### Manual
 
-- [ ] 2.3 Dashboard hero CTA opens modal (no page navigation)
-- [ ] 2.4 Each DeckCard shows Sparkles action button
-- [ ] 2.5 Modal from DeckCard pre-selects originating deck
-- [ ] 2.6 Deck list refreshes in place after saving (new deck appears without reload)
-- [ ] 2.7 Saving from DeckCard modal updates card count
+- [x] 2.3 Dashboard hero CTA opens modal (no page navigation)
+- [x] 2.4 Each DeckCard shows Sparkles action button
+- [x] 2.5 Modal from DeckCard pre-selects originating deck
+- [x] 2.6 Deck list refreshes in place after saving (new deck appears without reload)
+- [x] 2.7 Saving from DeckCard modal updates card count
 
 ### Phase 3: DeckDetail Entry Point + Route Cleanup
 

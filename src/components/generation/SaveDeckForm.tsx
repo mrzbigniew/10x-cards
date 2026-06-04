@@ -52,26 +52,28 @@ export function SaveDeckForm({ text, proposals, isSaving, onSave, preselectedDec
     <div className="border-border bg-card rounded-xl border p-6">
       <h3 className="text-foreground mb-4 text-base font-semibold">Zapisz fiszki</h3>
 
-      <div className="mb-4">
-        <label className="text-foreground/70 mb-1.5 block text-sm font-medium">Zestaw</label>
-        <select
-          value={selectedDeckId}
-          onChange={(e) => {
-            setSelectedDeckId(e.target.value);
-            setConfirmSkip(false);
-          }}
-          className="border-border bg-input text-foreground focus:border-primary/50 w-full rounded-lg border px-3 py-2 text-sm focus:outline-none"
-        >
-          <option value="new">Nowy zestaw</option>
-          {decks.map((d) => (
-            <option key={d.id} value={d.id}>
-              {d.name} ({d.card_count} fiszek)
-            </option>
-          ))}
-        </select>
-      </div>
+      {!preselectedDeckId && (
+        <div className="mb-4">
+          <label className="text-foreground/70 mb-1.5 block text-sm font-medium">Zestaw</label>
+          <select
+            value={selectedDeckId}
+            onChange={(e) => {
+              setSelectedDeckId(e.target.value);
+              setConfirmSkip(false);
+            }}
+            className="border-border bg-input text-foreground focus:border-primary/50 w-full rounded-lg border px-3 py-2 text-sm focus:outline-none"
+          >
+            <option value="new">Nowy zestaw</option>
+            {decks.map((d) => (
+              <option key={d.id} value={d.id}>
+                {d.name} ({d.card_count} fiszek)
+              </option>
+            ))}
+          </select>
+        </div>
+      )}
 
-      {selectedDeckId === "new" && (
+      {selectedDeckId === "new" && !preselectedDeckId && (
         <div className="mb-4">
           <label className="text-foreground/70 mb-1.5 block text-sm font-medium">Nazwa zestawu</label>
           <input

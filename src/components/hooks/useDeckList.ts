@@ -76,5 +76,5 @@ export function useDeckList() {
     }
   }, []);
 
-  return { decks, loading, error, createDeck, deleteDeck, resetDeckProgress };
+  return { decks, loading, error, createDeck, deleteDeck, resetDeckProgress, refresh };
 }

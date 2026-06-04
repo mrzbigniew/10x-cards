@@ -42,6 +42,7 @@
 }
 
 .dark {
+  color-scheme: dark;
   --cosmic-from: #0a0e1a;
   --cosmic-via: #0f1529;
   --cosmic-to: #0a0e1a;

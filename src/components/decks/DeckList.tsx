@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Plus } from "lucide-react";
 import { useDeckList } from "@/components/hooks/useDeckList";
 import type { DeckWithCount } from "@/components/hooks/useDeckList";
@@ -6,9 +6,22 @@ import { DeckCard } from "@/components/decks/DeckRow";
 import { DeleteDeckModal } from "@/components/decks/DeleteDeckModal";
 import { CreateDeckModal } from "@/components/decks/CreateDeckModal";
 import { ResetProgressModal } from "@/components/decks/ResetProgressModal";
+import { GenerationModal } from "@/components/generation/GenerationModal";
 
 export function DeckList() {
-  const { decks, loading, error, createDeck, deleteDeck, resetDeckProgress } = useDeckList();
+  const { decks, loading, error, createDeck, deleteDeck, resetDeckProgress, refresh } = useDeckList();
+
+  const [generatingDeck, setGeneratingDeck] = useState<DeckWithCount | null>(null);
+
+  useEffect(() => {
+    function handleDeckSaved() {
+      refresh();
+    }
+    window.addEventListener("deck-saved", handleDeckSaved);
+    return () => {
+      window.removeEventListener("deck-saved", handleDeckSaved);
+    };
+  }, [refresh]);
 
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [creating, setCreating] = useState(false);
@@ -66,23 +79,32 @@ export function DeckList() {
   return (
     <div className="mt-8 w-full max-w-5xl">
       <div className="mb-4">
-        <h2 className="text-base font-semibold text-foreground/80">Twoje zestawy</h2>
+        <h2 className="text-foreground/80 text-base font-semibold">Twoje zestawy</h2>
       </div>
 
-      {loading && <p className="text-sm text-muted-foreground">Ładowanie zestawów…</p>}
-      {error && <p className="text-sm text-destructive">{error}</p>}
+      {loading && <p className="text-muted-foreground text-sm">Ładowanie zestawów…</p>}
+      {error && <p className="text-destructive text-sm">{error}</p>}
 
       {!loading && (
         <div className="grid grid-cols-[repeat(auto-fill,minmax(360px,1fr))] gap-4">
           <button
-            onClick={() => { setShowCreateForm(true); setCreateError(null); }}
-            className="relative flex min-h-[150px] w-full cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed border-foreground/20 bg-card/30 transition-colors hover:border-primary/50 hover:bg-card/60"
+            onClick={() => {
+              setShowCreateForm(true);
+              setCreateError(null);
+            }}
+            className="border-foreground/20 bg-card/30 hover:border-primary/50 hover:bg-card/60 relative flex min-h-[150px] w-full cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed transition-colors"
           >
-            <Plus className="size-8 text-muted-foreground" />
-            <span className="mt-2 text-sm text-muted-foreground">Nowy zestaw</span>
+            <Plus className="text-muted-foreground size-8" />
+            <span className="text-muted-foreground mt-2 text-sm">Nowy zestaw</span>
           </button>
           {decks.map((deck) => (
-            <DeckCard key={deck.id} deck={deck} onDeleteRequest={setDeletingDeck} onResetProgressRequest={setResettingDeck} />
+            <DeckCard
+              key={deck.id}
+              deck={deck}
+              onDeleteRequest={setDeletingDeck}
+              onResetProgressRequest={setResettingDeck}
+              onGenerateRequest={setGeneratingDeck}
+            />
           ))}
         </div>
       )}
@@ -90,7 +112,10 @@ export function DeckList() {
       <CreateDeckModal
         isOpen={showCreateForm}
         onConfirm={(name) => void handleCreate(name)}
-        onCancel={() => { setShowCreateForm(false); setCreateError(null); }}
+        onCancel={() => {
+          setShowCreateForm(false);
+          setCreateError(null);
+        }}
         isCreating={creating}
         error={createError}
       />
@@ -99,7 +124,10 @@ export function DeckList() {
         isOpen={deletingDeck !== null}
         deckName={deletingDeck?.name ?? ""}
         onConfirm={() => void handleDelete()}
-        onCancel={() => { setDeletingDeck(null); setDeleteError(null); }}
+        onCancel={() => {
+          setDeletingDeck(null);
+          setDeleteError(null);
+        }}
         isDeleting={isDeleting}
         error={deleteError}
       />
@@ -109,9 +137,20 @@ export function DeckList() {
         deckName={resettingDeck?.name ?? ""}
         cardCount={resettingDeck?.card_count ?? 0}
         onConfirm={() => void handleReset()}
-        onCancel={() => { setResettingDeck(null); setResetError(null); }}
+        onCancel={() => {
+          setResettingDeck(null);
+          setResetError(null);
+        }}
         isResetting={isResetting}
         error={resetError}
+      />
+
+      <GenerationModal
+        isOpen={generatingDeck !== null}
+        onClose={() => {
+          setGeneratingDeck(null);
+        }}
+        preselectedDeckId={generatingDeck?.id}
       />
     </div>
   );

@@ -2,35 +2,25 @@
 import Layout from "@/layouts/Layout.astro";
 import { DeckList } from "@/components/decks/DeckList";
 import Topbar from "@/components/Topbar.astro";
-import { Sparkles } from "lucide-react";
+import { GenerateButton } from "@/components/GenerateButton";
 ---
 
 <Layout title="Dashboard">
   <div class="bg-cosmic flex min-h-screen flex-col p-4">
     <Topbar />
-  <div class="flex flex-1 flex-col items-center justify-start pt-8">
-    <div class="mb-8 w-full max-w-5xl rounded-2xl border border-border bg-card p-8 text-center backdrop-blur-xl">
-      <h1 class="mb-3 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-3xl font-bold text-transparent">
-        Witaj w 10xCards!
-      </h1>
-      <p class="text-lg text-foreground/80">
-        Ucz się szybciej dzięki inteligentnym fiszkom i algorytmowi powtórek.
-      </p>
-      <p class="mt-2 text-base text-muted-foreground">
-        Utwórz zestaw, dodaj fiszki i zacznij naukę już dziś.
-      </p>
-      <div class="mt-6">
-        <a
-          href="/generate"
-          class="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-purple-600 to-blue-600 px-6 py-3 text-base font-semibold text-white shadow-lg transition-all hover:from-purple-500 hover:to-blue-500 hover:shadow-purple-500/25"
-        >
-          <Sparkles className="size-5" />
-          Generuj fiszki z AI
-        </a>
+    <div class="flex flex-1 flex-col items-center justify-start pt-8">
+      <div class="border-border bg-card mb-8 w-full max-w-5xl rounded-2xl border p-8 text-center backdrop-blur-xl">
+        <h1 class="mb-3 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-3xl font-bold text-transparent">
+          Witaj w 10xCards!
+        </h1>
+        <p class="text-foreground/80 text-lg">Ucz się szybciej dzięki inteligentnym fiszkom i algorytmowi powtórek.</p>
+        <p class="text-muted-foreground mt-2 text-base">Utwórz zestaw, dodaj fiszki i zacznij naukę już dziś.</p>
+        <div class="mt-6">
+          <GenerateButton client:load />
+        </div>
       </div>
-    </div>
 
-    <DeckList client:load />
-  </div>
+      <DeckList client:load />
+    </div>
   </div>
 </Layout>

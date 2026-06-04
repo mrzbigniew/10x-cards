@@ -35,10 +35,7 @@ export function GenerationFlow({
 }: Props) {
   useEffect(() => {
     if (phase !== "done" || !onDone) return;
-    const timer = setTimeout(onDone, 1500);
-    return () => {
-      clearTimeout(timer);
-    };
+    onDone();
   }, [phase, onDone]);
 
   if (phase === "done") {
