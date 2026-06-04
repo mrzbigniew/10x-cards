@@ -8,3 +8,10 @@
 - **Problem**: Agents scaffold new components and strings in English by default, leaving a mixed PL/EN UI; the S-06 slice exists partly to clean up English strings that accumulated across earlier slices.
 - **Rule**: All text presented to the user must be written in Polish. Never introduce English user-facing strings; new UI copy, labels, messages, and errors are authored in Polish.
 - **Applies to**: plan, implement, impl-review
+
+## All modals must use a react-doom portal
+
+- **Context**: Any modal/dialog component in the codebase.
+- **Problem**: Modals rendered inline may be clipped or hidden by parent stacking contexts, causing z-index issues.
+- **Rule**: All modals must be rendered using a portal from react-doom. Never render modal/dialog components inline in the DOM tree.
+- **Applies to**: all
