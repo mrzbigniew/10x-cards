@@ -1,7 +1,7 @@
 ---
 import Layout from "@/layouts/Layout.astro";
 import Topbar from "@/components/Topbar.astro";
-import { ReviewSession } from "@/components/review/ReviewSession";
+import { ReviewPageMount } from "@/components/review/ReviewPageMount";
 
 const { id } = Astro.params;
 if (!id) {
@@ -13,9 +13,7 @@ if (!id) {
   <div class="bg-cosmic flex min-h-screen flex-col p-4">
     <Topbar />
     <div class="flex flex-1 flex-col items-center justify-start pt-8">
-      <div class="w-full max-w-2xl">
-        <ReviewSession deckId={id} client:load />
-      </div>
+      <ReviewPageMount deckId={id} client:only="react" />
     </div>
   </div>
 </Layout>

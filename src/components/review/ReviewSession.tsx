@@ -1,48 +1,61 @@
 import { useState, useEffect } from "react";
-import { useReviewSession } from "@/components/hooks/useReviewSession";
+import type { DueCard } from "@/lib/services/sr";
 import { RatingButtons } from "@/components/review/RatingButtons";
 import { cn } from "@/lib/utils";
 
 interface Props {
-  deckId: string;
+  loading: boolean;
+  error: string | null;
+  current: DueCard | null;
+  remaining: number;
+  reviewedCount: number;
+  againCount: number;
+  totalInitial: number;
+  finished: boolean;
+  showAnswer: boolean;
+  submitting: boolean;
+  reveal: () => void;
+  rate: (rating: 1 | 2 | 3 | 4) => Promise<void>;
+  onClose?: () => void;
 }
 
-export function ReviewSession({ deckId }: Props) {
-  const {
-    loading,
-    error,
-    current,
-    remaining,
-    reviewedCount,
-    againCount,
-    totalInitial,
-    finished,
-    showAnswer,
-    submitting,
-    reveal,
-    rate,
-  } = useReviewSession(deckId);
-
+export function ReviewSession({
+  loading,
+  error,
+  current,
+  remaining,
+  reviewedCount,
+  againCount,
+  totalInitial,
+  finished,
+  showAnswer,
+  submitting,
+  reveal,
+  rate,
+  onClose,
+}: Props) {
   const [flipped, setFlipped] = useState(false);
 
-  useEffect(() => { setFlipped(false); }, [current?.id]);
+  useEffect(() => {
+    setFlipped(false);
+  }, [current?.id]);
 
   if (loading) {
-    return <p className="text-sm text-muted-foreground">Ładowanie…</p>;
+    return <p className="text-muted-foreground text-sm">Ładowanie…</p>;
   }
 
   if (error) {
-    return <p className="text-sm text-destructive">{error}</p>;
+    return <p className="text-destructive text-sm">{error}</p>;
   }
 
   if (finished && totalInitial === 0) {
     return (
       <div className="text-center">
-        <p className="text-xl font-semibold text-foreground/80">Brak kart na dziś</p>
-        <p className="mt-2 text-sm text-muted-foreground">Wszystkie karty zaplanowane są na przyszłe daty.</p>
-        <a href={`/deck/${deckId}`} className="mt-6 inline-block text-sm text-purple-500 hover:text-purple-400">
-          ← Powrót do zestawu
-        </a>
+        <p className="text-foreground/80 text-xl font-semibold">Brak kart na dziś</p>
+        <p className="text-muted-foreground mt-2 text-sm">Wszystkie karty zaplanowane są na przyszłe daty.</p>
+        <button onClick={onClose} className="mt-6 inline-block text-sm text-purple-500 hover:text-purple-400">
+          Zamknij
+        </button>
       </div>
     );
   }
@@ -50,20 +63,17 @@ export function ReviewSession({ deckId }: Props) {
   if (finished) {
     return (
       <div className="text-center">
-        <p className="text-xl font-semibold text-foreground">Sesja zakończona!</p>
-        <p className="mt-3 text-sm text-muted-foreground">
-          Przejrzane karty: <span className="font-medium text-foreground">{reviewedCount}</span>
+        <p className="text-foreground text-xl font-semibold">Sesja zakończona!</p>
+        <p className="text-muted-foreground mt-3 text-sm">
+          Przejrzane karty: <span className="text-foreground font-medium">{reviewedCount}</span>
         </p>
-        <p className="mt-1 text-sm text-muted-foreground">
-          Oceny &ldquo;Raz jeszcze&rdquo;: <span className="font-medium text-foreground">{againCount}</span>
+        <p className="text-muted-foreground mt-1 text-sm">
+          Oceny &ldquo;Raz jeszcze&rdquo;: <span className="text-foreground font-medium">{againCount}</span>
         </p>
-        <div className="mt-6 flex justify-center gap-6">
-          <a href={`/deck/${deckId}`} className="text-sm text-purple-500 hover:text-purple-400">
-            ← Powrót do zestawu
-          </a>
-          <a href="/dashboard" className="text-sm text-purple-500 hover:text-purple-400">
-            Pulpit
-          </a>
+        <div className="mt-6 flex justify-center">
+          <button onClick={onClose} className="text-sm text-purple-500 hover:text-purple-400">
+            Zamknij
+          </button>
         </div>
       </div>
     );
@@ -73,30 +83,31 @@ export function ReviewSession({ deckId }: Props) {
 
   return (
     <div>
-      <div className="mb-4 flex items-center justify-between text-sm text-muted-foreground">
-        <a href={`/deck/${deckId}`} className="hover:text-foreground">
-          ← Wróć
-        </a>
+      <div className="text-muted-foreground mb-4 flex items-center justify-end text-sm">
         <span>Pozostało: {remaining + 1}</span>
       </div>
       <div className="[perspective:1200px]">
         <div
           className={cn("flip-card-inner", flipped && "flipped")}
-          onTransitionEnd={() => { if (flipped) reveal(); }}
+          onTransitionEnd={() => {
+            if (flipped) reveal();
+          }}
         >
           {/* Front face */}
           <div
-            className="flip-card-face rounded-xl border border-border bg-card p-6 backdrop-blur-sm cursor-pointer"
-            onClick={() => { if (!showAnswer && !submitting) setFlipped(true); }}
+            className="flip-card-face border-border bg-card cursor-pointer rounded-xl border p-6 backdrop-blur-sm"
+            onClick={() => {
+              if (!showAnswer && !submitting) setFlipped(true);
+            }}
           >
-            <p className="text-lg font-semibold text-foreground">{current.front}</p>
-            <p className="mt-4 text-xs text-muted-foreground">Kliknij, aby odsłonić odpowiedź</p>
+            <p className="text-foreground text-lg font-semibold">{current.front}</p>
+            <p className="text-muted-foreground mt-4 text-xs">Kliknij, aby odsłonić odpowiedź</p>
           </div>
           {/* Back face */}
-          <div className="flip-card-face flip-card-back rounded-xl border border-border bg-card p-6 backdrop-blur-sm">
-            <p className="text-lg font-semibold text-foreground">{current.front}</p>
-            <hr className="my-4 border-border" />
-            <p className="text-base text-foreground/80">{current.back}</p>
+          <div className="flip-card-face flip-card-back border-border bg-card rounded-xl border p-6 backdrop-blur-sm">
+            <p className="text-foreground text-lg font-semibold">{current.front}</p>
+            <hr className="border-border my-4" />
+            <p className="text-foreground/80 text-base">{current.back}</p>
             <div className="mt-6">
               <RatingButtons onRate={rate} disabled={submitting || !showAnswer} />
             </div>
