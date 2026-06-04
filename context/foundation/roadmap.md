@@ -38,7 +38,7 @@ top_blocker: time
 | S-06  | ui-polish               | use a branded shared header, a redesigned dashboard intro, bulk-reset a deck's progress, and a flip-card review | F-01, S-02, S-03, S-04 | FR-011, FR-015, UX refinement | done     |
 | F-02  | i18n-foundation         | (foundation) i18n infrastructure in place, enabling localized UI slices       | —                 | —                                                 | proposed |
 | S-07  | modal-generate-flashcards | user can open flashcard generation in a modal without leaving the page       | S-01, S-06        | UX refinement                                     | done     |
-| S-08  | modal-review-session    | user can run a review session in a modal without leaving the deck list        | S-03, S-06        | UX refinement                                     | proposed |
+| S-08  | modal-review-session    | user can run a review session in a modal without leaving the deck list        | S-03, S-06        | UX refinement                                     | done     |
 
 ## Streams
 
@@ -198,7 +198,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Blockers:** —
 - **Unknowns:** —
 - **Risk:** embedding the full review loop (question → flip → rate) inside a modal may introduce focus-trap and keyboard navigation issues; verify keyboard-only navigation before shipping.
-- **Status:** proposed
+- **Status:** done
 
 ## Backlog Handoff
 
@@ -257,3 +257,4 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **S-03: user can navigate to a deck, start a review session for cards due today (or overdue), see each card's question → reveal answer → rate recall using the SR library's native scale (e.g. Again / Hard / Good / Easy), have each rating persisted immediately after it is given, and reach a session-end summary; if no cards are due, a "0 due" screen explains the situation.** — Archived 2026-06-02 → `context/archive/2026-06-02-review-session/`. Lesson: —.
 - **S-06: across the whole app the user sees a single branded header — a clickable "10xCards" mark (icon + wordmark) that links to the dashboard, with the old standalone "Dashboard" link gone, the "Generuj fiszki" + "Wyloguj" actions kept but enlarged, and a dark/light mode toggle switch; on the dashboard the old "Dashboard" welcome card is replaced by a short intro paragraph followed by a primary "Nowy zestaw" button; each deck offers a "Resetuj postępy" action (behind a confirmation dialog) that resets the SR state of every card in that deck; and the review card flips with a 3D animation on click to reveal its answer (no separate "Show answer" button).** — Archived 2026-06-03 → `context/archive/2026-06-02-ui-polish/`. Lesson: —.
 - **S-07: user can open the flashcard generation flow in a modal dialog, paste text, review AI proposals, and save to a deck without navigating away from the current page** — Archived 2026-06-04 → `context/archive/2026-06-03-modal-generate-flashcards/`. Lesson: —.
+- **S-08: user can run a review session in a modal without leaving the deck list** — Archived 2026-06-04 → `context/archive/2026-06-04-modal-review-session/`. Lesson: —.
