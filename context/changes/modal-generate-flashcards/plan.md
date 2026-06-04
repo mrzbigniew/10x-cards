@@ -313,29 +313,29 @@ No data migration. The `/generate` route is replaced with a 301 redirect; no cli
 
 #### Automated
 
-- [x] 2.1 TypeScript compilation passes: `npm run typecheck`
-- [x] 2.2 Linting passes: `npm run lint`
+- [x] 2.1 TypeScript compilation passes: `npm run typecheck` — 02217b0
+- [x] 2.2 Linting passes: `npm run lint` — 02217b0
 
 #### Manual
 
-- [x] 2.3 Dashboard hero CTA opens modal (no page navigation)
-- [x] 2.4 Each DeckCard shows Sparkles action button
-- [x] 2.5 Modal from DeckCard pre-selects originating deck
-- [x] 2.6 Deck list refreshes in place after saving (new deck appears without reload)
-- [x] 2.7 Saving from DeckCard modal updates card count
+- [x] 2.3 Dashboard hero CTA opens modal (no page navigation) — 02217b0
+- [x] 2.4 Each DeckCard shows Sparkles action button — 02217b0
+- [x] 2.5 Modal from DeckCard pre-selects originating deck — 02217b0
+- [x] 2.6 Deck list refreshes in place after saving (new deck appears without reload) — 02217b0
+- [x] 2.7 Saving from DeckCard modal updates card count — 02217b0
 
 ### Phase 3: DeckDetail Entry Point + Route Cleanup
 
 #### Automated
 
-- [ ] 3.1 TypeScript compilation passes: `npm run typecheck`
-- [ ] 3.2 Linting passes: `npm run lint`
-- [ ] 3.3 `GET /generate` returns 301 redirect to `/dashboard`
+- [x] 3.1 TypeScript compilation passes: `npm run typecheck`
+- [x] 3.2 Linting passes: `npm run lint`
+- [x] 3.3 `GET /generate` returns 301 redirect to `/dashboard`
 
 #### Manual
 
-- [ ] 3.4 "Generuj z AI" button appears on deck detail page
-- [ ] 3.5 Modal from deck detail pre-selects the current deck
-- [ ] 3.6 After saving from deck detail, dashboard shows updated deck count
-- [ ] 3.7 `/generate` redirects to `/dashboard` in browser
-- [ ] 3.8 "+ Dodaj fiszkę" still works (no regression)
+- [x] 3.4 "Generuj z AI" button appears on deck detail page
+- [x] 3.5 Modal from deck detail pre-selects the current deck
+- [x] 3.6 After saving from deck detail, dashboard shows updated deck count
+- [x] 3.7 `/generate` redirects to `/dashboard` in browser
+- [x] 3.8 "+ Dodaj fiszkę" still works (no regression)
