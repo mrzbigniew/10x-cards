@@ -6,9 +6,10 @@ interface Props {
   onDeleteRequest: (deck: DeckWithCount) => void;
   onResetProgressRequest: (deck: DeckWithCount) => void;
   onGenerateRequest?: (deck: DeckWithCount) => void;
+  onReviewRequest?: (deck: DeckWithCount) => void;
 }
 
-export function DeckCard({ deck, onDeleteRequest, onResetProgressRequest, onGenerateRequest }: Props) {
+export function DeckCard({ deck, onDeleteRequest, onResetProgressRequest, onGenerateRequest, onReviewRequest }: Props) {
   return (
     <div className="border-border bg-card relative flex min-h-[150px] w-full flex-col justify-between rounded-xl border p-4 backdrop-blur-sm transition-shadow hover:shadow-md">
       <a href={`/deck/${deck.id}`} className="absolute inset-0 z-0 rounded-xl" aria-label={deck.name} />
@@ -21,13 +22,25 @@ export function DeckCard({ deck, onDeleteRequest, onResetProgressRequest, onGene
       </div>
 
       <div className="relative z-10 flex items-center justify-end gap-1">
-        <a
-          href={`/deck/${deck.id}/review`}
-          title="Powtórz"
-          className="rounded-lg p-2 text-green-600 transition-colors hover:bg-green-500/10 hover:text-green-500"
-        >
-          <Play className="size-4" />
-        </a>
+        {onReviewRequest ? (
+          <button
+            onClick={() => {
+              onReviewRequest(deck);
+            }}
+            title="Powtórz"
+            className="rounded-lg p-2 text-green-600 transition-colors hover:bg-green-500/10 hover:text-green-500"
+          >
+            <Play className="size-4" />
+          </button>
+        ) : (
+          <a
+            href={`/deck/${deck.id}/review`}
+            title="Powtórz"
+            className="rounded-lg p-2 text-green-600 transition-colors hover:bg-green-500/10 hover:text-green-500"
+          >
+            <Play className="size-4" />
+          </a>
+        )}
         {onGenerateRequest && (
           <button
             onClick={() => {

@@ -285,33 +285,33 @@ No database changes. No new API endpoints. Existing `useReviewSession` hook and 
 
 #### Automated
 
-- [x] 1.1 Type check passes: `npm run typecheck`
-- [x] 1.2 Lint passes: `npm run lint`
+- [x] 1.1 Type check passes: `npm run typecheck` — 089ba61
+- [x] 1.2 Lint passes: `npm run lint` — 089ba61
 
 #### Manual
 
-- [x] 1.3 ReviewModal mounts in DOM via portal (visible in DevTools under `<body>`)
-- [x] 1.4 Close guard dialog appears only when `reviewedCount > 0 && !finished`
-- [x] 1.5 Escape key triggers close guard path
-- [x] 1.6 `session-completed` CustomEvent fires when session finishes naturally
+- [x] 1.3 ReviewModal mounts in DOM via portal (visible in DevTools under `<body>`) — 089ba61
+- [x] 1.4 Close guard dialog appears only when `reviewedCount > 0 && !finished` — 089ba61
+- [x] 1.5 Escape key triggers close guard path — 089ba61
+- [x] 1.6 `session-completed` CustomEvent fires when session finishes naturally — 089ba61
 
 ### Phase 2: DeckList Entry Point + Zero-Due Toast
 
 #### Automated
 
-- [ ] 2.1 Type check passes: `npm run typecheck`
-- [ ] 2.2 Lint passes: `npm run lint`
+- [x] 2.1 Type check passes: `npm run typecheck`
+- [x] 2.2 Lint passes: `npm run lint`
 
 #### Manual
 
-- [ ] 2.3 Play button opens modal for deck with due cards
-- [ ] 2.4 Play button shows toast (no modal) for deck with 0 due cards; toast auto-dismisses
-- [ ] 2.5 Full review loop works in modal (flip → rate all four ratings → again-requeue → summary)
-- [ ] 2.6 "Zamknij" on summary closes the modal
-- [ ] 2.7 Deck list refreshes after session completes
-- [ ] 2.8 Mid-session close guard works; "Anuluj" resumes session; "Zamknij" closes modal
-- [ ] 2.9 No guard when closing from summary or before first card rated
-- [ ] 2.10 Re-opening modal starts a fresh session (no stale state)
+- [x] 2.3 Play button opens modal for deck with due cards
+- [x] 2.4 Play button shows toast (no modal) for deck with 0 due cards; toast auto-dismisses
+- [x] 2.5 Full review loop works in modal (flip → rate all four ratings → again-requeue → summary)
+- [x] 2.6 "Zamknij" on summary closes the modal
+- [x] 2.7 Deck list refreshes after session completes
+- [x] 2.8 Mid-session close guard works; "Anuluj" resumes session; "Zamknij" closes modal
+- [x] 2.9 No guard when closing from summary or before first card rated
+- [x] 2.10 Re-opening modal starts a fresh session (no stale state)
 
 ### Phase 3: Route Retirement
 

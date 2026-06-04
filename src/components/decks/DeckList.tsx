@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 import { Plus } from "lucide-react";
 import { useDeckList } from "@/components/hooks/useDeckList";
 import type { DeckWithCount } from "@/components/hooks/useDeckList";
@@ -7,11 +8,24 @@ import { DeleteDeckModal } from "@/components/decks/DeleteDeckModal";
 import { CreateDeckModal } from "@/components/decks/CreateDeckModal";
 import { ResetProgressModal } from "@/components/decks/ResetProgressModal";
 import { GenerationModal } from "@/components/generation/GenerationModal";
+import { ReviewModal } from "@/components/review/ReviewModal";
 
 export function DeckList() {
   const { decks, loading, error, createDeck, deleteDeck, resetDeckProgress, refresh } = useDeckList();
 
   const [generatingDeck, setGeneratingDeck] = useState<DeckWithCount | null>(null);
+  const [reviewingDeck, setReviewingDeck] = useState<DeckWithCount | null>(null);
+  const [zeroDueToast, setZeroDueToast] = useState(false);
+
+  useEffect(() => {
+    if (!zeroDueToast) return;
+    const timer = setTimeout(() => {
+      setZeroDueToast(false);
+    }, 3000);
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [zeroDueToast]);
 
   useEffect(() => {
     function handleDeckSaved() {
@@ -20,6 +34,16 @@ export function DeckList() {
     window.addEventListener("deck-saved", handleDeckSaved);
     return () => {
       window.removeEventListener("deck-saved", handleDeckSaved);
+    };
+  }, [refresh]);
+
+  useEffect(() => {
+    function handleSessionCompleted() {
+      refresh();
+    }
+    window.addEventListener("session-completed", handleSessionCompleted);
+    return () => {
+      window.removeEventListener("session-completed", handleSessionCompleted);
     };
   }, [refresh]);
 
@@ -76,6 +100,29 @@ export function DeckList() {
     }
   }
 
+  async function handleReviewRequest(deck: DeckWithCount) {
+    const endOfDay = new Date();
+    endOfDay.setHours(23, 59, 59, 999);
+    const res = await fetch(`/api/decks/${deck.id}/review?due_before=${encodeURIComponent(endOfDay.toISOString())}`);
+    if (!res.ok) return;
+    const data = (await res.json()) as { cards: unknown[] };
+    if (data.cards.length === 0) {
+      setZeroDueToast(true);
+    } else {
+      setReviewingDeck(deck);
+    }
+  }
+
+  const zeroDueToastEl =
+    zeroDueToast && typeof document !== "undefined"
+      ? createPortal(
+          <div className="fixed right-6 bottom-6 z-[60] flex items-center gap-3 rounded-xl border border-yellow-500/30 bg-yellow-600/20 px-4 py-3 shadow-lg backdrop-blur-sm">
+            <p className="text-sm font-semibold text-yellow-400">Brak kart na dziś</p>
+          </div>,
+          document.body,
+        )
+      : null;
+
   return (
     <div className="mt-8 w-full max-w-5xl">
       <div className="mb-4">
@@ -104,6 +151,7 @@ export function DeckList() {
               onDeleteRequest={setDeletingDeck}
               onResetProgressRequest={setResettingDeck}
               onGenerateRequest={setGeneratingDeck}
+              onReviewRequest={(d) => void handleReviewRequest(d)}
             />
           ))}
         </div>
@@ -152,6 +200,17 @@ export function DeckList() {
         }}
         preselectedDeckId={generatingDeck?.id}
       />
+
+      {reviewingDeck && (
+        <ReviewModal
+          deckId={reviewingDeck.id}
+          onClose={() => {
+            setReviewingDeck(null);
+          }}
+        />
+      )}
+
+      {zeroDueToastEl}
     </div>
   );
 }
