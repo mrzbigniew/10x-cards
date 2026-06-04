@@ -317,11 +317,11 @@ No database changes. No new API endpoints. Existing `useReviewSession` hook and 
 
 #### Automated
 
-- [x] 3.1 Type check passes: `npm run typecheck`
-- [x] 3.2 Lint passes: `npm run lint`
+- [x] 3.1 Type check passes: `npm run typecheck` — 92b4ab3
+- [x] 3.2 Lint passes: `npm run lint` — 92b4ab3
 
 #### Manual
 
-- [x] 3.3 `/deck/{id}/review` URL returns 404 in browser
-- [x] 3.4 No broken links visible in app
-- [x] 3.5 Full happy-path smoke test: deck list → Play → session → Zamknij → back on deck list
+- [x] 3.3 `/deck/{id}/review` URL returns 404 in browser — 92b4ab3
+- [x] 3.4 No broken links visible in app — 92b4ab3
+- [x] 3.5 Full happy-path smoke test: deck list → Play → session → Zamknij → back on deck list — 92b4ab3
