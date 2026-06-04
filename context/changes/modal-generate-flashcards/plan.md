@@ -328,14 +328,14 @@ No data migration. The `/generate` route is replaced with a 301 redirect; no cli
 
 #### Automated
 
-- [x] 3.1 TypeScript compilation passes: `npm run typecheck`
-- [x] 3.2 Linting passes: `npm run lint`
-- [x] 3.3 `GET /generate` returns 301 redirect to `/dashboard`
+- [x] 3.1 TypeScript compilation passes: `npm run typecheck` — 68398eb
+- [x] 3.2 Linting passes: `npm run lint` — 68398eb
+- [x] 3.3 `GET /generate` returns 301 redirect to `/dashboard` — 68398eb
 
 #### Manual
 
-- [x] 3.4 "Generuj z AI" button appears on deck detail page
-- [x] 3.5 Modal from deck detail pre-selects the current deck
-- [x] 3.6 After saving from deck detail, dashboard shows updated deck count
-- [x] 3.7 `/generate` redirects to `/dashboard` in browser
-- [x] 3.8 "+ Dodaj fiszkę" still works (no regression)
+- [x] 3.4 "Generuj z AI" button appears on deck detail page — 68398eb
+- [x] 3.5 Modal from deck detail pre-selects the current deck — 68398eb
+- [x] 3.6 After saving from deck detail, dashboard shows updated deck count — 68398eb
+- [x] 3.7 `/generate` redirects to `/dashboard` in browser — 68398eb
+- [x] 3.8 "+ Dodaj fiszkę" still works (no regression) — 68398eb
