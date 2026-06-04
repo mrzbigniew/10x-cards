@@ -298,16 +298,16 @@ No data migration. The `/generate` route is replaced with a 301 redirect; no cli
 
 #### Automated
 
-- [ ] 1.1 TypeScript compilation passes: `npm run typecheck`
-- [ ] 1.2 Linting passes: `npm run lint`
+- [x] 1.1 TypeScript compilation passes: `npm run typecheck`
+- [x] 1.2 Linting passes: `npm run lint`
 
 #### Manual
 
-- [ ] 1.3 Modal renders with scrollable layout when `isOpen={true}`
-- [ ] 1.4 × button shows close guard during reviewing phase
-- [ ] 1.5 Escape key triggers close guard in reviewing phase
-- [ ] 1.6 ✓ screen appears ~1.5 s then modal closes after successful save
-- [ ] 1.7 State resets on re-open (text empty, phase `input`)
+- [x] 1.3 Modal renders with scrollable layout when `isOpen={true}`
+- [x] 1.4 × button shows close guard during reviewing phase
+- [x] 1.5 Escape key triggers close guard in reviewing phase
+- [x] 1.6 ✓ screen appears ~1.5 s then modal closes after successful save
+- [x] 1.7 State resets on re-open (text empty, phase `input`)
 
 ### Phase 2: Dashboard + DeckList Entry Points
 

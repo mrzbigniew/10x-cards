@@ -1,6 +1,6 @@
 ---
 import Layout from "@/layouts/Layout.astro";
-import { GenerationFlow } from "@/components/generation/GenerationFlow";
+import { GenerationFlowPage } from "@/components/generation/GenerationFlowPage";
 import Topbar from "@/components/Topbar.astro";
 ---
 
@@ -16,7 +16,7 @@ import Topbar from "@/components/Topbar.astro";
             Wklej notatki lub tekst z podręcznika — AI zaproponuje fiszki do weryfikacji.
           </p>
         </div>
-        <GenerationFlow client:load />
+        <GenerationFlowPage client:load />
       </div>
     </div>
   </div>

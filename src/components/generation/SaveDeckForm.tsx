@@ -7,12 +7,13 @@ interface Props {
   proposals: Proposal[];
   isSaving: boolean;
   onSave: (target: { name: string } | { deckId: string }) => void;
+  preselectedDeckId?: string;
 }
 
-export function SaveDeckForm({ text, proposals, isSaving, onSave }: Props) {
+export function SaveDeckForm({ text, proposals, isSaving, onSave, preselectedDeckId }: Props) {
   const autoName = text.trim().replace(/\s+/g, " ").slice(0, 50);
   const [decks, setDecks] = useState<DeckWithCount[]>([]);
-  const [selectedDeckId, setSelectedDeckId] = useState<string>("new");
+  const [selectedDeckId, setSelectedDeckId] = useState<string>(preselectedDeckId ?? "new");
   const [newDeckName, setNewDeckName] = useState(autoName);
   const [confirmSkip, setConfirmSkip] = useState(false);
 
@@ -48,18 +49,18 @@ export function SaveDeckForm({ text, proposals, isSaving, onSave }: Props) {
   }
 
   return (
-    <div className="rounded-xl border border-border bg-card p-6">
-      <h3 className="mb-4 text-base font-semibold text-foreground">Zapisz fiszki</h3>
+    <div className="border-border bg-card rounded-xl border p-6">
+      <h3 className="text-foreground mb-4 text-base font-semibold">Zapisz fiszki</h3>
 
       <div className="mb-4">
-        <label className="mb-1.5 block text-sm font-medium text-foreground/70">Zestaw</label>
+        <label className="text-foreground/70 mb-1.5 block text-sm font-medium">Zestaw</label>
         <select
           value={selectedDeckId}
           onChange={(e) => {
             setSelectedDeckId(e.target.value);
             setConfirmSkip(false);
           }}
-          className="w-full rounded-lg border border-border bg-input px-3 py-2 text-sm text-foreground focus:border-primary/50 focus:outline-none"
+          className="border-border bg-input text-foreground focus:border-primary/50 w-full rounded-lg border px-3 py-2 text-sm focus:outline-none"
         >
           <option value="new">Nowy zestaw</option>
           {decks.map((d) => (
@@ -72,7 +73,7 @@ export function SaveDeckForm({ text, proposals, isSaving, onSave }: Props) {
 
       {selectedDeckId === "new" && (
         <div className="mb-4">
-          <label className="mb-1.5 block text-sm font-medium text-foreground/70">Nazwa zestawu</label>
+          <label className="text-foreground/70 mb-1.5 block text-sm font-medium">Nazwa zestawu</label>
           <input
             type="text"
             value={newDeckName}
@@ -81,18 +82,18 @@ export function SaveDeckForm({ text, proposals, isSaving, onSave }: Props) {
               setConfirmSkip(false);
             }}
             maxLength={200}
-            className="w-full rounded-lg border border-border bg-input px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary/50 focus:outline-none"
+            className="border-border bg-input text-foreground placeholder:text-muted-foreground focus:border-primary/50 w-full rounded-lg border px-3 py-2 text-sm focus:outline-none"
             placeholder="Nazwa zestawu"
           />
         </div>
       )}
 
-      <div className="mb-4 text-sm text-muted-foreground">
+      <div className="text-muted-foreground mb-4 text-sm">
         {acceptedCount === 0 ? (
           <span className="text-amber-500">Zaakceptuj przynajmniej jedną propozycję, aby zapisać.</span>
         ) : (
           <span>
-            Liczba fiszek do zapisania: <span className="font-medium text-foreground">{acceptedCount}</span>
+            Liczba fiszek do zapisania: <span className="text-foreground font-medium">{acceptedCount}</span>
           </span>
         )}
       </div>

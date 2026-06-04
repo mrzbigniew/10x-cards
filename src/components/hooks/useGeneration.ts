@@ -95,6 +95,7 @@ export function useGeneration() {
         }
 
         setPhase("done");
+        window.dispatchEvent(new CustomEvent("deck-saved"));
       } catch (err) {
         const message = err instanceof Error ? err.message : "Nie udało się zapisać zestawu. Spróbuj ponownie.";
         setErrorMessage(message);
@@ -103,6 +104,13 @@ export function useGeneration() {
     },
     [proposals],
   );
+
+  const reset = useCallback(() => {
+    setPhase("input");
+    setTextRaw("");
+    setProposals([]);
+    setErrorMessage(null);
+  }, []);
 
   return {
     phase,
@@ -115,5 +123,6 @@ export function useGeneration() {
     bulkAccept,
     bulkReject,
     saveProposals,
+    reset,
   };
 }

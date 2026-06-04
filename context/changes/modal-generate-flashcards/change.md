@@ -1,9 +1,9 @@
 ---
 change_id: modal-generate-flashcards
 title: Move flashcard generation flow into a modal dialog
-status: planned
+status: implementing
 created: 2026-06-03
-updated: 2026-06-03
+updated: 2026-06-04
 archived_at: null
 ---
 
