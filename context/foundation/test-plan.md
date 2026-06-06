@@ -13,14 +13,14 @@
 Tests follow three non-negotiable principles for this project:
 
 1. **Cost × signal.** The cheapest test that gives a real signal for the
-   risk wins. Do not promote to e2e because e2e "feels safer." Do not put a
+  risk wins. Do not promote to e2e because e2e "feels safer." Do not put a
    vision model on top of a deterministic visual diff that already catches
    the regression.
 2. **User concerns are first-class evidence.** Risks anchored in "the
-   team is worried about X, and the failure would surface somewhere in
-   \<area\>" carry the same weight as PRD lines or hot-spot data.
+  team is worried about X, and the failure would surface somewhere in
+   area" carry the same weight as PRD lines or hot-spot data.
 3. **Risks are scenarios, not code locations.** This plan documents *what
-   could fail* and *why we believe it's likely* — drawn from documents,
+  could fail* and *why we believe it's likely* — drawn from documents,
    interview, and codebase *signal* (churn, structure, test base). It does
    NOT claim to know which line owns the failure. That knowledge is
    produced by `/10x-research` during each rollout phase. If the plan and
@@ -37,25 +37,29 @@ terms, not test names. The Source column cites the *evidence that surfaced
 this risk* — never a specific file as "where the failure lives" (that is
 research's job, see §1 principle #3).
 
-| # | Risk (failure scenario) | Impact | Likelihood | Source (evidence — not anchor) |
-|---|---|---|---|---|
-| 1 | AI generation returns malformed or empty proposals — user pastes text, clicks Generate, gets zero usable cards (LLM returns invalid JSON, parser rejects, or array is empty) | High | Medium | PRD US-01, FR-006, FR-007; interview Q1 ("core functionality"); hot-spot dir `src/components/generation` (20 commits/30d) |
-| 2 | Deck-save writes partially — deck created but cards missing — user accepts proposals, clicks Save, gets success, but deck is empty because bulk card insert failed silently | High | Medium | PRD guardrail (durability of flashcards); archive first-gated-generation/plan.md (bulk insert + trigger dependency); interview Q2 (Supabase config burns) |
-| 3 | SR scheduling error — due cards not shown or shown when not due — student trusts the algorithm; a bug in due-date filtering or rating persistence means they study wrong | High | Low | PRD guardrail (SR algorithm correctness); archive review-session/plan.md (ts-fsrs integration, due_before contract) |
-| 4 | Cross-user data access via RLS gap — user A reads or modifies user B's decks/cards by manipulating IDs in API requests | High | Low | PRD NFR (user data isolation); interview Q2 (burned on Supabase config); hot-spot dir `src/lib/services` (10 commits/30d) |
-| 5 | Generation flow drops pasted text on API error — AI call times out, student's pasted notes disappear from the UI, requiring re-paste | Medium | Medium | PRD FR-007 (preserve input on error); US-01 AC (error recovery); interview Q1 |
-| 6 | Auth gate regression — unauthenticated user reaches product routes — a change to middleware exposes dashboard/generation/deck pages to anonymous users | High | Low | PRD FR-005 (redirect non-signed-in); hot-spot dir `src/pages` (14 commits/30d) |
+
+| #   | Risk (failure scenario)                                                                                                                                                      | Impact | Likelihood | Source (evidence — not anchor)                                                                                                                            |
+| --- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------ | ---------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1   | AI generation returns malformed or empty proposals — user pastes text, clicks Generate, gets zero usable cards (LLM returns invalid JSON, parser rejects, or array is empty) | High   | Medium     | PRD US-01, FR-006, FR-007; interview Q1 ("core functionality"); hot-spot dir `src/components/generation` (20 commits/30d)                                 |
+| 2   | Deck-save writes partially — deck created but cards missing — user accepts proposals, clicks Save, gets success, but deck is empty because bulk card insert failed silently  | High   | Medium     | PRD guardrail (durability of flashcards); archive first-gated-generation/plan.md (bulk insert + trigger dependency); interview Q2 (Supabase config burns) |
+| 3   | SR scheduling error — due cards not shown or shown when not due — student trusts the algorithm; a bug in due-date filtering or rating persistence means they study wrong     | High   | Low        | PRD guardrail (SR algorithm correctness); archive review-session/plan.md (ts-fsrs integration, due_before contract)                                       |
+| 4   | Cross-user data access via RLS gap — user A reads or modifies user B's decks/cards by manipulating IDs in API requests                                                       | High   | Low        | PRD NFR (user data isolation); interview Q2 (burned on Supabase config); hot-spot dir `src/lib/services` (10 commits/30d)                                 |
+| 5   | Generation flow drops pasted text on API error — AI call times out, student's pasted notes disappear from the UI, requiring re-paste                                         | Medium | Medium     | PRD FR-007 (preserve input on error); US-01 AC (error recovery); interview Q1                                                                             |
+| 6   | Auth gate regression — unauthenticated user reaches product routes — a change to middleware exposes dashboard/generation/deck pages to anonymous users                       | High   | Low        | PRD FR-005 (redirect non-signed-in); hot-spot dir `src/pages` (14 commits/30d)                                                                            |
+
 
 ### Risk Response Guidance
 
-| Risk | What would prove protection | Must challenge | Context `/10x-research` must ground | Likely cheapest layer | Anti-pattern to avoid |
-|---|---|---|---|---|---|
-| #1 | Given valid input, the service returns a well-formed array of `{front, back}` pairs; given malformed LLM output, the service returns a structured error without crashing | "If JSON.parse succeeds, the response is valid" — it can parse but violate the schema | Entry point to LLM, response parsing logic, Zod validation schema, error propagation path | Unit test (service layer, mocked LLM response) | Asserting against a hardcoded LLM response snapshot — tautological test |
-| #2 | After save completes, deck row count equals accepted proposals; if any insert fails, user sees an error and no partial deck is created | "Insert returns without error = all rows landed" — bulk insert can succeed partially | Deck creation + card bulk insert sequence, trigger behavior, error surfacing path | Integration test (API route with test DB) | Mocking DB so heavily the test can never catch an RLS or trigger issue |
-| #3 | Cards rated "Good" today do not appear tomorrow; cards due today always appear; Again-rated cards reappear in same session | "ts-fsrs is tested by its maintainers" — the integration layer is custom and untested | Row-to-FSRS-card mapper, rating service, due-date query filter, Again-requeue logic | Unit test (service layer with deterministic FSRS config) | Testing ts-fsrs's own algorithm instead of the integration boundary |
-| #4 | A request with user A's token attempting to read/modify user B's deck returns 0 rows or 403 — never user B's data | "RLS is on = isolation works" — a missing policy on a new table or service-role bypass breaks this | Which tables have RLS, policy definitions, whether any route uses service-role client | Integration test (two test users, cross-access attempt) | Testing Supabase's RLS engine in isolation rather than the app's actual queries through it |
-| #5 | After an API error, the generation UI still displays the original pasted text and a retry option | "Text is in React state, it can't disappear" — a re-render, unmount, or navigation clears it | Error handling in the generation hook, what triggers unmount, error-state interaction with text state | Unit test (React hook with mocked fetch returning errors) | Testing only the happy path and assuming error recovery works |
-| #6 | An unauthenticated request to any product route returns redirect (pages) or 401 (API) — never 200 with content | "Middleware covers all routes" — a new route added outside the protection array is unguarded | Middleware implementation, route registration, how new routes join the protected set | Integration test (unauthenticated fetch against protected route patterns) | Hardcoding the route list in the test — becomes stale when a new route is added |
+
+| Risk | What would prove protection                                                                                                                                              | Must challenge                                                                                     | Context `/10x-research` must ground                                                                   | Likely cheapest layer                                                     | Anti-pattern to avoid                                                                      |
+| ---- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
+| #1   | Given valid input, the service returns a well-formed array of `{front, back}` pairs; given malformed LLM output, the service returns a structured error without crashing | "If JSON.parse succeeds, the response is valid" — it can parse but violate the schema              | Entry point to LLM, response parsing logic, Zod validation schema, error propagation path             | Unit test (service layer, mocked LLM response)                            | Asserting against a hardcoded LLM response snapshot — tautological test                    |
+| #2   | After save completes, deck row count equals accepted proposals; if any insert fails, user sees an error and no partial deck is created                                   | "Insert returns without error = all rows landed" — bulk insert can succeed partially               | Deck creation + card bulk insert sequence, trigger behavior, error surfacing path                     | Integration test (API route with test DB)                                 | Mocking DB so heavily the test can never catch an RLS or trigger issue                     |
+| #3   | Cards rated "Good" today do not appear tomorrow; cards due today always appear; Again-rated cards reappear in same session                                               | "ts-fsrs is tested by its maintainers" — the integration layer is custom and untested              | Row-to-FSRS-card mapper, rating service, due-date query filter, Again-requeue logic                   | Unit test (service layer with deterministic FSRS config)                  | Testing ts-fsrs's own algorithm instead of the integration boundary                        |
+| #4   | A request with user A's token attempting to read/modify user B's deck returns 0 rows or 403 — never user B's data                                                        | "RLS is on = isolation works" — a missing policy on a new table or service-role bypass breaks this | Which tables have RLS, policy definitions, whether any route uses service-role client                 | Integration test (two test users, cross-access attempt)                   | Testing Supabase's RLS engine in isolation rather than the app's actual queries through it |
+| #5   | After an API error, the generation UI still displays the original pasted text and a retry option                                                                         | "Text is in React state, it can't disappear" — a re-render, unmount, or navigation clears it       | Error handling in the generation hook, what triggers unmount, error-state interaction with text state | Unit test (React hook with mocked fetch returning errors)                 | Testing only the happy path and assuming error recovery works                              |
+| #6   | An unauthenticated request to any product route returns redirect (pages) or 401 (API) — never 200 with content                                                           | "Middleware covers all routes" — a new route added outside the protection array is unguarded       | Middleware implementation, route registration, how new routes join the protected set                  | Integration test (unauthenticated fetch against protected route patterns) | Hardcoding the route list in the test — becomes stale when a new route is added            |
+
 
 ## 3. Phased Rollout
 
@@ -63,26 +67,31 @@ Each row is a discrete rollout phase that will open its own change folder
 via `/10x-new`. Status moves left-to-right through the values below; the
 orchestrator updates Status as artifacts appear on disk.
 
-| # | Phase name | Goal (one line) | Risks covered | Test types | Status | Change folder |
-|---|---|---|---|---|---|---|
-| 1 | Critical-path coverage | Bootstrap Vitest; prove generation service produces valid output and save-to-deck is atomic | #1, #2, #5 | unit + integration | change opened | context/changes/testing-critical-path-coverage/ |
-| 2 | SR integration correctness | Prove the review service schedules and persists ratings correctly | #3 | unit | not started | — |
-| 3 | Auth and access control | Prove no unauthenticated or cross-user access is possible through the app's routes | #4, #6 | integration | not started | — |
-| 4 | Quality gates wiring | Lock the floor: wire lint + typecheck + test into CI so no commit can regress silently | cross-cutting | CI gates | not started | — |
+
+| #   | Phase name                 | Goal (one line)                                                                             | Risks covered | Test types         | Status        | Change folder                                   |
+| --- | -------------------------- | ------------------------------------------------------------------------------------------- | ------------- | ------------------ | ------------- | ----------------------------------------------- |
+| 1   | Critical-path coverage     | Bootstrap Vitest; prove generation service produces valid output and save-to-deck is atomic | #1, #2, #5    | unit + integration | change opened | context/changes/testing-critical-path-coverage/ |
+| 2   | SR integration correctness | Prove the review service schedules and persists ratings correctly                           | #3            | unit               | not started   | —                                               |
+| 3   | Auth and access control    | Prove no unauthenticated or cross-user access is possible through the app's routes          | #4, #6        | integration        | not started   | —                                               |
+| 4   | Quality gates wiring       | Lock the floor: wire lint + typecheck + test into CI so no commit can regress silently      | cross-cutting | CI gates           | not started   | —                                               |
+
 
 ## 4. Stack
 
 The classic test base for this project. No test infrastructure exists yet —
 Phase 1 bootstraps the runner.
 
-| Layer | Tool | Version | Notes |
-|---|---|---|---|
-| unit + integration | Vitest | latest (to install in Phase 1) | Vite-native; zero-config with Astro projects; supports TypeScript and JSX out of the box |
-| API/service mocking | MSW (Mock Service Worker) | latest (to install in Phase 1) | Intercepts at the network level; mocks OpenRouter responses without touching internals |
-| e2e | none yet — see §3 Phase 3 if warranted | — | e2e only if cheaper layers cannot cover the interaction risk |
-| accessibility | none planned | — | Baseline a11y is a non-goal per PRD (no WCAG-AA audit in MVP) |
+
+| Layer               | Tool                                   | Version                        | Notes                                                                                    |
+| ------------------- | -------------------------------------- | ------------------------------ | ---------------------------------------------------------------------------------------- |
+| unit + integration  | Vitest                                 | latest (to install in Phase 1) | Vite-native; zero-config with Astro projects; supports TypeScript and JSX out of the box |
+| API/service mocking | MSW (Mock Service Worker)              | latest (to install in Phase 1) | Intercepts at the network level; mocks OpenRouter responses without touching internals   |
+| e2e                 | none yet — see §3 Phase 3 if warranted | —                              | e2e only if cheaper layers cannot cover the interaction risk                             |
+| accessibility       | none planned                           | —                              | Baseline a11y is a non-goal per PRD (no WCAG-AA audit in MVP)                            |
+
 
 **Stack grounding tools (current session):**
+
 - Docs: Context7 — available; can query Vitest, Astro, Supabase, ts-fsrs docs; checked: 2026-06-06
 - Search: Exa.ai — available; can verify current tool status and best practices; checked: 2026-06-06
 - Runtime/browser: none — no Playwright MCP runtime in session; checked: 2026-06-06
@@ -94,12 +103,14 @@ The full set of gates that must pass before a change reaches production.
 "Required after §3 Phase N" means the gate is enforced once that rollout
 phase lands; before that, the gate is `planned`.
 
-| Gate | Where | Required? | Catches |
-|---|---|---|---|
-| lint (ESLint) + typecheck (`astro check`) | local (husky pre-commit) + CI | required | syntactic / type drift |
-| unit + integration tests | local + CI | required after §3 Phase 1 | logic regressions in generation, save, SR, auth |
-| e2e on critical flows | CI on PR | optional — add only if unit+integration leaves a gap | broken cross-layer user paths |
-| post-edit hook (run affected tests) | local (agent loop) | recommended after §3 Phase 4 | regressions at edit time before commit |
+
+| Gate                                      | Where                         | Required?                                            | Catches                                         |
+| ----------------------------------------- | ----------------------------- | ---------------------------------------------------- | ----------------------------------------------- |
+| lint (ESLint) + typecheck (`astro check`) | local (husky pre-commit) + CI | required                                             | syntactic / type drift                          |
+| unit + integration tests                  | local + CI                    | required after §3 Phase 1                            | logic regressions in generation, save, SR, auth |
+| e2e on critical flows                     | CI on PR                      | optional — add only if unit+integration leaves a gap | broken cross-layer user paths                   |
+| post-edit hook (run affected tests)       | local (agent loop)            | recommended after §3 Phase 4                         | regressions at edit time before commit          |
+
 
 ## 6. Cookbook Patterns
 
@@ -149,3 +160,4 @@ Refresh (`/10x-test-plan --refresh`) when:
 - a recommended tool's `checked:` date is older than three months,
 - the project's tech stack changes (new framework, new test runner),
 - §7 negative-space no longer matches what the team believes.
+
