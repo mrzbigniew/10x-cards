@@ -407,9 +407,9 @@ change is ready for review.
 
 #### Automated
 
-- [x] 3.1 `npx stryker run --mutate "src/lib/services/sr.ts"` completes without config errors
+- [x] 3.1 `npx stryker run --mutate "src/lib/services/sr.ts"` completes without config errors — 9a103d1
 
 #### Manual
 
-- [x] 3.2 Every survived mutant documented in sr.test.ts comment block
-- [x] 3.3 test-plan.md Phase 2 row shows `done`
+- [x] 3.2 Every survived mutant documented in sr.test.ts comment block — 9a103d1
+- [x] 3.3 test-plan.md Phase 2 row shows `done` — 9a103d1

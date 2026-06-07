@@ -1,7 +1,7 @@
 ---
 change_id: testing-sr-integration-correctness
 title: SR integration correctness — prove review service schedules and persists ratings correctly
-status: implementing
+status: implemented
 created: 2026-06-07
 updated: 2026-06-07
 
