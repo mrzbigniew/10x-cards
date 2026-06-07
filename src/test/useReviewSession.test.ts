@@ -101,7 +101,7 @@ describe("useReviewSession — logika kolejki", () => {
 
     const { result } = renderHook(() => useReviewSession(DECK_ID));
 
-    await act(() => Promise.resolve());
+    await act(async () => {});
 
     await act(async () => {
       await result.current.rate(1);
@@ -133,7 +133,7 @@ describe("useReviewSession — logika kolejki", () => {
 
     const { result } = renderHook(() => useReviewSession(DECK_ID));
 
-    await act(() => Promise.resolve());
+    await act(async () => {});
 
     await act(async () => {
       await result.current.rate(3);
@@ -141,6 +141,38 @@ describe("useReviewSession — logika kolejki", () => {
 
     expect(result.current.remaining).toBe(0);
     expect(result.current.current?.id).toBe(CARD_B.id);
+    expect(result.current.reviewedCount).toBe(1);
+    expect(result.current.finished).toBe(false);
+  });
+
+  it("reviewedCount nie zwiększa się, gdy ta sama karta pojawia się w kolejce dwukrotnie", async () => {
+    const CARD_A_DUP: DueCard = { ...CARD_A, sr: { ...CARD_A.sr, id: "sr-a-dup" } };
+    const fetchSpy = vi.spyOn(globalThis, "fetch");
+    fetchSpy
+      .mockResolvedValueOnce({
+        ok: true,
+        json: vi.fn().mockResolvedValue({ cards: [CARD_A, CARD_A_DUP] }),
+      } as unknown as Response)
+      .mockResolvedValueOnce({
+        ok: true,
+        json: vi.fn().mockResolvedValue({ sr: UPDATED_SR_A }),
+      } as unknown as Response)
+      .mockResolvedValueOnce({
+        ok: true,
+        json: vi.fn().mockResolvedValue({ sr: UPDATED_SR_A }),
+      } as unknown as Response);
+
+    const { result } = renderHook(() => useReviewSession(DECK_ID));
+    await act(async () => {});
+
+    await act(async () => {
+      await result.current.rate(3);
+    });
+    expect(result.current.reviewedCount).toBe(1);
+
+    await act(async () => {
+      await result.current.rate(3);
+    });
     expect(result.current.reviewedCount).toBe(1);
   });
 
@@ -158,7 +190,7 @@ describe("useReviewSession — logika kolejki", () => {
 
     const { result } = renderHook(() => useReviewSession(DECK_ID));
 
-    await act(() => Promise.resolve());
+    await act(async () => {});
 
     await act(async () => {
       await result.current.rate(3);

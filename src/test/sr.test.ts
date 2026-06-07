@@ -157,9 +157,10 @@ describe("loadDueCards", () => {
     const dueBefore = TEST_NOW.toISOString();
     loadDueResultFn.mockResolvedValueOnce({ data: [], error: null });
 
-    await loadDueCards(supabase, USER_ID, DECK_ID, dueBefore);
+    const result = await loadDueCards(supabase, USER_ID, DECK_ID, dueBefore);
 
     expect(lteFn).toHaveBeenCalledWith("due", dueBefore);
+    expect(result).toEqual([]);
   });
 
   it("rzuca błąd gdy Supabase zwróci error", async () => {
@@ -195,6 +196,8 @@ describe("applyRating", () => {
     const result = await applyRating(supabase, USER_ID, CARD_ID, DECK_ID, 3, TEST_NOW);
 
     expect(result).toEqual(expectedUpdate);
+    expect(result.reps).toBe(1);
+    expect(result.state).toBeGreaterThan(0);
     expect(srUpdateFn).toHaveBeenCalled();
     expect(reviewLogsInsertFn).toHaveBeenCalled();
   });
@@ -216,6 +219,7 @@ describe("applyRating", () => {
   });
 
   it("błąd wstawiania review_log nie jest propagowany — applyRating rozwiązuje się pomyślnie", async () => {
+    const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => {});
     const expectedUpdate = fsrsCardToDbUpdate(scheduler.next(buildCard(INITIAL_CARD_ROW), TEST_NOW, 3).card);
 
     srLoadSingleFn.mockResolvedValueOnce({
@@ -228,6 +232,8 @@ describe("applyRating", () => {
     const result = await applyRating(supabase, USER_ID, CARD_ID, DECK_ID, 3, TEST_NOW);
 
     expect(result).toEqual(expectedUpdate);
+    expect(consoleSpy).toHaveBeenCalledWith("[review_logs] insert failed:", "log insert failed");
+    consoleSpy.mockRestore();
   });
 });
 
