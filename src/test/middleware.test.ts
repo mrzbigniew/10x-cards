@@ -5,8 +5,9 @@ vi.mock("astro:middleware", () => ({
 }));
 
 const mockGetUser = vi.fn();
+const mockCreateClient = vi.fn();
 vi.mock("@/lib/supabase", () => ({
-  createClient: () => ({ auth: { getUser: mockGetUser } }),
+  createClient: (...args: unknown[]) => mockCreateClient(...args),
 }));
 
 import { onRequest } from "@/middleware";
@@ -32,7 +33,8 @@ function makeContext(path: string): MockContext {
 const next = vi.fn().mockResolvedValue(new Response(null, { status: 200 }));
 
 beforeEach(() => {
-  vi.clearAllMocks();
+  vi.resetAllMocks();
+  mockCreateClient.mockReturnValue({ auth: { getUser: mockGetUser } });
   next.mockResolvedValue(new Response(null, { status: 200 }));
 });
 
@@ -85,6 +87,15 @@ describe("middleware: bramka uwierzytelniania", () => {
   it("strażnik prefiksu /api/auth/: nieuwhentykowany użytkownik wywołujący /api/auth2 otrzymuje 401", async () => {
     mockGetUser.mockResolvedValueOnce({ data: { user: null } });
     const ctx = makeContext("/api/auth2");
+
+    const response = await onRequest(ctx as never, next);
+
+    expect((response as Response).status).toBe(401);
+  });
+
+  it("nieautoryzowany użytkownik otrzymuje 401 gdy createClient zwraca null (brak konfiguracji sesji)", async () => {
+    mockCreateClient.mockReturnValueOnce(null);
+    const ctx = makeContext("/api/decks");
 
     const response = await onRequest(ctx as never, next);
 

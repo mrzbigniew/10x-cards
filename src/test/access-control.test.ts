@@ -6,13 +6,10 @@ import type { createClient } from "@/lib/supabase";
 
 type SupabaseClientType = NonNullable<ReturnType<typeof createClient>>;
 
-const USER_A_ID = "user-a-uuid";
 const USER_B_ID = "user-b-uuid";
 const USER_A_DECK_ID = "deck-a-uuid";
 const USER_A_CARD_ID = "card-a-uuid";
-const CARDS = [
-  { front: "Pytanie", back: "Odpowiedź" },
-];
+const CARDS = [{ front: "Pytanie", back: "Odpowiedź" }];
 const TEST_NOW = new Date("2026-01-15T10:00:00Z");
 
 // ---------------------------------------------------------------------------
@@ -26,7 +23,7 @@ describe("listDecksWithCardCount: użytkownik B próbuje wylistować zestawy uż
     const chain: Record<string, unknown> = {};
     chain.select = vi.fn().mockReturnValue(chain);
     chain.eq = vi.fn().mockReturnValue(chain);
-    chain.order = vi.fn().mockImplementation(() => orderFn());
+    chain.order = vi.fn().mockImplementation(() => orderFn() as Promise<unknown>);
     return { from: vi.fn().mockReturnValue(chain) } as unknown as SupabaseClientType;
   }
 
@@ -58,7 +55,7 @@ describe("renameDeck: użytkownik B próbuje zmienić nazwę zestawu użytkownik
     chain.update = vi.fn().mockReturnValue(chain);
     chain.eq = vi.fn().mockReturnValue(chain);
     chain.select = vi.fn().mockReturnValue(chain);
-    chain.single = vi.fn().mockImplementation(() => singleFn());
+    chain.single = vi.fn().mockImplementation(() => singleFn() as Promise<unknown>);
     return { from: vi.fn().mockReturnValue(chain) } as unknown as SupabaseClientType;
   }
 
@@ -88,7 +85,7 @@ describe("deleteDeck: użytkownik B próbuje usunąć zestaw użytkownika A", ()
     chain.delete = vi.fn().mockReturnValue(chain);
     chain.eq = vi.fn().mockReturnValue(chain);
     chain.select = vi.fn().mockReturnValue(chain);
-    chain.single = vi.fn().mockImplementation(() => singleFn());
+    chain.single = vi.fn().mockImplementation(() => singleFn() as Promise<unknown>);
     return { from: vi.fn().mockReturnValue(chain) } as unknown as SupabaseClientType;
   }
 
@@ -117,7 +114,7 @@ describe("appendCardsToDeck: użytkownik B próbuje dołączyć karty do zestawu
     const chain: Record<string, unknown> = {};
     chain.select = vi.fn().mockReturnValue(chain);
     chain.eq = vi.fn().mockReturnValue(chain);
-    chain.single = vi.fn().mockImplementation(() => singleFn());
+    chain.single = vi.fn().mockImplementation(() => singleFn() as Promise<unknown>);
     return { from: vi.fn().mockReturnValue(chain) } as unknown as SupabaseClientType;
   }
 
@@ -160,13 +157,12 @@ describe("applyRating: użytkownik B próbuje ocenić kartę użytkownika A", ()
         .mockReset()
         .mockReturnValueOnce(chain)
         // eslint-disable-next-line @typescript-eslint/no-misused-promises
-        .mockImplementation(() => srUpdateFn());
+        .mockImplementation(() => srUpdateFn() as Promise<unknown>);
       return chain;
     });
     chain.eq = vi.fn().mockReturnValue(chain);
-    chain.lte = vi.fn().mockReturnValue(chain);
     chain.order = vi.fn().mockReturnValue(chain);
-    chain.single = vi.fn().mockImplementation(() => srLoadSingleFn());
+    chain.single = vi.fn().mockImplementation(() => srLoadSingleFn() as Promise<unknown>);
 
     return chain;
   }
@@ -207,7 +203,7 @@ describe("listCardsInDeck: użytkownik B próbuje wylistować karty z zestawu u�
     const chain: Record<string, unknown> = {};
     chain.select = vi.fn().mockReturnValue(chain);
     chain.eq = vi.fn().mockReturnValue(chain);
-    chain.order = vi.fn().mockImplementation(() => orderFn());
+    chain.order = vi.fn().mockImplementation(() => orderFn() as Promise<unknown>);
     return { from: vi.fn().mockReturnValue(chain) } as unknown as SupabaseClientType;
   }
 
