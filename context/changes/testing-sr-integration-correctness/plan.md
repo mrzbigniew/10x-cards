@@ -393,15 +393,15 @@ change is ready for review.
 
 #### Automated
 
-- [x] 2.1 All 3 useReviewSession.test.ts cases pass: `npm test -- useReviewSession.test.ts`
-- [x] 2.2 Full test suite still passes: `npm test`
-- [x] 2.3 Typecheck passes: `npm run check`
-- [x] 2.4 Lint passes: `npm run lint`
+- [x] 2.1 All 3 useReviewSession.test.ts cases pass: `npm test -- useReviewSession.test.ts` — 9dc9b75
+- [x] 2.2 Full test suite still passes: `npm test` — 9dc9b75
+- [x] 2.3 Typecheck passes: `npm run check` — 9dc9b75
+- [x] 2.4 Lint passes: `npm run lint` — 9dc9b75
 
 #### Manual
 
-- [x] 2.5 All 3 case names visible and passing with `--reporter=verbose`
-- [x] 2.6 Again test checks both queue order and `sr` field update
+- [x] 2.5 All 3 case names visible and passing with `--reporter=verbose` — 9dc9b75
+- [x] 2.6 Again test checks both queue order and `sr` field update — 9dc9b75
 
 ### Phase 3: Mutation Triage
 
