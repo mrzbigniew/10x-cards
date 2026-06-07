@@ -389,11 +389,11 @@ Stryker with `coverageAnalysis: "perTest"` on `generation.ts` (one file, ~50 lin
 
 #### Automated
 
-- [x] 5.1 `npm run test:mutation` completes (exit 0 or above `low: 60` threshold)
-- [x] 5.2 `npm run test` still green after any new assertions
-- [x] 5.3 `npm run lint` passes
+- [x] 5.1 `npm run test:mutation` completes (exit 0 or above `low: 60` threshold) — 603989b
+- [x] 5.2 `npm run test` still green after any new assertions — 603989b
+- [x] 5.3 `npm run lint` passes — 603989b
 
 #### Manual
 
-- [ ] 5.4 HTML Stryker report reviewed; every survived mutant has a triage decision
-- [ ] 5.5 `test-plan.md §6.1`, `§6.2`, and `§6.3` contain prose descriptions (not "TBD")
+- [x] 5.4 HTML Stryker report reviewed; every survived mutant has a triage decision — 603989b
+- [x] 5.5 `test-plan.md §6.1`, `§6.2`, and `§6.3` contain prose descriptions (not "TBD") — 603989b
