@@ -1,8 +1,14 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Sun, Moon } from "lucide-react";
 
 export default function ThemeToggle() {
-  const [isDark, setIsDark] = useState(() => document.documentElement.classList.contains("dark"));
+  const [isDark, setIsDark] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setIsDark(document.documentElement.classList.contains("dark"));
+    setMounted(true);
+  }, []);
 
   function toggle() {
     const next = !isDark;
@@ -17,7 +23,7 @@ export default function ThemeToggle() {
       className="text-foreground/60 hover:text-foreground rounded p-1 transition-colors"
       aria-label={isDark ? "Przełącz na jasny motyw" : "Przełącz na ciemny motyw"}
     >
-      {isDark ? <Sun className="size-4" /> : <Moon className="size-4" />}
+      {!mounted ? <Moon className="size-4" /> : isDark ? <Sun className="size-4" /> : <Moon className="size-4" />}
     </button>
   );
 }
