@@ -171,7 +171,7 @@ cases for risk #3 in a single file following the `decks.test.ts` pattern.
   `{ data: { ...INITIAL_CARD_ROW, cards: { deck_id: DECK_ID } }, error: null }`,
   `srUpdateFn` to return `{ error: null }`, `reviewLogsInsertFn` to return
   `{ error: null }`. Call `applyRating(supabase, USER_ID, CARD_ID, DECK_ID, 3, TEST_NOW)`.
-  Assert: return value deep-equals `expectedUpdate`; `srUpdateFn` was called; 
+  Assert: return value deep-equals `expectedUpdate`; `srUpdateFn` was called;
   `reviewLogsInsertFn` was called.
 - "rzuca błąd gdy ładowanie card_sr_state nie powiedzie się" — `srLoadSingleFn` returns
   `{ data: null, error: { message: "load failed" } }`; assert `rejects.toThrow("load
@@ -386,8 +386,8 @@ change is ready for review.
 
 #### Manual
 
-- [ ] 1.5 All 7 case names visible and passing with `--reporter=verbose`
-- [ ] 1.6 Non-fatal log test explicitly confirms `applyRating` resolved
+- [x] 1.5 All 7 case names visible and passing with `--reporter=verbose`
+- [x] 1.6 Non-fatal log test explicitly confirms `applyRating` resolved
 
 ### Phase 2: Hook Tests
 
