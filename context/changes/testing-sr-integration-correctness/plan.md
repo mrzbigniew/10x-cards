@@ -379,10 +379,10 @@ change is ready for review.
 
 #### Automated
 
-- [ ] 1.1 All 7 sr.test.ts cases pass: `npm test -- sr.test.ts`
-- [ ] 1.2 Full test suite still passes: `npm test`
-- [ ] 1.3 Typecheck passes: `npm run check`
-- [ ] 1.4 Lint passes: `npm run lint`
+- [x] 1.1 All 7 sr.test.ts cases pass: `npm test -- sr.test.ts`
+- [x] 1.2 Full test suite still passes: `npm test`
+- [x] 1.3 Typecheck passes: `npm run check`
+- [x] 1.4 Lint passes: `npm run lint`
 
 #### Manual
 
