@@ -3,7 +3,7 @@ change_id: testing-critical-path-coverage
 title: Testing critical path coverage
 status: planned
 created: 2026-06-06
-updated: 2026-06-06
+updated: 2026-06-07
 archived_at: null
 ---
 

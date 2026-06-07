@@ -10,9 +10,16 @@ Bootstrap the project's first test infrastructure (Vitest + MSW + Testing Librar
 
 Each test asserts the **contract** (what the code should do, per PRD/domain), not a snapshot of current output. As part of Risk #2, this plan also fixes the underlying non-atomicity defect (orphan deck) so the test asserts a clean contract rather than documenting a bug.
 
+> **Plan revision (2026-06-07, commit `61eb0bd`):** Re-grounded after a research
+> refresh found test infra **partially bootstrapped**. Decisions applied below:
+> (1) stay on **Vitest 4.x**; (2) keep the **`getViteConfig`** config; (3) add the
+> **non-watch** scripts; (4) scope **Stryker to `generation.ts`**; (5) the
+> whitespace-only edge is now **in scope** (change `ProposalSchema` to
+> `.trim().min(1)` + test). Integration stays **hermetic-only / deferred**.
+
 ## Current State Analysis
 
-No test infrastructure exists: zero test deps, no `vitest.config.*`, no `*.test.*` files, no `test` script. The repo is **Astro 6** (`astro@^6.3.1`), npm, `output: "server"`, Cloudflare adapter, React 19, Vite pinned to `^7.3.2` via `overrides`. `tsconfig.json` extends `astro/tsconfigs/strict`, aliases `@/* → ./src/*`, and uses `react-jsx` / `jsxImportSource: "react"`.
+Test infrastructure is **partially bootstrapped** (not the zero-state of the original plan). Already present: `vitest@^4.1.8`, `jsdom@^29.1.1`, `@stryker-mutator/core` + `@stryker-mutator/vitest-runner@^9.6.1`, `zod` promoted to a **direct** dependency (`^4.4.3`), a `vitest.config.ts` built on Astro's `getViteConfig` (+ `@astrojs/node` adapter), and a `stryker.config.json` (broad `mutate` glob). **Still missing:** `msw`, `@testing-library/react`/`-dom`, `@vitest/coverage-v8`, `vitest.setup.ts`, the non-watch scripts, and **all test files**. `"test"` is currently `"vitest"` (watch mode). The repo is **Astro 6** (`astro@^6.4.4`), npm, `output: "server"`, Cloudflare adapter, React 19, Vite resolved `7.3.5` via `overrides`. `tsconfig.json` extends `astro/tsconfigs/strict`, aliases `@/* → ./src/*`, and uses `react-jsx` / `jsxImportSource: "react"`.
 
 The three targets are well-seamed:
 
@@ -37,7 +44,7 @@ The three targets are well-seamed:
 
 - **No CI changes.** Wiring tests + `astro check` into `.github/workflows/ci.yml` is test-plan §3 Phase 4. Phase 1 only adds npm scripts.
 - **No real-Supabase integration test.** The happy-path row-count + trigger assertion is deferred and marked ad-hoc per CLAUDE.md doctrine; no local stack is assumed this session.
-- **No whitespace-only validation change.** `ProposalSchema` `.min(1)` (not `.trim().min(1)`) accepting `" "` is accepted behaviour for Phase 1 — no dedicated test, no schema change.
+- ~~**No whitespace-only validation change.**~~ **Now IN SCOPE (decision 2026-06-07):** `ProposalSchema` changes from `.min(1)` to `.trim().min(1)` so whitespace-only `" "` is rejected; covered by a dedicated test in Phase 2. Note `.trim()` also normalises surrounding whitespace on valid content.
 - **No e2e, no a11y, no visual tests** (test-plan §7 negative space).
 - **No changes to Risks #3/#4/#6** — those are Phases 2–3.
 - **No transaction/RPC rewrite** of the save path — the compensating best-effort delete is the agreed scope, not a Postgres atomic-save function.
@@ -48,7 +55,7 @@ Build the runner first (Phase 1) so every later phase has a green harness. Cover
 
 ## Critical Implementation Details
 
-- **`astro:env/server` resolution** — Vitest cannot resolve this virtual module. Resolve it once in the Vitest config via `resolve.alias` (or `test.alias`) pointing `astro:env/server` at a small stub module that exports the secrets as mutable values, OR `vi.mock("astro:env/server", ...)` in setup. Risk #1's "missing `OPENROUTER_API_KEY`" case and the configured case both need to toggle this value per test, so the stub must allow per-test override (mockable export, not a frozen constant).
+- **`astro:env/server` resolution (decision: `getViteConfig`)** — the shipped `vitest.config.ts` uses Astro's `getViteConfig`, which inherits Astro's Vite plugins and is expected to resolve the `astro:env/server` virtual *module* without a hand-written alias/stub. **Verify** this in the Phase 1 smoke test. Secret *values* are still toggled per test via `vi.mock("astro:env/server", ...)` — Risk #1's "missing `OPENROUTER_API_KEY`" case and the configured case both need a mockable export, not a frozen constant. Do **not** create a standalone `src/test/astro-env-server.stub.ts`.
 - **ESLint `strictTypeChecked` over test files** — floating promises, `any`, and unsafe member access will error. Import Vitest globals explicitly; type stub clients against `SupabaseClientType` (cast through `unknown` only where unavoidable, with a localized eslint-disable comment naming the reason if needed).
 - **Compensating-delete ordering (Risk #2 fix)** — on card-insert error, attempt `delete from decks where id = deck.id` (best-effort), then throw the *original* card-insert error. A failure of the cleanup delete must be caught and logged (warn), never masking the original error. The user sees one coherent error; the orphan is removed on the happy-cleanup path.
 
@@ -64,25 +71,25 @@ Install and wire Vitest, MSW, jsdom, and Testing Library so the repo has a green
 
 **File**: `package.json`
 
-**Intent**: Add the Phase 1 test toolchain as devDependencies and expose run scripts. Add `zod` as an explicit dependency (currently only transitive) since service/schema tests import it.
+**Intent**: Complete the partially-installed test toolchain and fix the run scripts. `vitest@^4.1.8`, `jsdom`, `@stryker-mutator/*`, and a direct `zod` are **already installed** — do not re-pin or downgrade. Add only what is missing, and replace the watch-mode `test` script with the non-watch set.
 
-**Contract**: New devDeps — `vitest` (3.x, Vite-7 compatible), `@vitest/coverage-v8`, `msw`, `jsdom`, `@testing-library/react`, `@testing-library/dom`, `@stryker-mutator/core` + `@stryker-mutator/vitest-runner` (used in Phase 5). New scripts: `"test": "vitest run"`, `"test:watch": "vitest"`, `"test:coverage": "vitest run --coverage"`. Promote `zod` to `dependencies`. Install with npm; pick versions via the package manager (do not hand-write versions).
+**Contract**: Add the missing devDeps — `@vitest/coverage-v8` (matching the installed **Vitest 4.x** major), `msw`, `@testing-library/react`, `@testing-library/dom`. Keep `vitest@^4.1.8` (decision: stay on 4.x — do **not** install 3.x). Replace scripts so the default is non-watch: `"test": "vitest run"`, `"test:watch": "vitest"`, `"test:coverage": "vitest run --coverage"`. `zod` is already a direct dependency (done). Install with npm; pick versions via the package manager (do not hand-write versions).
 
 #### 2. Vitest configuration
 
-**File**: `vitest.config.ts` (new)
+**File**: `vitest.config.ts` (exists — extend, do not rewrite)
 
-**Intent**: Configure Vitest to mirror the project's path alias, default to jsdom for component/hook tests, load a global setup file, and resolve the `astro:env/server` virtual module to a mockable stub.
+**Intent**: Keep the **`getViteConfig`** approach already shipped (decision: do not switch to a hand-written `defineConfig` + standalone `astro:env/server` stub). Add only what's missing on top of it: a `setupFiles` entry for Testing Library cleanup. Rely on `getViteConfig` inheriting Astro's Vite plugins to resolve the `astro:env/server` virtual *module*; secret *values* are toggled per test via `vi.mock` (see #3).
 
-**Contract**: `defineConfig({ test: { environment: "jsdom", globals: false, setupFiles: ["./vitest.setup.ts"], coverage: { provider: "v8" } }, resolve: { alias: { "@": "/src", "astro:env/server": <stub path> } } })`. `globals: false` keeps tests importing from `vitest` explicitly (lint-clean). Alias `@` to the absolute `src` path.
+**Contract**: Current config is `getViteConfig({ test: { environment: "jsdom", globals: false, coverage: { provider: "v8" }, alias: { "@": "/src" } } }, { adapter: node({ mode: "standalone" }) })`. Add `setupFiles: ["./vitest.setup.ts"]` to the `test` block. Keep `globals: false` (tests import from `vitest` explicitly — lint-clean) and the `@ → /src` alias. **Verify during Phase 1** that `astro:env/server` resolves under `getViteConfig` (no resolution error in the smoke test); if it does not, fall back to `vi.mock("astro:env/server", ...)` in setup.
 
 #### 3. Global setup + env stub
 
-**File**: `vitest.setup.ts` (new), `src/test/astro-env-server.stub.ts` (new)
+**File**: `vitest.setup.ts` (new)
 
-**Intent**: Provide a stub for `astro:env/server` whose exported secrets can be toggled per test, and register Testing Library cleanup. MSW server lifecycle is registered here only if a shared server is used; Risk #1 may instead mock the SDK directly (see Phase 2).
+**Intent**: Register Testing Library cleanup globally. Because the config uses `getViteConfig` (decision), **no standalone `astro:env/server` stub module is created** — the module resolves through Astro's plugins, and secret *values* are toggled per test with `vi.mock("astro:env/server", () => ({ OPENROUTER_API_KEY: ..., SUPABASE_URL: ..., SUPABASE_KEY: ... }))` (Risk #1's missing-key vs configured cases). MSW server lifecycle is registered here only if a shared server is used; Risk #1 instead mocks the SDK directly (see Phase 2).
 
-**Contract**: Stub module exports `let OPENROUTER_API_KEY`, `SUPABASE_URL`, `SUPABASE_KEY` (mutable, defaulting to a test value) so a test can override via `vi.mock`/assignment. `vitest.setup.ts` imports `@testing-library/react` `cleanup` in `afterEach`.
+**Contract**: `vitest.setup.ts` imports `cleanup` from `@testing-library/react` and calls it in `afterEach`. The Risk #1 suite owns its own `vi.mock("astro:env/server", ...)` per-case (mockable export, not a frozen constant), so the missing-key and configured paths can both be exercised. No `src/test/astro-env-server.stub.ts`.
 
 #### 4. Smoke test
 
@@ -126,12 +133,20 @@ Unit-test `generateProposals` against the full failure matrix and the happy-path
 
 **Contract**: Tests for the six rows of the research failure matrix —
   1. invalid/non-JSON/empty content → `"AI zwróciło nieprawidłową odpowiedź. Spróbuj ponownie."`
-  2. parses but fails schema (wrong shape / empty strings / non-array) → `"AI zwróciło nieoczekiwany format odpowiedzi. Spróbuj ponownie."`
+  2. parses but fails schema (wrong shape / empty strings / **whitespace-only `front`/`back`** / non-array) → `"AI zwróciło nieoczekiwany format odpowiedzi. Spróbuj ponownie."`
   3. valid but empty array `[]` → `"AI nie zwróciło żadnych propozycji. Spróbuj z dłuższym lub bardziej szczegółowym tekstem."`
   4. SDK throws → message starts with `"Żądanie do AI nie powiodło się:"`
   5. missing `OPENROUTER_API_KEY` → `"Generowanie AI nie jest skonfigurowane. Skontaktuj się z administratorem."`
   6. happy path → returns array, `length >= 1`, every element `front`/`back` non-empty.
-Use `it.each` for the schema-rejection variants (one parameterised test per malformed shape) to avoid redundant copies. Assert error type is `GenerationError` and `.message` equals the oracle string — never a captured LLM payload.
+Use `it.each` for the schema-rejection variants (one parameterised test per malformed shape, including the whitespace-only case) to avoid redundant copies. Assert error type is `GenerationError` and `.message` equals the oracle string — never a captured LLM payload.
+
+#### 2. Whitespace-only validation change (decision 2026-06-07 — in scope)
+
+**File**: `src/lib/schemas/generation.ts`
+
+**Intent**: Reject whitespace-only `front`/`back` so a `" "` card can never enter a deck. This change flows through both the generation validation (`z.array(ProposalSchema)`) and the save schemas (`NewDeckSaveSchema`/`ExistingDeckSaveSchema`) since they share `ProposalSchema`.
+
+**Contract**: Change `ProposalSchema` fields from `z.string().min(1)` to `z.string().trim().min(1)` (`generation.ts:7-10`). Consequence: whitespace-only input fails schema → at the service layer it surfaces as the existing schema-rejection oracle (`"AI zwróciło nieoczekiwany format odpowiedzi. Spróbuj ponownie."`); at the save API it yields a 400. `.trim()` also normalises surrounding whitespace on otherwise-valid content — this is accepted as desirable normalisation. The Phase 2 `it.each` schema-rejection set includes a whitespace-only row that goes red without this change and green with it (the test guards the fix).
 
 ### Success Criteria:
 
@@ -145,6 +160,7 @@ Use `it.each` for the schema-rejection variants (one parameterised test per malf
 
 - Each failure-matrix row maps to its exact Polish message (spot-check report output)
 - No test asserts against a hardcoded LLM response snapshot
+- Reverting `ProposalSchema` to `.min(1)` makes the whitespace-only test go red (guards the change)
 
 **Implementation Note**: Pause for human confirmation before Phase 3.
 
@@ -246,11 +262,11 @@ Validate the Risk #1 suite with mutation testing, document the three test patter
 
 #### 1. Stryker pass on the generation service
 
-**File**: `stryker.conf.json` (new)
+**File**: `stryker.config.json` (exists — narrow scope for this run)
 
-**Intent**: Configure Stryker with the Vitest runner scoped to `generation.ts`, run it as a selective gate, and either kill survived mutants with new assertions or consciously ignore equivalents.
+**Intent**: A `stryker.config.json` already exists with `testRunner: "vitest"` but a **broad** `mutate: ["src/**/*.ts", ...]` glob. For this change, scope the mutation run to `generation.ts` only (decision: selective gate per CLAUDE.md/AGENTS.md), run it, and either kill survived mutants with new assertions or consciously ignore equivalents.
 
-**Contract**: Stryker config with `testRunner: "vitest"`, `mutate: ["src/lib/services/generation.ts"]`. Run `npx stryker run`; review the HTML report; for each survivor ask "would this hurt a user/business?" — add an assertion in `generation.test.ts` if yes, document the ignore if no. Do not chase 100%.
+**Contract**: Either set `mutate: ["src/lib/services/generation.ts"]` for this run, or invoke `npx stryker run --mutate "src/lib/services/generation.ts"` to override the broad config without committing a permanently-narrowed file. Keep `testRunner: "vitest"`. Review the HTML report; for each survivor ask "would this hurt a user/business?" — add an assertion in `generation.test.ts` if yes, document the ignore if no. Do not chase 100%.
 
 #### 2. Cookbook update
 

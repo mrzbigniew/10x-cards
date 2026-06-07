@@ -22,7 +22,7 @@ Zero test infrastructure exists (no Vitest, no MSW, no test files, no `test` scr
 | Risk #2 oracle | Fix the bug + assert clean contract | Add best-effort compensating delete so the test proves no orphan deck, not documents one | Plan |
 | Integration scope | Hermetic-only now; integration deferred ad-hoc | No local Supabase assumed; CLAUDE.md ad-hoc-gate doctrine | Plan |
 | Hook DOM env | `@testing-library/react` + jsdom (`renderHook`) | Standard, well-documented React-hook testing path | Plan |
-| Whitespace-only card | Out of scope | Keep the oracle focused on structural validity for Phase 1 | Plan |
+| Whitespace-only card | **In scope (rev. 2026-06-07)** | Change `ProposalSchema` to `.trim().min(1)` + test so `" "` is rejected | Decision |
 | Risk #1 mock seam | `vi.mock` the OpenAI SDK | Deterministic, drives every parse/validate/empty branch without network | Plan |
 | Compensating-delete failure | Best-effort: log + throw original error | User sees one coherent error; cleanup failure never masks the real one | Plan |
 | Deck-save test breadth | Both `createDeckWithCards` and `appendCardsToDeck` | Both are part of the save-to-deck risk surface | Plan |
@@ -32,13 +32,13 @@ Zero test infrastructure exists (no Vitest, no MSW, no test files, no `test` scr
 
 ## Scope
 
-**In scope:** Vitest + MSW + Testing Library + jsdom bootstrap; unit tests for Risks #1/#2/#5; orphan-deck fix; Stryker pass on `generation.ts`; cookbook + status sync.
+**In scope:** complete the Vitest 4 + MSW + Testing Library + jsdom bootstrap (partially done); non-watch scripts; unit tests for Risks #1/#2/#5; orphan-deck fix; `ProposalSchema` `.trim().min(1)` whitespace fix + test; Stryker pass scoped to `generation.ts`; cookbook + status sync.
 
-**Out of scope:** CI changes; real-Supabase integration test; whitespace validation change; e2e/a11y/visual; Risks #3/#4/#6; transaction/RPC rewrite of the save path.
+**Out of scope:** CI changes; real-Supabase integration test; e2e/a11y/visual; Risks #3/#4/#6; transaction/RPC rewrite of the save path.
 
 ## Architecture / Approach
 
-Build the runner first, then cover each risk at the cheapest layer with real signal: `vi.mock` the OpenAI SDK (Risk #1), a hermetic typed stub Supabase client (Risk #2), `renderHook` + mocked `fetch` (Risk #5). Risk #2's test asserts the desired clean contract, so it ships paired with the orphan-deck fix. The `astro:env/server` virtual module is aliased to a mockable stub in the Vitest config.
+Build the runner first, then cover each risk at the cheapest layer with real signal: `vi.mock` the OpenAI SDK (Risk #1), a hermetic typed stub Supabase client (Risk #2), `renderHook` + mocked `fetch` (Risk #5). Risk #2's test asserts the desired clean contract, so it ships paired with the orphan-deck fix. The Vitest config uses Astro's `getViteConfig` (rev. 2026-06-07), which is expected to resolve the `astro:env/server` virtual module; secret values are toggled per test with `vi.mock("astro:env/server", ...)`.
 
 ## Phases at a Glance
 
@@ -55,7 +55,7 @@ Build the runner first, then cover each risk at the cheapest layer with real sig
 
 ## Open Risks & Assumptions
 
-- Vitest 3.x is compatible with the pinned Vite `^7.3.2` — verify during install.
+- Vitest **4.x** (`^4.1.8`, already installed) is in use with the pinned Vite `^7.3.2` — verify `@vitest/coverage-v8` 4.x and the `getViteConfig` env resolution during Phase 1.
 - ESLint `strictTypeChecked` covers test files; tests must import Vitest globals explicitly and type stubs carefully to stay lint-clean.
 - Deferred integration assertion (row counts + trigger) is captured as a skipped placeholder, not lost.
 
