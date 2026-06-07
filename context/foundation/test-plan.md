@@ -71,7 +71,7 @@ orchestrator updates Status as artifacts appear on disk.
 | #   | Phase name                 | Goal (one line)                                                                             | Risks covered | Test types         | Status        | Change folder                                   |
 | --- | -------------------------- | ------------------------------------------------------------------------------------------- | ------------- | ------------------ | ------------- | ----------------------------------------------- |
 | 1   | Critical-path coverage     | Bootstrap Vitest; prove generation service produces valid output and save-to-deck is atomic | #1, #2, #5    | unit + integration | change opened | context/changes/testing-critical-path-coverage/ |
-| 2   | SR integration correctness | Prove the review service schedules and persists ratings correctly                           | #3            | unit               | not started   | context/changes/testing-sr-integration-correctness/ |
+| 2   | SR integration correctness | Prove the review service schedules and persists ratings correctly                           | #3            | unit               | done          | context/changes/testing-sr-integration-correctness/ |
 | 3   | Auth and access control    | Prove no unauthenticated or cross-user access is possible through the app's routes          | #4, #6        | integration        | not started   | —                                               |
 | 4   | Quality gates wiring       | Lock the floor: wire lint + typecheck + test into CI so no commit can regress silently      | cross-cutting | CI gates           | not started   | —                                               |
 
