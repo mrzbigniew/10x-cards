@@ -361,15 +361,15 @@ Stryker with `coverageAnalysis: "perTest"` on `generation.ts` (one file, ~50 lin
 
 #### Automated
 
-- [x] 3.1 All deck tests pass (orphan-guard test green after fix)
-- [x] 3.2 `npm run test` green across all suites
-- [x] 3.3 `npm run typecheck` passes
-- [x] 3.4 `npm run lint` passes
+- [x] 3.1 All deck tests pass (orphan-guard test green after fix) — 9aabbd6
+- [x] 3.2 `npm run test` green across all suites — 9aabbd6
+- [x] 3.3 `npm run typecheck` passes — 9aabbd6
+- [x] 3.4 `npm run lint` passes — 9aabbd6
 
 #### Manual
 
-- [x] 3.5 Git log shows `src/test/decks.test.ts` committed before the `decks.ts` fix
-- [x] 3.6 `cards: []` test asserts card-table stub method was not called
+- [x] 3.5 Git log shows `src/test/decks.test.ts` committed before the `decks.ts` fix — 9aabbd6
+- [x] 3.6 `cards: []` test asserts card-table stub method was not called — 9aabbd6
 
 ### Phase 4: Risk #5 — Hook Error Recovery
 
