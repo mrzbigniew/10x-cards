@@ -375,10 +375,10 @@ Stryker with `coverageAnalysis: "perTest"` on `generation.ts` (one file, ~50 lin
 
 #### Automated
 
-- [ ] 4.1 All hook tests pass
-- [ ] 4.2 `npm run test` green across all three suites
-- [ ] 4.3 `npm run typecheck` passes
-- [ ] 4.4 `npm run lint` passes
+- [x] 4.1 All hook tests pass
+- [x] 4.2 `npm run test` green across all three suites
+- [x] 4.3 `npm run typecheck` passes
+- [x] 4.4 `npm run lint` passes
 
 #### Manual
 
