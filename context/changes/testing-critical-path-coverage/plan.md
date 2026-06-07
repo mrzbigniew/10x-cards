@@ -335,27 +335,27 @@ Stryker with `coverageAnalysis: "perTest"` on `generation.ts` (one file, ~50 lin
 
 #### Automated
 
-- [x] 1.1 `npm run test` exits 0 (no setup-file error)
-- [x] 1.2 `npm run typecheck` passes with `.trim().min(1)` change
-- [x] 1.3 `npm run lint` passes
+- [x] 1.1 `npm run test` exits 0 (no setup-file error) — 2e9998b
+- [x] 1.2 `npm run typecheck` passes with `.trim().min(1)` change — 2e9998b
+- [x] 1.3 `npm run lint` passes — 2e9998b
 
 #### Manual
 
-- [x] 1.4 `vitest.setup.ts` exists at repo root
-- [x] 1.5 `npm run test:mutation -- --help` prints Stryker help
+- [x] 1.4 `vitest.setup.ts` exists at repo root — 2e9998b
+- [x] 1.5 `npm run test:mutation -- --help` prints Stryker help — 2e9998b
 
 ### Phase 2: Risk #1 — Generation Unit Tests
 
 #### Automated
 
-- [ ] 2.1 `npm run test` passes (minimum 8 generation test cases green)
-- [ ] 2.2 `npm run typecheck` passes
-- [ ] 2.3 `npm run lint` passes
+- [x] 2.1 `npm run test` passes (minimum 8 generation test cases green)
+- [x] 2.2 `npm run typecheck` passes
+- [x] 2.3 `npm run lint` passes
 
 #### Manual
 
-- [ ] 2.4 Each of the six Polish error messages appears in test descriptions
-- [ ] 2.5 No test derives its expected value from the implementation (no mirror tests)
+- [x] 2.4 Each of the six Polish error messages appears in test descriptions
+- [x] 2.5 No test derives its expected value from the implementation (no mirror tests)
 
 ### Phase 3: Risk #2 — Deck Atomicity (TDD)
 
