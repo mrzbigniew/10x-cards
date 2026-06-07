@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import type { DueCard } from "@/lib/services/sr";
 import { RatingButtons } from "@/components/review/RatingButtons";
 import { cn } from "@/lib/utils";
@@ -34,11 +34,9 @@ export function ReviewSession({
   rate,
   onClose,
 }: Props) {
-  const [flipped, setFlipped] = useState(false);
-
-  useEffect(() => {
-    setFlipped(false);
-  }, [current?.id]);
+  const cardId = current?.id ?? null;
+  const [flippedCardId, setFlippedCardId] = useState<string | null>(null);
+  const flipped = cardId !== null && flippedCardId === cardId;
 
   if (loading) {
     return <p className="text-muted-foreground text-sm">Ładowanie…</p>;
@@ -97,7 +95,7 @@ export function ReviewSession({
           <div
             className="flip-card-face border-border bg-card cursor-pointer rounded-xl border p-6 backdrop-blur-sm"
             onClick={() => {
-              if (!showAnswer && !submitting) setFlipped(true);
+              if (!showAnswer && !submitting && cardId) setFlippedCardId(cardId);
             }}
           >
             <p className="text-foreground text-lg font-semibold">{current.front}</p>

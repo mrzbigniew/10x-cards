@@ -69,7 +69,7 @@ export async function resetDeckProgress(supabase: SupabaseClientType, userId: st
     .eq("user_id", userId);
 
   if (fetchError) throw new Error(fetchError.message);
-  if (!data || data.length === 0) return;
+  if (data.length === 0) return;
 
   const cardIds = data.map((c) => c.id);
 

@@ -13,7 +13,7 @@ export function CreateDeckModal({ isOpen, onConfirm, onCancel, isCreating, error
 
   if (!isOpen) return null;
 
-  function handleSubmit(e: React.FormEvent) {
+  function handleSubmit(e: React.SubmitEvent<HTMLFormElement>) {
     e.preventDefault();
     const trimmed = name.trim();
     if (trimmed) onConfirm(trimmed);
