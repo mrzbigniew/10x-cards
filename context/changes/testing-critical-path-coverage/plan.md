@@ -375,23 +375,23 @@ Stryker with `coverageAnalysis: "perTest"` on `generation.ts` (one file, ~50 lin
 
 #### Automated
 
-- [x] 4.1 All hook tests pass
-- [x] 4.2 `npm run test` green across all three suites
-- [x] 4.3 `npm run typecheck` passes
-- [x] 4.4 `npm run lint` passes
+- [x] 4.1 All hook tests pass — ab148c7
+- [x] 4.2 `npm run test` green across all three suites — ab148c7
+- [x] 4.3 `npm run typecheck` passes — ab148c7
+- [x] 4.4 `npm run lint` passes — ab148c7
 
 #### Manual
 
-- [ ] 4.5 Both `!res.ok` and network-reject branches have distinct test cases
-- [ ] 4.6 No hook internals imported — only returned values asserted
+- [x] 4.5 Both `!res.ok` and network-reject branches have distinct test cases — ab148c7
+- [x] 4.6 No hook internals imported — only returned values asserted — ab148c7
 
 ### Phase 5: Mutation Gate + Cookbook
 
 #### Automated
 
-- [ ] 5.1 `npm run test:mutation` completes (exit 0 or above `low: 60` threshold)
-- [ ] 5.2 `npm run test` still green after any new assertions
-- [ ] 5.3 `npm run lint` passes
+- [x] 5.1 `npm run test:mutation` completes (exit 0 or above `low: 60` threshold)
+- [x] 5.2 `npm run test` still green after any new assertions
+- [x] 5.3 `npm run lint` passes
 
 #### Manual
 

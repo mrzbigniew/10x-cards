@@ -13,6 +13,7 @@
     "!src/**/*.spec.ts",
     "!src/**/*.test.ts"
   ],
+  "ignorePatterns": [".agents", ".astro", ".claude", ".cursor", ".git", ".github", ".husky", ".vscode", ".wrangler", "context", "dist", "reports", "supabase"],
   "concurrency": 4,
   "thresholds": {
     "high": 80,

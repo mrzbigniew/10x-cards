@@ -120,15 +120,33 @@ the relevant rollout phase ships; before that, the sub-section reads
 
 ### 6.1 Adding a unit test for a service function
 
-TBD — see §3 Phase 1 for generation service parsing/validation pattern and SR rating pattern.
+Pattern established in §3 Phase 1. Canonical example: `src/test/generation.test.ts`.
 
-### 6.2 Adding an integration test for an API route
+- **Mock setup**: use `vi.mock()` at module top to intercept both the external SDK (e.g. `openai`) and any virtual Astro modules (e.g. `astro:env/server`). For env modules, use a getter inside the mock factory so per-test values can be toggled with a `let` variable — no `vi.resetModules()` needed.
+- **Oracle source**: derive all expected values from the production error messages and domain rules (PRD, business contract) — never compute the expected value by running the same logic as the code under test.
+- **Assertion style**: use `it.each` with a named-scenario table to cover a failure matrix; each row names the scenario in Polish so test-runner output is self-explanatory. Assert both the error class (`instanceof`) and the message content (`toContain`).
+- **Edge cases**: add at least one edge case per risk beyond the happy path and the failure matrix (e.g., whitespace-only input after a schema `.trim().min(1)` fix).
+- **Mutation triage**: after shipping, run `npm run test:mutation --mutate <file>` and consciously review each survived mutant. Equivalent mutants (cosmetic `.name` property, LLM prompt content, SDK constructor wiring) are documented as comments at the bottom of the test file so the decision is explicit and auditable.
 
-TBD — see §3 Phase 1 for save-to-deck atomicity pattern and §3 Phase 3 for auth/access pattern.
+### 6.2 Adding a hermetic stub test for a service with injected client
+
+Pattern established in §3 Phase 1. Canonical example: `src/test/decks.test.ts`. Full integration test (real DB) is deferred to §3 Phase 3.
+
+- **Mock setup**: build a typed fluent-builder stub that matches the shape of the injected client (`SupabaseClientType = NonNullable<ReturnType<typeof createClient>>`). Expose `vi.fn()` references only at terminal async operations (`.single()`, bare `.insert()`); intermediate chain methods return the same stub object.
+- **Oracle source**: expected behavior comes from the service contract (what `createDeckWithCards` must guarantee: atomicity, compensating delete on failure). The oracle is the *outcome* — error thrown, delete called, card table untouched — not the internal sequence.
+- **Assertion style**: assert error messages with `.rejects.toThrow()`, assert side-effects with `expect(fn).toHaveBeenCalledOnce()` or `not.toHaveBeenCalled()` on the exposed `vi.fn()` terminals.
+- **Partial failure coverage**: hermetic stubs let you trigger the second-step failure (card insert fails after deck insert succeeds) that real infra cannot easily produce. This is the main value of the layer — do not replace it with an integration test just to get a "real DB" feel.
+- **Deferred placeholder**: add a `describe.skip` block with `it.todo` for deferred integration assertions (e.g., `"deck row count = N after successful save"`) so the intent is preserved without blocking the test run.
 
 ### 6.3 Adding a unit test for a React hook
 
-TBD — see §3 Phase 1 for error-recovery pattern in generation hook.
+Pattern established in §3 Phase 1. Canonical example: `src/test/useGeneration.test.ts`.
+
+- **Mock setup**: spy on `globalThis.fetch` with `vi.spyOn` — do not import or mock an internal fetch wrapper. Restore all spies in `afterEach` with `vi.restoreAllMocks()`.
+- **Oracle source**: expected values come from the hook's observable contract (PRD FR-007: preserve input on error). Assert `phase`, `errorMessage`, and `text` values that a user would experience — not internal state variables or implementation details.
+- **Assertion style**: wrap synchronous state mutations in `act()`; wrap async operations in `await act(async () => { ... })` to flush all React state updates before asserting. Access only the values returned by `renderHook` — never import or access hook-internal variables.
+- **Both error branches**: cover `!res.ok` (non-200 HTTP response) and `fetch` rejection (network failure) as separate test cases — they exercise different code paths in the catch branch.
+- **Retry path**: pin that a successful retry after an error restores `phase === "reviewing"` with the original text intact; this proves state is not reset between calls.
 
 ### 6.4 Adding a test for a new API endpoint
 
