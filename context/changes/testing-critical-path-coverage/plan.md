@@ -348,28 +348,28 @@ Stryker with `coverageAnalysis: "perTest"` on `generation.ts` (one file, ~50 lin
 
 #### Automated
 
-- [x] 2.1 `npm run test` passes (minimum 8 generation test cases green)
-- [x] 2.2 `npm run typecheck` passes
-- [x] 2.3 `npm run lint` passes
+- [x] 2.1 `npm run test` passes (minimum 8 generation test cases green) — 1c52a9a
+- [x] 2.2 `npm run typecheck` passes — 1c52a9a
+- [x] 2.3 `npm run lint` passes — 1c52a9a
 
 #### Manual
 
-- [x] 2.4 Each of the six Polish error messages appears in test descriptions
-- [x] 2.5 No test derives its expected value from the implementation (no mirror tests)
+- [x] 2.4 Each of the six Polish error messages appears in test descriptions — 1c52a9a
+- [x] 2.5 No test derives its expected value from the implementation (no mirror tests) — 1c52a9a
 
 ### Phase 3: Risk #2 — Deck Atomicity (TDD)
 
 #### Automated
 
-- [ ] 3.1 All deck tests pass (orphan-guard test green after fix)
-- [ ] 3.2 `npm run test` green across all suites
-- [ ] 3.3 `npm run typecheck` passes
-- [ ] 3.4 `npm run lint` passes
+- [x] 3.1 All deck tests pass (orphan-guard test green after fix)
+- [x] 3.2 `npm run test` green across all suites
+- [x] 3.3 `npm run typecheck` passes
+- [x] 3.4 `npm run lint` passes
 
 #### Manual
 
-- [ ] 3.5 Git log shows `src/test/decks.test.ts` committed before the `decks.ts` fix
-- [ ] 3.6 `cards: []` test asserts card-table stub method was not called
+- [x] 3.5 Git log shows `src/test/decks.test.ts` committed before the `decks.ts` fix
+- [x] 3.6 `cards: []` test asserts card-table stub method was not called
 
 ### Phase 4: Risk #5 — Hook Error Recovery
 

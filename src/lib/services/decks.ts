@@ -38,6 +38,11 @@ export async function createDeckWithCards(
     );
 
     if (cardsError) {
+      try {
+        await deleteDeck(supabase, userId, deck.id);
+      } catch {
+        // best-effort compensating delete — swallow and re-throw the original error
+      }
       throw new Error(cardsError.message);
     }
   }
