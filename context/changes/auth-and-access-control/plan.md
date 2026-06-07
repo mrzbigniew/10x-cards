@@ -260,27 +260,27 @@ Phase 1 migration is append-only: two new policies on an existing table. No appl
 
 #### Automated
 
-- [x] 2.1 All 6 middleware tests pass: `npm run test -- src/test/middleware.test.ts`
-- [x] 2.2 TypeScript compiles: `npx astro check`
-- [x] 2.3 Lint passes: `npm run lint`
-- [x] 2.4 Full test suite passes: `npm run test`
+- [x] 2.1 All 6 middleware tests pass: `npm run test -- src/test/middleware.test.ts` — 10f7042
+- [x] 2.2 TypeScript compiles: `npx astro check` — 10f7042
+- [x] 2.3 Lint passes: `npm run lint` — 10f7042
+- [x] 2.4 Full test suite passes: `npm run test` — 10f7042
 
 #### Manual
 
-- [x] 2.5 Test names in Polish and describe expected behavior
-- [x] 2.6 Prefix guard test (scenario 6) confirmed load-bearing: fails before fix, passes after
+- [x] 2.5 Test names in Polish and describe expected behavior — 10f7042
+- [x] 2.6 Prefix guard test (scenario 6) confirmed load-bearing: fails before fix, passes after — 10f7042
 
 ### Phase 3: Cross-User Isolation Tests (Risk #4)
 
 #### Automated
 
-- [ ] 3.1 All 6 cross-user isolation tests pass: `npm run test -- src/test/access-control.test.ts`
-- [ ] 3.2 `describe.skip` placeholder present in output: `npm run test`
-- [ ] 3.3 Full test suite passes: `npm run test`
-- [ ] 3.4 TypeScript compiles: `npx astro check`
-- [ ] 3.5 Lint passes: `npm run lint`
+- [x] 3.1 All 6 cross-user isolation tests pass: `npm run test -- src/test/access-control.test.ts`
+- [x] 3.2 `describe.skip` placeholder present in output: `npm run test`
+- [x] 3.3 Full test suite passes: `npm run test`
+- [x] 3.4 TypeScript compiles: `npx astro check`
+- [x] 3.5 Lint passes: `npm run lint`
 
 #### Manual
 
-- [ ] 3.6 All 6 test names in Polish, naming the cross-user scenario explicitly
-- [ ] 3.7 `describe.skip` block contains at least 2 `it.todo` items for deferred real-DB assertions
+- [x] 3.6 All 6 test names in Polish, naming the cross-user scenario explicitly
+- [x] 3.7 `describe.skip` block contains at least 2 `it.todo` items for deferred real-DB assertions
