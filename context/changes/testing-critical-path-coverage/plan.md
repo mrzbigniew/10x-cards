@@ -1,411 +1,399 @@
-# Phase 1 Critical-Path Coverage Implementation Plan
+# Critical-Path Coverage — Implementation Plan
 
 ## Overview
 
-Bootstrap the project's first test infrastructure (Vitest + MSW + Testing Library) and use it to protect the three critical-path risks from `context/foundation/test-plan.md` §3 Phase 1:
-
-- **Risk #1** — AI generation returns malformed/empty proposals.
-- **Risk #2** — deck-save writes partially (orphan deck on card-insert failure).
-- **Risk #5** — generation flow drops pasted text on API error.
-
-Each test asserts the **contract** (what the code should do, per PRD/domain), not a snapshot of current output. As part of Risk #2, this plan also fixes the underlying non-atomicity defect (orphan deck) so the test asserts a clean contract rather than documenting a bug.
-
-> **Plan revision (2026-06-07, commit `61eb0bd`):** Re-grounded after a research
-> refresh found test infra **partially bootstrapped**. Decisions applied below:
-> (1) stay on **Vitest 4.x**; (2) keep the **`getViteConfig`** config; (3) add the
-> **non-watch** scripts; (4) scope **Stryker to `generation.ts`**; (5) the
-> whitespace-only edge is now **in scope** (change `ProposalSchema` to
-> `.trim().min(1)` + test). Integration stays **hermetic-only / deferred**.
+Bootstrap the remaining test infrastructure gaps and write three risk-covering test suites (generation output validity, deck-save atomicity, generation error recovery) per `context/foundation/test-plan.md` §3 Phase 1. Includes a behavior fix to `ProposalSchema` (`.trim().min(1)`) and a bug fix to `createDeckWithCards` (compensating delete on card-insert failure), each proven by its own test.
 
 ## Current State Analysis
 
-Test infrastructure is **partially bootstrapped** (not the zero-state of the original plan). Already present: `vitest@^4.1.8`, `jsdom@^29.1.1`, `@stryker-mutator/core` + `@stryker-mutator/vitest-runner@^9.6.1`, `zod` promoted to a **direct** dependency (`^4.4.3`), a `vitest.config.ts` built on Astro's `getViteConfig` (+ `@astrojs/node` adapter), and a `stryker.config.json` (broad `mutate` glob). **Still missing:** `msw`, `@testing-library/react`/`-dom`, `@vitest/coverage-v8`, `vitest.setup.ts`, the non-watch scripts, and **all test files**. `"test"` is currently `"vitest"` (watch mode). The repo is **Astro 6** (`astro@^6.4.4`), npm, `output: "server"`, Cloudflare adapter, React 19, Vite resolved `7.3.5` via `overrides`. `tsconfig.json` extends `astro/tsconfigs/strict`, aliases `@/* → ./src/*`, and uses `react-jsx` / `jsxImportSource: "react"`.
-
-The three targets are well-seamed:
-
-- `generateProposals(text)` (`src/lib/services/generation.ts:27-73`) is a single async function: OpenRouter call via OpenAI SDK → `JSON.parse` → `z.array(ProposalSchema).safeParse` → empty-array guard, each failure throwing a `GenerationError` with a distinct Polish message.
-- `createDeckWithCards()` (`src/lib/services/decks.ts:13-46`) does **two separate, non-atomic Supabase inserts** (deck, then cards) with **no rollback**. A failed card insert leaves an orphan deck. The service layer is dependency-injected (`SupabaseClientType`), so a hermetic stub client is trivial.
-- `useGeneration.generate()` (`src/components/hooks/useGeneration.ts:27-59`) already preserves `text` and sets `phase="input"` in its catch branch. Only `reset()` clears `text`, and it is never called from the error path.
-
-### Key Discoveries:
-
-- **`astro:env/server` virtual module** (`src/lib/supabase.ts:3`, `src/lib/services/generation.ts:2`) will not resolve under plain Vitest — it must be aliased to a stub or mocked in setup. This is the single biggest infra gotcha.
-- **Vite is pinned to `^7.3.2`** (`package.json:61-63`) — Vitest must be a Vite-7-compatible major (Vitest 3.x).
-- **ESLint runs `strictTypeChecked` with `projectService`** (`eslint.config.js:14-21`) over `**/*` — test files are type-checked and linted. Test files must import Vitest globals explicitly (`import { describe, it, expect, vi } from "vitest"`) to avoid ambient-global config and stay clean under strict rules.
-- **`createDeckWithCards` has `deleteDeck` available** (`src/lib/services/decks.ts:101-107`) but never calls it — the building block for the compensating-delete fix already exists.
-- **`after_card_insert` trigger** (`supabase/migrations/20260526220447_initial_schema.sql`) inserts one `card_sr_state` row per card; `cards.deck_id → decks(id) ON DELETE CASCADE`. This is the integration side-effect deferred to ad-hoc.
-- The five `GenerationError` messages are centralised, Polish, and stable — they are reliable oracles, not brittle snapshots.
+- Vitest 4.x, jsdom, Testing Library, coverage-v8, MSW, and Stryker are all installed.
+- `vitest.config.ts` uses `getViteConfig` + `@astrojs/node` adapter; references `./vitest.setup.ts` which does not exist yet — any `npm run test` call will error before this is created.
+- `package.json` scripts: `test` → `vitest run`, `test:watch` → `vitest`, `test:coverage` → `vitest run --coverage`. No `test:mutation` script.
+- `stryker.config.json` mutates `src/**/*.ts` — too broad for selective-gate use.
+- No test files exist anywhere.
+- `ProposalSchema` (`src/lib/schemas/generation.ts:7-10`) has `.min(1)` on `front` and `back` — whitespace-only strings pass validation today.
+- `createDeckWithCards` (`src/lib/services/decks.ts:13-46`) has no compensating delete when card insert fails; orphan decks can persist in the database.
 
 ## Desired End State
 
-`npm run test` runs green with three risk suites plus a smoke test; `npm run lint` and `astro check` stay clean with the new test files present; `createDeckWithCards` no longer leaves an orphan deck on card-insert failure; Stryker confirms the Risk #1 suite kills meaningful mutants on `generation.ts`; test-plan §6 cookbook documents the three patterns and §3 Phase 1 status is updated.
+- `vitest.setup.ts` exists; `npm run test` runs clean with no setup file error.
+- `ProposalSchema` rejects whitespace-only strings on both `front` and `back`.
+- Three test suites covering all failure-matrix entries for Risks #1, #2, and #5.
+- `createDeckWithCards` deletes the newly created deck when card insert fails.
+- `npm run test:mutation` runs Stryker scoped to `generation.ts`; all surviving mutants reviewed.
+- `test-plan.md §6` cookbook entries filled for all three test types established here.
+
+### Key Discoveries
+
+- `vitest.config.ts:14` references `./vitest.setup.ts` (missing — must exist before any test run)
+- `generation.ts:2` imports `OPENROUTER_API_KEY` from `"astro:env/server"` — requires `vi.mock("astro:env/server", ...)` in test files; a getter pattern allows per-test key toggling without `vi.resetModules()`
+- `decks.ts:101-107` — `deleteDeck(supabase, userId, deckId)` already exists; it is the seam for the compensating-delete fix
+- Risk #2 hermetic stub must shape-match `SupabaseClientType = NonNullable<ReturnType<typeof createClient>>`; the fluent chain (`.from(...).insert(...).select(...).single()`) must be stubbed at every level
+- `useGeneration.ts:32` calls `fetch` directly — mock via `vi.spyOn(globalThis, "fetch")`
+- `appendCardsToDeck` already has an early return for `cards.length === 0` at `decks.ts:126`; this is the path tested in Phase 3 for the empty-cards skip case
 
 ## What We're NOT Doing
 
-- **No CI changes.** Wiring tests + `astro check` into `.github/workflows/ci.yml` is test-plan §3 Phase 4. Phase 1 only adds npm scripts.
-- **No real-Supabase integration test.** The happy-path row-count + trigger assertion is deferred and marked ad-hoc per CLAUDE.md doctrine; no local stack is assumed this session.
-- ~~**No whitespace-only validation change.**~~ **Now IN SCOPE (decision 2026-06-07):** `ProposalSchema` changes from `.min(1)` to `.trim().min(1)` so whitespace-only `" "` is rejected; covered by a dedicated test in Phase 2. Note `.trim()` also normalises surrounding whitespace on valid content.
-- **No e2e, no a11y, no visual tests** (test-plan §7 negative space).
-- **No changes to Risks #3/#4/#6** — those are Phases 2–3.
-- **No transaction/RPC rewrite** of the save path — the compensating best-effort delete is the agreed scope, not a Postgres atomic-save function.
+- Integration tests against a real Supabase DB — deferred; a skipped placeholder preserves the intent per test-plan §4
+- MSW server setup — not needed for Phase 1; `vi.spyOn` on `fetch` is cheaper and sufficient for the hook test
+- `@testing-library/jest-dom` matchers — not installed; Vitest native `expect` is sufficient
+- Stryker config broad-glob cleanup — `stryker.config.json`'s default glob is left as the global default; the `test:mutation` script overrides scope via CLI flag
+- Coverage CI gate — Phase 4 of the rollout (test-plan §5)
 
 ## Implementation Approach
 
-Build the runner first (Phase 1) so every later phase has a green harness. Cover each risk with the cheapest layer that gives signal: `vi.mock` of the OpenAI SDK for Risk #1 (deterministic, drives every parse/validate branch), a hermetic stub Supabase client for Risk #2 (the only way to force a mid-sequence card failure), and `renderHook` + mocked `fetch` for Risk #5. Risk #2's test asserts the *desired* clean contract, so it is paired with the orphan-deck fix in the same phase. Finish with a Stryker validation pass on `generation.ts` and the cookbook/status handoff.
+Five phases progress from infrastructure → schema fix → three risk suites → mutation gate + cookbook. Risk #2 uses TDD: the hermetic test is written first (red), then `createDeckWithCards` is fixed (green). All test files live in `src/test/`. Each suite uses the cheapest layer that gives a real signal: `vi.mock("openai")` for the generation service, a typed Supabase stub for the deck service, and `vi.spyOn(globalThis, "fetch")` for the hook.
 
 ## Critical Implementation Details
 
-- **`astro:env/server` resolution (decision: `getViteConfig`)** — the shipped `vitest.config.ts` uses Astro's `getViteConfig`, which inherits Astro's Vite plugins and is expected to resolve the `astro:env/server` virtual *module* without a hand-written alias/stub. **Verify** this in the Phase 1 smoke test. Secret *values* are still toggled per test via `vi.mock("astro:env/server", ...)` — Risk #1's "missing `OPENROUTER_API_KEY`" case and the configured case both need a mockable export, not a frozen constant. Do **not** create a standalone `src/test/astro-env-server.stub.ts`.
-- **ESLint `strictTypeChecked` over test files** — floating promises, `any`, and unsafe member access will error. Import Vitest globals explicitly; type stub clients against `SupabaseClientType` (cast through `unknown` only where unavoidable, with a localized eslint-disable comment naming the reason if needed).
-- **Compensating-delete ordering (Risk #2 fix)** — on card-insert error, attempt `delete from decks where id = deck.id` (best-effort), then throw the *original* card-insert error. A failure of the cleanup delete must be caught and logged (warn), never masking the original error. The user sees one coherent error; the orphan is removed on the happy-cleanup path.
+**`astro:env/server` per-test key toggling.** `vi.mock` is hoisted before imports, so the factory runs once. To toggle `OPENROUTER_API_KEY` between present and absent across different test cases without `vi.resetModules()`, declare a mutable `let mockApiKey` in module scope and return it via a getter from the mock factory:
 
-## Phase 1: Test Infrastructure Bootstrap
+```ts
+let mockApiKey: string | undefined = "test-key";
+vi.mock("astro:env/server", () => ({
+  get OPENROUTER_API_KEY() { return mockApiKey; },
+}));
+```
 
-### Overview
+Assign `mockApiKey` in `beforeEach` or per test to switch between `"test-key"` (SDK tests) and `undefined` (missing-key test).
 
-Install and wire Vitest, MSW, jsdom, and Testing Library so the repo has a green test harness that respects the `@/*` alias and the `astro:env/server` virtual module, with npm scripts and a passing smoke test.
+**Supabase fluent builder stub.** The Supabase client exposes a fluent chain (`.from().insert().select().single()`, `.from().delete().eq().eq().select().single()`). The stub must return a fresh chainable object at each level so the chain doesn't throw on a missing method. Use `vi.fn()` only at the terminal async operations (`.single()`, bare `.insert()`), and have each intermediate method return the same stub object.
 
-### Changes Required:
-
-#### 1. Test dependencies
-
-**File**: `package.json`
-
-**Intent**: Complete the partially-installed test toolchain and fix the run scripts. `vitest@^4.1.8`, `jsdom`, `@stryker-mutator/*`, and a direct `zod` are **already installed** — do not re-pin or downgrade. Add only what is missing, and replace the watch-mode `test` script with the non-watch set.
-
-**Contract**: Add the missing devDeps — `@vitest/coverage-v8` (matching the installed **Vitest 4.x** major), `msw`, `@testing-library/react`, `@testing-library/dom`. Keep `vitest@^4.1.8` (decision: stay on 4.x — do **not** install 3.x). Replace scripts so the default is non-watch: `"test": "vitest run"`, `"test:watch": "vitest"`, `"test:coverage": "vitest run --coverage"`. `zod` is already a direct dependency (done). Install with npm; pick versions via the package manager (do not hand-write versions).
-
-#### 2. Vitest configuration
-
-**File**: `vitest.config.ts` (exists — extend, do not rewrite)
-
-**Intent**: Keep the **`getViteConfig`** approach already shipped (decision: do not switch to a hand-written `defineConfig` + standalone `astro:env/server` stub). Add only what's missing on top of it: a `setupFiles` entry for Testing Library cleanup. Rely on `getViteConfig` inheriting Astro's Vite plugins to resolve the `astro:env/server` virtual *module*; secret *values* are toggled per test via `vi.mock` (see #3).
-
-**Contract**: Current config is `getViteConfig({ test: { environment: "jsdom", globals: false, coverage: { provider: "v8" }, alias: { "@": "/src" } } }, { adapter: node({ mode: "standalone" }) })`. Add `setupFiles: ["./vitest.setup.ts"]` to the `test` block. Keep `globals: false` (tests import from `vitest` explicitly — lint-clean) and the `@ → /src` alias. **Verify during Phase 1** that `astro:env/server` resolves under `getViteConfig` (no resolution error in the smoke test); if it does not, fall back to `vi.mock("astro:env/server", ...)` in setup.
-
-#### 3. Global setup + env stub
-
-**File**: `vitest.setup.ts` (new)
-
-**Intent**: Register Testing Library cleanup globally. Because the config uses `getViteConfig` (decision), **no standalone `astro:env/server` stub module is created** — the module resolves through Astro's plugins, and secret *values* are toggled per test with `vi.mock("astro:env/server", () => ({ OPENROUTER_API_KEY: ..., SUPABASE_URL: ..., SUPABASE_KEY: ... }))` (Risk #1's missing-key vs configured cases). MSW server lifecycle is registered here only if a shared server is used; Risk #1 instead mocks the SDK directly (see Phase 2).
-
-**Contract**: `vitest.setup.ts` imports `cleanup` from `@testing-library/react` and calls it in `afterEach`. The Risk #1 suite owns its own `vi.mock("astro:env/server", ...)` per-case (mockable export, not a frozen constant), so the missing-key and configured paths can both be exercised. No `src/test/astro-env-server.stub.ts`.
-
-#### 4. Smoke test
-
-**File**: `src/test/smoke.test.ts` (new)
-
-**Intent**: Prove the harness runs, the alias resolves, and the `astro:env/server` stub loads.
-
-**Contract**: A trivial `expect(true).toBe(true)` plus one `import` from `@/lib/schemas/generation` asserting `ProposalSchema` parses a valid `{front, back}` — confirms alias + zod wiring end to end.
-
-### Success Criteria:
-
-#### Automated Verification:
-
-- Dependencies install cleanly: `npm install`
-- Smoke test passes: `npm run test`
-- Type checking passes: `npx astro check`
-- Linting passes: `npm run lint`
-
-#### Manual Verification:
-
-- `npm run test:watch` starts and re-runs on file change
-- No `astro:env/server` resolution error appears in test output
-
-**Implementation Note**: After automated verification passes, pause for human confirmation before Phase 2.
+**TDD ordering for Phase 3.** `src/test/decks.test.ts` is committed before any change to `decks.ts`. The orphan-guard assertion starts red. The fix to `createDeckWithCards` is a separate commit that turns it green. This ordering must be preserved so the TDD trace is visible in git history.
 
 ---
 
-## Phase 2: Risk #1 — Generation Service Unit Tests
+## Phase 1: Environment & Schema Fix
 
 ### Overview
 
-Unit-test `generateProposals` against the full failure matrix and the happy-path contract, mocking the OpenAI SDK so every parse/validate/empty branch is driven deterministically.
+Create `vitest.setup.ts` so the config reference doesn't error, fix `ProposalSchema` to reject whitespace-only values, and add the `test:mutation` script. No test suites are written here — the goal is a clean `npm run test` (zero test files → passes trivially) and the schema contract in place before Phase 2 exercises it.
 
-### Changes Required:
+### Changes Required
 
-#### 1. Generation service tests
+#### 1. Create `vitest.setup.ts`
 
-**File**: `src/lib/services/generation.test.ts` (new)
+**File**: `vitest.setup.ts`
 
-**Intent**: Assert the contract — valid input yields a non-empty `{front, back}[]`; each malformed LLM output yields the specific `GenerationError` message; missing API key and SDK/network failure are handled. Mock the OpenAI SDK (`vi.mock("openai")`) and toggle `OPENROUTER_API_KEY` via the env stub.
+**Intent**: Satisfy the `setupFiles: ["./vitest.setup.ts"]` reference in `vitest.config.ts:14`. Without this file, Vitest errors before running any tests. Phase 2+ can register global mocks here if needed.
 
-**Contract**: Tests for the six rows of the research failure matrix —
-  1. invalid/non-JSON/empty content → `"AI zwróciło nieprawidłową odpowiedź. Spróbuj ponownie."`
-  2. parses but fails schema (wrong shape / empty strings / **whitespace-only `front`/`back`** / non-array) → `"AI zwróciło nieoczekiwany format odpowiedzi. Spróbuj ponownie."`
-  3. valid but empty array `[]` → `"AI nie zwróciło żadnych propozycji. Spróbuj z dłuższym lub bardziej szczegółowym tekstem."`
-  4. SDK throws → message starts with `"Żądanie do AI nie powiodło się:"`
-  5. missing `OPENROUTER_API_KEY` → `"Generowanie AI nie jest skonfigurowane. Skontaktuj się z administratorem."`
-  6. happy path → returns array, `length >= 1`, every element `front`/`back` non-empty.
-Use `it.each` for the schema-rejection variants (one parameterised test per malformed shape, including the whitespace-only case) to avoid redundant copies. Assert error type is `GenerationError` and `.message` equals the oracle string — never a captured LLM payload.
+**Contract**: An empty TypeScript file with a single `export {}` is sufficient for Phase 1. Must use LF line endings.
 
-#### 2. Whitespace-only validation change (decision 2026-06-07 — in scope)
+#### 2. Fix `ProposalSchema` whitespace validation
 
 **File**: `src/lib/schemas/generation.ts`
 
-**Intent**: Reject whitespace-only `front`/`back` so a `" "` card can never enter a deck. This change flows through both the generation validation (`z.array(ProposalSchema)`) and the save schemas (`NewDeckSaveSchema`/`ExistingDeckSaveSchema`) since they share `ProposalSchema`.
+**Intent**: `ProposalSchema.front` and `.back` currently accept whitespace-only strings because `.min(1)` counts space characters. `.trim().min(1)` rejects them and normalises surrounding whitespace on valid content — a behavior change the Phase 2 test explicitly covers.
 
-**Contract**: Change `ProposalSchema` fields from `z.string().min(1)` to `z.string().trim().min(1)` (`generation.ts:7-10`). Consequence: whitespace-only input fails schema → at the service layer it surfaces as the existing schema-rejection oracle (`"AI zwróciło nieoczekiwany format odpowiedzi. Spróbuj ponownie."`); at the save API it yields a 400. `.trim()` also normalises surrounding whitespace on otherwise-valid content — this is accepted as desirable normalisation. The Phase 2 `it.each` schema-rejection set includes a whitespace-only row that goes red without this change and green with it (the test guards the fix).
+**Contract**: Change `front: z.string().min(1)` and `back: z.string().min(1)` at lines 8-9 to `.trim().min(1)`. `GenerateRequestSchema.text` at line 4 is unchanged.
 
-### Success Criteria:
+#### 3. Add `test:mutation` script
 
-#### Automated Verification:
+**File**: `package.json`
 
-- Generation tests pass: `npm run test`
-- Type checking passes: `npx astro check`
-- Linting passes: `npm run lint`
+**Intent**: Provide a single command that runs Stryker scoped to `generation.ts`, honouring the selective-gate doctrine in AGENTS.md. The broad `mutate` glob in `stryker.config.json` is left unchanged as the global fallback; this script overrides it via CLI flag for this change.
 
-#### Manual Verification:
+**Contract**: Add `"test:mutation": "stryker run --mutate \"src/lib/services/generation.ts\""` to the `scripts` block.
 
-- Each failure-matrix row maps to its exact Polish message (spot-check report output)
-- No test asserts against a hardcoded LLM response snapshot
-- Reverting `ProposalSchema` to `.min(1)` makes the whitespace-only test go red (guards the change)
+### Success Criteria
 
-**Implementation Note**: Pause for human confirmation before Phase 3.
+#### Automated Verification
+
+- `npm run test` exits 0 (zero test files — passes trivially; no setup-file load error)
+- `npm run typecheck` passes with the `.trim().min(1)` change
+- `npm run lint` passes
+
+#### Manual Verification
+
+- `vitest.setup.ts` exists at repo root
+- `npm run test:mutation -- --help` prints Stryker help (validates the script is wired)
+
+**Implementation Note**: After all automated verification passes, pause for manual confirmation before proceeding to Phase 2. Phase blocks use plain bullets — the corresponding `- [ ]` checkboxes live in `## Progress`.
 
 ---
 
-## Phase 3: Risk #2 — Orphan-Deck Fix + Hermetic Deck-Save Tests
+## Phase 2: Risk #1 — Generation Unit Tests
 
 ### Overview
 
-Fix the non-atomic save so a card-insert failure no longer leaves an orphan deck, then prove the save-to-deck contract with a hermetic stub Supabase client across both `createDeckWithCards` and `appendCardsToDeck`.
+Write the full unit test suite for `generateProposals()` covering all six failure-matrix entries from the research doc, the happy path, and the whitespace edge case introduced by the Phase 1 schema fix.
 
-### Changes Required:
+### Changes Required
 
-#### 1. Compensating-delete fix
+#### 1. Create generation test file
+
+**File**: `src/test/generation.test.ts`
+
+**Intent**: Cover every distinct error path in `generateProposals()` with one parameterised test each, one happy-path test, and one whitespace edge case. The oracle for each assertion is the specific Polish error message from `generation.ts`, not a snapshot of LLM output or a value computed by re-running the same logic.
+
+**Contract**: Mock setup (hoisted via `vi.mock` at top of file — see Critical Implementation Details for the getter pattern). Six `it.each` rows matching the research failure matrix:
+
+| Row | Scenario | Expected thrown message |
+|-----|----------|------------------------|
+| 1 | `OPENROUTER_API_KEY` is `undefined` | `"Generowanie AI nie jest skonfigurowane..."` |
+| 2 | SDK throws `Error` | `` `Żądanie do AI nie powiodło się: ${message}` `` |
+| 3 | SDK throws non-Error | `"Żądanie do AI nie powiodło się: Unknown error from AI provider"` |
+| 4 | Content is non-JSON / empty string | `"AI zwróciło nieprawidłową odpowiedź..."` |
+| 5 | Content parses but fails schema (wrong shape; empty strings; `null`) | `"AI zwróciło nieoczekiwany format odpowiedzi..."` |
+| 6 | Valid array but `length === 0` | `"AI nie zwróciło żadnych propozycji..."` |
+
+Happy-path test: mock returns `[{ front: "Q", back: "A" }]`; assert result length ≥ 1 and each item has non-empty `front` and `back`.
+
+Whitespace edge case: mock returns `[{ front: " ", back: "valid" }]`; assert the schema-failure message (#5) is thrown (the `.trim().min(1)` change now rejects the whitespace front).
+
+All tests assert `instanceof GenerationError` in addition to the message.
+
+#### 2. Verify `astro:env/server` resolves under `getViteConfig`
+
+**File**: `src/test/generation.test.ts` (verified by the test run itself)
+
+**Intent**: Confirm the virtual module resolves and the `vi.mock` factory intercepts it. If the run fails with a module-not-found error (not a test-assertion failure), the implementer must add an explicit `alias` entry in `vitest.config.ts` pointing `astro:env/server` to a stub module — this is the fallback if `getViteConfig` doesn't carry the env plugin in the test context.
+
+**Contract**: No separate file unless the fallback is needed. The signal is the error type: `Cannot find module 'astro:env/server'` → add alias; `AssertionError` → test logic issue.
+
+### Success Criteria
+
+#### Automated Verification
+
+- `npm run test` passes with a minimum of 8 generation test cases green
+- `npm run typecheck` passes
+- `npm run lint` passes
+
+#### Manual Verification
+
+- Each of the six Polish error messages appears in a test description or assertion comment so failures are debuggable without reading source
+- No test derives its expected value by re-running the same parsing/validation logic (no mirror tests)
+
+**Implementation Note**: Pause after automated verification for manual review of test descriptions and oracle sourcing.
+
+---
+
+## Phase 3: Risk #2 — Deck Atomicity (TDD)
+
+### Overview
+
+Write the hermetic stub test for `createDeckWithCards` **first** (it starts red because the compensating delete does not exist yet), then fix the function. Also cover the `cards: []` skip and `appendCardsToDeck` error paths. Implemented via `/10x-tdd`.
+
+### Changes Required
+
+#### 1. Create deck service test file (written first — starts red)
+
+**File**: `src/test/decks.test.ts`
+
+**Intent**: Assert the desired contract for `createDeckWithCards`: when card insert fails, the service (a) throws an error, (b) calls the compensating delete on the newly created deck id. Also assert `cards: []` returns `{ deckId }` without touching the card table, and that `appendCardsToDeck` throws on ownership failure and on card insert failure. The orphan-guard test is written before the fix and starts red — that is the point.
+
+**Contract**: The Supabase stub follows the fluent builder pattern described in Critical Implementation Details. The stub exposes `vi.fn()` references for the terminal operations so tests can assert call counts and arguments. The integration placeholder is added as a `describe.skip` block at the end of the file with a single `it.todo` naming the deferred assertions (deck row count = N cards; `card_sr_state` count = N).
+
+#### 2. Fix `createDeckWithCards` — compensating delete
 
 **File**: `src/lib/services/decks.ts`
 
-**Intent**: When the card insert in `createDeckWithCards` fails, remove the just-created deck (best-effort) before re-throwing the original card-insert error, so no orphan deck survives a partial save.
+**Intent**: When `cardsError` is truthy at line 40, issue a best-effort `deleteDeck` call before re-throwing. If the delete itself fails, swallow that error and still re-throw the original card insert error. The user always sees the error; the orphan deck is cleaned up on a best-effort basis.
 
-**Contract**: In the `cardsError` branch (`decks.ts:40-42`), attempt a delete of the created deck by id; wrap the cleanup in its own try/catch and `console.warn` on cleanup failure; then `throw new Error(cardsError.message)` (original error preserved). Reuse the existing delete-by-id pattern (`deleteDeck` logic) — ownership filter is unnecessary here since the deck was just created for `userId`, but keep the `user_id` filter for defense in depth.
+**Contract**: Wrap the compensating delete in a `try/catch` that does not mask the original error. The existing `deleteDeck` function (`decks.ts:101-107`) is called with `(supabase, userId, deck.id)`. Function signature and return type are unchanged.
 
-#### 2. Hermetic stub client + deck-save tests
+### Success Criteria
 
-**File**: `src/lib/services/decks.test.ts` (new), `src/test/supabase-stub.ts` (new)
+#### Automated Verification
 
-**Intent**: Build a typed stub Supabase client whose per-table `insert`/`select`/`delete` results are configurable per test, then assert the save contract and the orphan fix.
+- All deck tests pass (orphan-guard test goes green after the fix)
+- `npm run test` green across all suites
+- `npm run typecheck` passes
+- `npm run lint` passes
 
-**Contract**: Stub exposes a builder typed against `SupabaseClientType` whose `from(table)` returns chainable `insert/select/single/delete/eq` resolving to caller-supplied `{ data, error }`. Tests:
-  - `createDeckWithCards` happy path → returns `{ deckId }`; cards insert called with mapped `{front, back, source:"ai", deck_id, user_id}`.
-  - **card insert fails → service throws the original error AND a delete on `decks` for the created id was issued** (assert orphan cleanup); no `{ deckId }` returned.
-  - cleanup delete itself fails → original card error still thrown, `console.warn` invoked, no masking.
-  - `cards.length === 0` → no card insert attempted.
-  - `appendCardsToDeck`: ownership select error → throws `"Deck not found or access denied"`; insert error → throws; `cards.length === 0` → early return, no insert.
+#### Manual Verification
 
-#### 3. Deferred integration note
+- Git log shows `src/test/decks.test.ts` committed before the `decks.ts` fix (TDD ordering preserved)
+- `cards: []` test asserts the card-table stub method was not called
 
-**File**: `src/lib/services/decks.test.ts` (new) — `it.skip` or `describe.skip` block
-
-**Intent**: Record the deferred happy-path integration assertion (COUNT(cards)=N and COUNT(card_sr_state)=N via the `after_card_insert` trigger) as a skipped, documented placeholder so the ad-hoc gate is visible in code, not just in the test plan.
-
-**Contract**: A `describe.skip("integration (ad-hoc, requires local Supabase)", ...)` containing a commented outline of the row-count + trigger assertion and a reference to test-plan §4.
-
-### Success Criteria:
-
-#### Automated Verification:
-
-- Deck-save tests pass: `npm run test`
-- Type checking passes: `npx astro check`
-- Linting passes: `npm run lint`
-
-#### Manual Verification:
-
-- The orphan-cleanup assertion fails if the compensating delete is removed (confirm the test actually guards the fix)
-- The deferred integration block is skipped, not deleted, and references §4
-
-**Implementation Note**: Pause for human confirmation before Phase 4.
+**Implementation Note**: Pause after automated verification. Confirm TDD red→green trace is visible in git history before proceeding.
 
 ---
 
-## Phase 4: Risk #5 — Generation Hook Error-Recovery Test
+## Phase 4: Risk #5 — Hook Error Recovery Tests
 
 ### Overview
 
-Pin the error-recovery contract of `useGeneration`: after a failed generate, the pasted text survives, the phase returns to input, an error is shown, and a retry is possible without re-pasting.
+Write unit tests for `useGeneration`'s error branch using `renderHook` from Testing Library. Mock `fetch` to return failures; pin that `text` is preserved, `phase` returns to `"input"`, and `errorMessage` is set. Also pin that a successful retry after an error works without re-paste.
 
-### Changes Required:
+### Changes Required
 
-#### 1. useGeneration hook test
+#### 1. Create hook test file
 
-**File**: `src/components/hooks/useGeneration.test.ts` (new)
+**File**: `src/test/useGeneration.test.ts`
 
-**Intent**: Use `renderHook` + a mocked `fetch` that rejects (and a non-2xx variant) to assert the catch branch preserves `text`, resets `phase`, sets `errorMessage`, and allows a second `generate()`.
+**Intent**: Cover the catch branch in `useGeneration.generate()` (lines 54–58): after an API error, `text` is not touched, `phase` is `"input"`, and `errorMessage` is a non-empty string. Cover both the `!res.ok` path (non-200 response) and the network-reject path (fetch throws). Pin the retry: a second `generate()` call that succeeds should advance to `phase === "reviewing"` with the original `text` still intact and proposals populated.
 
-**Contract**: Mock global `fetch` (`vi.stubGlobal`/`vi.fn`). With `setText("...notes...")` then `await act(generate)` under a rejected fetch: assert `result.current.text` unchanged, `result.current.phase === "input"`, `result.current.errorMessage` truthy. Cover both failure modes — fetch reject and `res.ok === false` (error JSON body → thrown message surfaces). Then a second `generate()` with fetch succeeding moves `phase` to `"reviewing"` without re-setting text (retry-without-repaste).
+**Contract**: Mock via `vi.spyOn(globalThis, "fetch")`. Restore after each test with `vi.restoreAllMocks()`. Wrap async state updates in `act()` from React. Do not import or assert on internal state variables — only the values returned by `renderHook`.
 
-### Success Criteria:
+#### 2. Add integration placeholder to `src/test/decks.test.ts`
 
-#### Automated Verification:
+**File**: `src/test/decks.test.ts` (append)
 
-- Hook tests pass: `npm run test`
-- Type checking passes: `npx astro check`
-- Linting passes: `npm run lint`
+**Intent**: Satisfy test-plan §4 doctrine — record the deferred integration assertion as a skipped block so the intent is not lost and the file is self-documenting about what's missing.
 
-#### Manual Verification:
+**Contract**: A `describe.skip("integration: createDeckWithCards happy path — deferred", () => { it.todo("deck row count = N, card_sr_state count = N after successful save") })` block at the end of the file. No real Supabase client is needed or referenced.
 
-- Removing the `setPhase("input")` line or clearing text in the catch branch makes the test fail (guards the real regression)
+### Success Criteria
 
-**Implementation Note**: Pause for human confirmation before Phase 5.
+#### Automated Verification
+
+- All hook tests pass
+- `npm run test` green across all three suites
+- `npm run typecheck` passes
+- `npm run lint` passes
+
+#### Manual Verification
+
+- `!res.ok` branch and network-reject branch have distinct test cases
+- No hook-internal state is imported or asserted — only returned values
+
+**Implementation Note**: Pause after automated verification before proceeding to Phase 5.
 
 ---
 
-## Phase 5: Hardening & Handoff
+## Phase 5: Mutation Gate + Cookbook
 
 ### Overview
 
-Validate the Risk #1 suite with mutation testing, document the three test patterns in the cookbook, and sync the rollout status.
+Run the narrowed Stryker mutation gate on `generation.ts`, triage each survived mutant per AGENTS.md doctrine, and fill in `test-plan.md §6` cookbook entries for the three test patterns established in Phases 2–4.
 
-### Changes Required:
+### Changes Required
 
-#### 1. Stryker pass on the generation service
+#### 1. Run mutation gate and address findings
 
-**File**: `stryker.config.json` (exists — narrow scope for this run)
+**File**: (runtime step — no code change required upfront)
 
-**Intent**: A `stryker.config.json` already exists with `testRunner: "vitest"` but a **broad** `mutate: ["src/**/*.ts", ...]` glob. For this change, scope the mutation run to `generation.ts` only (decision: selective gate per CLAUDE.md/AGENTS.md), run it, and either kill survived mutants with new assertions or consciously ignore equivalents.
+**Intent**: Confirm the generation unit tests kill mutants for each distinct error-path branch. Survived mutants representing user-visible or business-relevant bugs get a new assertion in `src/test/generation.test.ts`. Equivalent mutants (cosmetic changes, unreachable branches) are consciously ignored. Do not chase 100% mutation score.
 
-**Contract**: Either set `mutate: ["src/lib/services/generation.ts"]` for this run, or invoke `npx stryker run --mutate "src/lib/services/generation.ts"` to override the broad config without committing a permanently-narrowed file. Keep `testRunner: "vitest"`. Review the HTML report; for each survivor ask "would this hurt a user/business?" — add an assertion in `generation.test.ts` if yes, document the ignore if no. Do not chase 100%.
+**Contract**: `npm run test:mutation` produces an HTML report in `reports/mutation/`. Triage each survived mutant: add assertion if user-visible impact; add a comment `// mutant: equivalent — <reason>` in the test file if consciously ignoring.
 
-#### 2. Cookbook update
+#### 2. Fill `test-plan.md §6` cookbook entries
 
 **File**: `context/foundation/test-plan.md`
 
-**Intent**: Replace the TBD slots §6.1 (service unit test), §6.2 (API/route — hermetic save pattern, integration deferred), §6.3 (React hook) with the concrete patterns shipped, and note the per-phase notes in §6.5.
+**Intent**: Replace the three "TBD — see §3 Phase 1" placeholders at §6.1 (unit test for a service function), §6.2 (hermetic stub for a service with injected client), and §6.3 (React hook with mocked fetch) with prose descriptions of the patterns established here. Each entry cites the canonical example test file.
 
-**Contract**: Prose pattern entries referencing the real test files and the key conventions (vi.mock the SDK; explicit Vitest imports; stub client typed against `SupabaseClientType`; `renderHook` + mocked fetch; `astro:env/server` stub). §6.2 records that the hermetic partial-failure pattern shipped and the integration count/trigger assertion is deferred/ad-hoc.
+**Contract**: Replace each "TBD" placeholder paragraph with 3–5 bullet prose points: mock setup approach, oracle source (where the expected value comes from), assertion style, and the canonical example file. Do not paste code — describe the pattern so a new contributor knows what to look at.
 
-#### 3. Rollout status sync
+### Success Criteria
 
-**File**: `context/foundation/test-plan.md`, `context/changes/testing-critical-path-coverage/change.md`
+#### Automated Verification
 
-**Intent**: Move §3 Phase 1 Status from `change opened` to its shipped value and stamp the change as complete-ready.
+- `npm run test:mutation` completes without crashing (exit 0 or score above configured `low: 60` threshold)
+- `npm run test` still green after any new assertions added for survived mutants
+- `npm run lint` passes
 
-**Contract**: Update the §3 row 1 Status cell; set `change.md` `status` and `updated` accordingly.
+#### Manual Verification
 
-### Success Criteria:
+- HTML Stryker report opened; every survived mutant has a triage decision (fix or consciously ignored)
+- `test-plan.md §6.1`, `§6.2`, and `§6.3` contain prose descriptions, not "TBD"
 
-#### Automated Verification:
-
-- Full suite passes: `npm run test`
-- Coverage report generates: `npm run test:coverage`
-- Stryker run completes and report is generated: `npx stryker run`
-- Linting passes: `npm run lint`
-
-#### Manual Verification:
-
-- Stryker survivors triaged (each killed or consciously ignored with a note)
-- Cookbook §6.1/§6.2/§6.3 read as usable patterns, not TBD
-- Test-plan §3 Phase 1 Status reflects shipped state
-
-**Implementation Note**: Final phase — confirm the full suite and the handoff edits with the human.
+**Implementation Note**: Do not auto-accept Stryker findings without reviewing the HTML report. The triage is the point — killing every mutant mechanically produces vibe tests. Final sign-off on Phase 5 marks the Phase 1 rollout complete.
 
 ---
 
 ## Testing Strategy
 
-### Unit Tests:
+### Unit Tests
 
-- `generation.ts` — failure matrix (5 distinct errors) + happy-path contract (Risk #1).
-- `decks.ts` — hermetic stub: orphan cleanup on partial failure, empty-cards skip, `appendCardsToDeck` ownership/insert errors (Risk #2).
-- `useGeneration.ts` — error-recovery: text preserved, phase reset, retry (Risk #5).
+- `src/test/generation.test.ts`: `it.each` over 6 failure-matrix entries + happy path + whitespace edge; oracle = Polish error messages from `generation.ts`
+- `src/test/decks.test.ts`: hermetic Supabase stub; orphan-guard, empty-cards skip, ownership error, insert error; integration placeholder skipped
+- `src/test/useGeneration.test.ts`: `renderHook` + `vi.spyOn(globalThis, "fetch")`; both error branches; retry success
 
-### Integration Tests:
+### Manual Testing Steps
 
-- Deferred (ad-hoc): happy-path row counts + `after_card_insert` trigger against a real test DB. Captured as a `describe.skip` placeholder referencing test-plan §4.
-
-### Manual Testing Steps:
-
-1. Run `npm run test` — all suites green.
-2. Temporarily remove the compensating delete — confirm the Risk #2 orphan test goes red.
-3. Temporarily clear `text` in the hook catch branch — confirm the Risk #5 test goes red.
-4. Open the Stryker HTML report — confirm survivors are triaged.
+1. After Phase 1: run `npm run test` — expect "no test files found" pass, not a setup-file error
+2. After Phase 2: read each test description aloud — if it names implementation internals rather than user outcomes, rewrite
+3. After Phase 3: verify git log shows decks test committed before the decks.ts fix
+4. After Phase 4: confirm two error branches (`!res.ok` and fetch-throws) have distinct test cases
+5. After Phase 5: review HTML Stryker report before closing; note any consciously ignored mutants in the test file
 
 ## Performance Considerations
 
-Negligible — all Phase 1 tests are hermetic/mocked (no network, no real DB). Stryker is selectively scoped to one file to keep mutation runtime bounded.
-
-## Migration Notes
-
-The compensating-delete change to `createDeckWithCards` is behaviour-preserving on the happy path and only adds cleanup on the existing error path; no data migration. `ON DELETE CASCADE` means deleting the orphan deck also clears any partially-inserted dependent rows.
+Stryker with `coverageAnalysis: "perTest"` on `generation.ts` (one file, ~50 lines of logic) runs in seconds. No performance concern for Phase 1 scope.
 
 ## References
 
 - Research: `context/changes/testing-critical-path-coverage/research.md`
-- Test plan: `context/foundation/test-plan.md` (§2 risks, §3 Phase 1, §4 stack, §6 cookbook)
-- Risk #1: `src/lib/services/generation.ts:20-73`, `src/lib/schemas/generation.ts:7-10`
-- Risk #2: `src/lib/services/decks.ts:13-46`, `src/lib/services/decks.ts:101-141`, `supabase/migrations/20260526220447_initial_schema.sql`
-- Risk #5: `src/components/hooks/useGeneration.ts:27-59`
-- Lint constraints: `eslint.config.js:14-21`; alias/JSX: `tsconfig.json:5-12`; Vite pin: `package.json:61-63`
+- Failure matrix oracle: `research.md §Risk#1 failure matrix`
+- Generation service: `src/lib/services/generation.ts:27-73`
+- Schema fix target: `src/lib/schemas/generation.ts:7-10`
+- Deck service fix target: `src/lib/services/decks.ts:13-46` and `101-107`
+- Hook under test: `src/components/hooks/useGeneration.ts:27-58`
+- Vitest config: `vitest.config.ts`
+- Stryker config: `stryker.config.json`
+- Test plan rollout: `context/foundation/test-plan.md §3`
+
+---
 
 ## Progress
 
-> Convention: `- [ ]` pending, `- [x]` done. Append ` — <commit sha>` when a step lands. Do not rename step titles.
+> Convention: `- [ ]` pending, `- [x]` done. Append ` — <commit sha>` when a step lands. Do not rename step titles. See `references/progress-format.md`.
 
-### Phase 1: Test Infrastructure Bootstrap
-
-#### Automated
-
-- [ ] 1.1 Dependencies install cleanly: `npm install`
-- [ ] 1.2 Smoke test passes: `npm run test`
-- [ ] 1.3 Type checking passes: `npx astro check`
-- [ ] 1.4 Linting passes: `npm run lint`
-
-#### Manual
-
-- [ ] 1.5 `npm run test:watch` starts and re-runs on file change
-- [ ] 1.6 No `astro:env/server` resolution error in test output
-
-### Phase 2: Risk #1 — Generation Service Unit Tests
+### Phase 1: Environment & Schema Fix
 
 #### Automated
 
-- [ ] 2.1 Generation tests pass: `npm run test`
-- [ ] 2.2 Type checking passes: `npx astro check`
-- [ ] 2.3 Linting passes: `npm run lint`
+- [ ] 1.1 `npm run test` exits 0 (no setup-file error)
+- [ ] 1.2 `npm run typecheck` passes with `.trim().min(1)` change
+- [ ] 1.3 `npm run lint` passes
 
 #### Manual
 
-- [ ] 2.4 Each failure-matrix row maps to its exact Polish message
-- [ ] 2.5 No test asserts against a hardcoded LLM response snapshot
+- [ ] 1.4 `vitest.setup.ts` exists at repo root
+- [ ] 1.5 `npm run test:mutation -- --help` prints Stryker help
 
-### Phase 3: Risk #2 — Orphan-Deck Fix + Hermetic Deck-Save Tests
+### Phase 2: Risk #1 — Generation Unit Tests
 
 #### Automated
 
-- [ ] 3.1 Deck-save tests pass: `npm run test`
-- [ ] 3.2 Type checking passes: `npx astro check`
-- [ ] 3.3 Linting passes: `npm run lint`
+- [ ] 2.1 `npm run test` passes (minimum 8 generation test cases green)
+- [ ] 2.2 `npm run typecheck` passes
+- [ ] 2.3 `npm run lint` passes
 
 #### Manual
 
-- [ ] 3.4 Removing the compensating delete makes the orphan test fail
-- [ ] 3.5 Deferred integration block is skipped (not deleted) and references §4
+- [ ] 2.4 Each of the six Polish error messages appears in test descriptions
+- [ ] 2.5 No test derives its expected value from the implementation (no mirror tests)
 
-### Phase 4: Risk #5 — Generation Hook Error-Recovery Test
+### Phase 3: Risk #2 — Deck Atomicity (TDD)
 
 #### Automated
 
-- [ ] 4.1 Hook tests pass: `npm run test`
-- [ ] 4.2 Type checking passes: `npx astro check`
-- [ ] 4.3 Linting passes: `npm run lint`
+- [ ] 3.1 All deck tests pass (orphan-guard test green after fix)
+- [ ] 3.2 `npm run test` green across all suites
+- [ ] 3.3 `npm run typecheck` passes
+- [ ] 3.4 `npm run lint` passes
 
 #### Manual
 
-- [ ] 4.4 Clearing text / dropping phase reset in the catch branch makes the test fail
+- [ ] 3.5 Git log shows `src/test/decks.test.ts` committed before the `decks.ts` fix
+- [ ] 3.6 `cards: []` test asserts card-table stub method was not called
 
-### Phase 5: Hardening & Handoff
+### Phase 4: Risk #5 — Hook Error Recovery
 
 #### Automated
 
-- [ ] 5.1 Full suite passes: `npm run test`
-- [ ] 5.2 Coverage report generates: `npm run test:coverage`
-- [ ] 5.3 Stryker run completes and report generated: `npx stryker run`
-- [ ] 5.4 Linting passes: `npm run lint`
+- [ ] 4.1 All hook tests pass
+- [ ] 4.2 `npm run test` green across all three suites
+- [ ] 4.3 `npm run typecheck` passes
+- [ ] 4.4 `npm run lint` passes
 
 #### Manual
 
-- [ ] 5.5 Stryker survivors triaged (killed or consciously ignored)
-- [ ] 5.6 Cookbook §6.1/§6.2/§6.3 read as usable patterns
-- [ ] 5.7 Test-plan §3 Phase 1 Status reflects shipped state
+- [ ] 4.5 Both `!res.ok` and network-reject branches have distinct test cases
+- [ ] 4.6 No hook internals imported — only returned values asserted
+
+### Phase 5: Mutation Gate + Cookbook
+
+#### Automated
+
+- [ ] 5.1 `npm run test:mutation` completes (exit 0 or above `low: 60` threshold)
+- [ ] 5.2 `npm run test` still green after any new assertions
+- [ ] 5.3 `npm run lint` passes
+
+#### Manual
+
+- [ ] 5.4 HTML Stryker report reviewed; every survived mutant has a triage decision
+- [ ] 5.5 `test-plan.md §6.1`, `§6.2`, and `§6.3` contain prose descriptions (not "TBD")
