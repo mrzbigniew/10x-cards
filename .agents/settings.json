@@ -48,6 +48,16 @@
         "hooks": [
           {
             "type": "command",
+            "command": "bash -c 'FILE=$(jq -r .tool_input.file_path) && npx eslint --fix \"$FILE\" --quiet'",
+            "timeout": 10000
+          }
+        ]
+      },
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
             "command": "AI_AGENT=1 bash -c 'FILE=$(jq -r .tool_input.file_path) && npx vitest related \"$FILE\" --run'",
             "timeout": 10000
           }
