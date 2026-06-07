@@ -34,4 +34,11 @@ reports
 
 // playwright
 .playwright-cli
-auth.json
+playwright/.auth/
+
+# Playwright
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+/playwright/.auth/
