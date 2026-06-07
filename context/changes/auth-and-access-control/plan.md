@@ -248,27 +248,27 @@ Phase 1 migration is append-only: two new policies on an existing table. No appl
 
 #### Automated
 
-- [x] 1.1 Migration applies cleanly: `npx supabase db reset`
-- [x] 1.2 Types consistent and check passes: `npm run gen-types && npx astro check`
-- [x] 1.3 Existing tests still pass: `npm run test`
+- [x] 1.1 Migration applies cleanly: `npx supabase db reset` — bfd4a9c
+- [x] 1.2 Types consistent and check passes: `npm run gen-types && npx astro check` — bfd4a9c
+- [x] 1.3 Existing tests still pass: `npm run test` — bfd4a9c
 
 #### Manual
 
-- [x] 1.4 Four policies confirmed on review_logs (SELECT, INSERT, UPDATE deny, DELETE deny)
+- [x] 1.4 Four policies confirmed on review_logs (SELECT, INSERT, UPDATE deny, DELETE deny) — bfd4a9c
 
 ### Phase 2: Middleware Unit Tests (Risk #6 — Auth Gate)
 
 #### Automated
 
-- [ ] 2.1 All 6 middleware tests pass: `npm run test -- src/test/middleware.test.ts`
-- [ ] 2.2 TypeScript compiles: `npx astro check`
-- [ ] 2.3 Lint passes: `npm run lint`
-- [ ] 2.4 Full test suite passes: `npm run test`
+- [x] 2.1 All 6 middleware tests pass: `npm run test -- src/test/middleware.test.ts`
+- [x] 2.2 TypeScript compiles: `npx astro check`
+- [x] 2.3 Lint passes: `npm run lint`
+- [x] 2.4 Full test suite passes: `npm run test`
 
 #### Manual
 
-- [ ] 2.5 Test names in Polish and describe expected behavior
-- [ ] 2.6 Prefix guard test (scenario 6) confirmed load-bearing: fails before fix, passes after
+- [x] 2.5 Test names in Polish and describe expected behavior
+- [x] 2.6 Prefix guard test (scenario 6) confirmed load-bearing: fails before fix, passes after
 
 ### Phase 3: Cross-User Isolation Tests (Risk #4)
 

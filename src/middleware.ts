@@ -10,7 +10,7 @@ const PUBLIC_ROUTES = [
   "/auth/forgot-password-sent",
   "/auth/reset-password",
 ];
-const PUBLIC_API_ROUTES = ["/api/auth"];
+const PUBLIC_API_ROUTES = ["/api/auth/"];
 
 export const onRequest = defineMiddleware(async (context, next) => {
   const supabase = createClient(context.request.headers, context.cookies);
