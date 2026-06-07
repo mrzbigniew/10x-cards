@@ -335,14 +335,14 @@ Stryker with `coverageAnalysis: "perTest"` on `generation.ts` (one file, ~50 lin
 
 #### Automated
 
-- [ ] 1.1 `npm run test` exits 0 (no setup-file error)
-- [ ] 1.2 `npm run typecheck` passes with `.trim().min(1)` change
-- [ ] 1.3 `npm run lint` passes
+- [x] 1.1 `npm run test` exits 0 (no setup-file error)
+- [x] 1.2 `npm run typecheck` passes with `.trim().min(1)` change
+- [x] 1.3 `npm run lint` passes
 
 #### Manual
 
-- [ ] 1.4 `vitest.setup.ts` exists at repo root
-- [ ] 1.5 `npm run test:mutation -- --help` prints Stryker help
+- [x] 1.4 `vitest.setup.ts` exists at repo root
+- [x] 1.5 `npm run test:mutation -- --help` prints Stryker help
 
 ### Phase 2: Risk #1 — Generation Unit Tests
 

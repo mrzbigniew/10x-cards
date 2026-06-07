@@ -18,6 +18,7 @@ export default getViteConfig(
       alias: {
         "@": "/src",
       },
+      passWithNoTests: true,
     },
   },
   {

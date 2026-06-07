@@ -5,8 +5,8 @@ export const GenerateRequestSchema = z.object({
 });
 
 export const ProposalSchema = z.object({
-  front: z.string().min(1),
-  back: z.string().min(1),
+  front: z.string().trim().min(1),
+  back: z.string().trim().min(1),
 });
 
 export const GenerateResponseSchema = z.object({
