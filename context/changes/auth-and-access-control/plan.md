@@ -274,13 +274,13 @@ Phase 1 migration is append-only: two new policies on an existing table. No appl
 
 #### Automated
 
-- [x] 3.1 All 6 cross-user isolation tests pass: `npm run test -- src/test/access-control.test.ts`
-- [x] 3.2 `describe.skip` placeholder present in output: `npm run test`
-- [x] 3.3 Full test suite passes: `npm run test`
-- [x] 3.4 TypeScript compiles: `npx astro check`
-- [x] 3.5 Lint passes: `npm run lint`
+- [x] 3.1 All 6 cross-user isolation tests pass: `npm run test -- src/test/access-control.test.ts` — f39c97a
+- [x] 3.2 `describe.skip` placeholder present in output: `npm run test` — f39c97a
+- [x] 3.3 Full test suite passes: `npm run test` — f39c97a
+- [x] 3.4 TypeScript compiles: `npx astro check` — f39c97a
+- [x] 3.5 Lint passes: `npm run lint` — f39c97a
 
 #### Manual
 
-- [x] 3.6 All 6 test names in Polish, naming the cross-user scenario explicitly
-- [x] 3.7 `describe.skip` block contains at least 2 `it.todo` items for deferred real-DB assertions
+- [x] 3.6 All 6 test names in Polish, naming the cross-user scenario explicitly — f39c97a
+- [x] 3.7 `describe.skip` block contains at least 2 `it.todo` items for deferred real-DB assertions — f39c97a
