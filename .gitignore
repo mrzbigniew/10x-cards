@@ -29,5 +29,9 @@ pnpm-debug.log*
 
 # stryker temp files
 .stryker-tmp
-
 reports
+
+
+// playwright
+.playwright-cli
+auth.json
