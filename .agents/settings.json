@@ -40,5 +40,19 @@
       "Read(./.DS_Store)",
       "Read(./.idea/)"
     ]
+  },
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "AI_AGENT=1 bash -c 'FILE=$(jq -r .tool_input.file_path) && npx vitest related \"$FILE\" --run'",
+            "timeout": 10000
+          }
+        ]
+      }
+    ]
   }
 }
