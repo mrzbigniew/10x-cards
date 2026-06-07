@@ -45,7 +45,7 @@ export function DeckDetailHeader({ deck, onRename }: Props) {
     <div className="mb-6">
       <a
         href="/dashboard"
-        className="mb-4 inline-flex items-center gap-1 text-sm text-muted-foreground transition-colors hover:text-foreground"
+        className="text-muted-foreground hover:text-foreground mb-4 inline-flex items-center gap-1 text-sm transition-colors"
       >
         ← Pulpit
       </a>
@@ -56,25 +56,27 @@ export function DeckDetailHeader({ deck, onRename }: Props) {
               ref={inputRef}
               type="text"
               value={draftName}
-              onChange={(e) => setDraftName(e.target.value)}
+              onChange={(e) => {
+                setDraftName(e.target.value);
+              }}
               onBlur={() => void commitRename()}
               onKeyDown={(e) => {
                 if (e.key === "Enter") void commitRename();
                 if (e.key === "Escape") cancelEdit();
               }}
               maxLength={200}
-              className="w-full rounded border border-primary/50 bg-input px-3 py-1 text-2xl font-bold text-foreground focus:outline-none"
+              className="border-primary/50 bg-input text-foreground w-full rounded border px-3 py-1 text-2xl font-bold focus:outline-none"
             />
           ) : (
             <button
               onClick={startEdit}
               title="Kliknij, aby zmienić nazwę"
-              className="block text-left text-2xl font-bold text-foreground transition-colors hover:text-purple-500"
+              className="text-foreground block text-left text-2xl font-bold transition-colors hover:text-purple-500"
             >
               {deck.name}
             </button>
           )}
-          {renameError && <p className="mt-1 text-sm text-destructive">{renameError}</p>}
+          {renameError && <p className="text-destructive mt-1 text-sm">{renameError}</p>}
         </div>
       </div>
     </div>

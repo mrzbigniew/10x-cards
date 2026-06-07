@@ -61,9 +61,9 @@ export function CardRow({ card, onUpdate, onDelete }: Props) {
 
   if (mode === "deleting") {
     return (
-      <li className="rounded-lg border border-destructive/30 bg-card px-4 py-3">
+      <li className="border-destructive/30 bg-card rounded-lg border px-4 py-3">
         <div className="flex items-center gap-3">
-          <span className="flex-1 text-sm text-foreground/80">Potwierdzić usunięcie?</span>
+          <span className="text-foreground/80 flex-1 text-sm">Potwierdzić usunięcie?</span>
           <button
             onClick={() => void handleDelete()}
             disabled={deleting}
@@ -72,61 +72,69 @@ export function CardRow({ card, onUpdate, onDelete }: Props) {
             {deleting ? "Usuwanie…" : "Tak, usuń"}
           </button>
           <button
-            onClick={() => setMode("view")}
+            onClick={() => {
+              setMode("view");
+            }}
             disabled={deleting}
-            className="rounded border border-border px-3 py-1 text-xs text-foreground/70 transition-colors hover:text-foreground disabled:opacity-40"
+            className="border-border text-foreground/70 hover:text-foreground rounded border px-3 py-1 text-xs transition-colors disabled:opacity-40"
           >
             Anuluj
           </button>
         </div>
-        {error && <p className="mt-2 text-xs text-destructive">{error}</p>}
+        {error && <p className="text-destructive mt-2 text-xs">{error}</p>}
       </li>
     );
   }
 
   if (mode === "editing") {
     return (
-      <li className="space-y-3 rounded-lg border border-primary/30 bg-card px-4 py-3">
+      <li className="border-primary/30 bg-card space-y-3 rounded-lg border px-4 py-3">
         <div>
           <div className="mb-1 flex justify-between">
-            <label className="text-xs font-medium text-muted-foreground">Przód</label>
+            <label className="text-muted-foreground text-xs font-medium">Przód</label>
             <span className={cn("text-xs", editFront.length >= 490 ? "text-destructive" : "text-muted-foreground")}>
               {editFront.length}/500
             </span>
           </div>
           <textarea
             value={editFront}
-            onChange={(e) => setEditFront(e.target.value)}
+            onChange={(e) => {
+              setEditFront(e.target.value);
+            }}
             maxLength={500}
             rows={2}
-            className="w-full resize-none rounded border border-border bg-input px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary/50 focus:outline-none"
+            className="border-border bg-input text-foreground placeholder:text-muted-foreground focus:border-primary/50 w-full resize-none rounded border px-3 py-2 text-sm focus:outline-none"
           />
         </div>
         <div>
           <div className="mb-1 flex justify-between">
-            <label className="text-xs font-medium text-muted-foreground">Tył</label>
+            <label className="text-muted-foreground text-xs font-medium">Tył</label>
             <span className={cn("text-xs", editBack.length >= 490 ? "text-destructive" : "text-muted-foreground")}>
               {editBack.length}/500
             </span>
           </div>
           <textarea
             value={editBack}
-            onChange={(e) => setEditBack(e.target.value)}
+            onChange={(e) => {
+              setEditBack(e.target.value);
+            }}
             maxLength={500}
             rows={2}
-            className="w-full resize-none rounded border border-border bg-input px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary/50 focus:outline-none"
+            className="border-border bg-input text-foreground placeholder:text-muted-foreground focus:border-primary/50 w-full resize-none rounded border px-3 py-2 text-sm focus:outline-none"
           />
         </div>
-        <label className="flex cursor-pointer items-center gap-2 text-sm text-foreground/70">
+        <label className="text-foreground/70 flex cursor-pointer items-center gap-2 text-sm">
           <input
             type="checkbox"
             checked={resetSR}
-            onChange={(e) => setResetSR(e.target.checked)}
+            onChange={(e) => {
+              setResetSR(e.target.checked);
+            }}
             className="rounded"
           />
           Resetuj postęp powtórek
         </label>
-        {error && <p className="text-xs text-destructive">{error}</p>}
+        {error && <p className="text-destructive text-xs">{error}</p>}
         <div className="flex gap-2">
           <button
             onClick={() => void handleSave()}
@@ -136,9 +144,11 @@ export function CardRow({ card, onUpdate, onDelete }: Props) {
             {saving ? "Zapisywanie…" : "Zapisz"}
           </button>
           <button
-            onClick={() => setMode("view")}
+            onClick={() => {
+              setMode("view");
+            }}
             disabled={saving}
-            className="rounded border border-border px-3 py-1 text-xs text-foreground/70 transition-colors hover:text-foreground disabled:opacity-40"
+            className="border-border text-foreground/70 hover:text-foreground rounded border px-3 py-1 text-xs transition-colors disabled:opacity-40"
           >
             Anuluj
           </button>
@@ -148,21 +158,23 @@ export function CardRow({ card, onUpdate, onDelete }: Props) {
   }
 
   return (
-    <li className="flex items-start gap-3 rounded-lg border border-border bg-card px-4 py-3">
+    <li className="border-border bg-card flex items-start gap-3 rounded-lg border px-4 py-3">
       <div className="min-w-0 flex-1">
-        <p className="text-sm font-medium text-foreground">{truncate(card.front)}</p>
-        <p className="mt-0.5 text-sm text-muted-foreground">{truncate(card.back)}</p>
+        <p className="text-foreground text-sm font-medium">{truncate(card.front)}</p>
+        <p className="text-muted-foreground mt-0.5 text-sm">{truncate(card.back)}</p>
       </div>
       <div className="flex shrink-0 gap-1.5">
         <button
           onClick={startEdit}
-          className="rounded border border-border px-2.5 py-1 text-xs text-foreground/70 transition-colors hover:text-foreground"
+          className="border-border text-foreground/70 hover:text-foreground rounded border px-2.5 py-1 text-xs transition-colors"
         >
           Edytuj
         </button>
         <button
-          onClick={() => setMode("deleting")}
-          className="rounded border border-destructive/30 px-2.5 py-1 text-xs text-destructive/80 transition-colors hover:border-destructive hover:text-destructive"
+          onClick={() => {
+            setMode("deleting");
+          }}
+          className="border-destructive/30 text-destructive/80 hover:border-destructive hover:text-destructive rounded border px-2.5 py-1 text-xs transition-colors"
         >
           Usuń
         </button>

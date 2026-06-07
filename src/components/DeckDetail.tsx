@@ -16,28 +16,32 @@ export function DeckDetail({ deckId }: Props) {
   const [showGenerationModal, setShowGenerationModal] = useState(false);
 
   if (loading) {
-    return <p className="text-sm text-muted-foreground">Ładowanie…</p>;
+    return <p className="text-muted-foreground text-sm">Ładowanie…</p>;
   }
 
   if (error ?? !deck) {
-    return <p className="text-sm text-destructive">{error ?? "Nie znaleziono zestawu"}</p>;
+    return <p className="text-destructive text-sm">{error ?? "Nie znaleziono zestawu"}</p>;
   }
 
   return (
     <div>
       <DeckDetailHeader deck={deck} onRename={renameDeck} />
       <div className="mb-4 flex items-center justify-between">
-        <h2 className="text-base font-semibold text-foreground/80">Fiszki</h2>
+        <h2 className="text-foreground/80 text-base font-semibold">Fiszki</h2>
         <div className="flex items-center gap-2">
           <button
-            onClick={() => setShowGenerationModal(true)}
+            onClick={() => {
+              setShowGenerationModal(true);
+            }}
             className="flex items-center gap-1.5 rounded-lg border border-purple-500/40 bg-purple-600/20 px-3 py-1.5 text-xs font-medium text-purple-600 transition-colors hover:bg-purple-600/30 dark:text-purple-300"
           >
             <Sparkles className="h-3 w-3" />
             Generuj z AI
           </button>
           <button
-            onClick={() => setShowAddModal(true)}
+            onClick={() => {
+              setShowAddModal(true);
+            }}
             className="rounded-lg border border-purple-500/40 bg-purple-600/20 px-3 py-1.5 text-xs font-medium text-purple-600 transition-colors hover:bg-purple-600/30 dark:text-purple-300"
           >
             + Dodaj fiszkę
@@ -47,12 +51,16 @@ export function DeckDetail({ deckId }: Props) {
       <CardList cards={cards} onUpdate={updateCard} onDelete={deleteCard} />
       <AddCardModal
         isOpen={showAddModal}
-        onClose={() => setShowAddModal(false)}
+        onClose={() => {
+          setShowAddModal(false);
+        }}
         onAdd={addCard}
       />
       <GenerationModal
         isOpen={showGenerationModal}
-        onClose={() => setShowGenerationModal(false)}
+        onClose={() => {
+          setShowGenerationModal(false);
+        }}
         preselectedDeckId={deckId}
       />
     </div>

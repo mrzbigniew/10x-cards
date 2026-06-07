@@ -21,25 +21,30 @@ export function CreateDeckModal({ isOpen, onConfirm, onCancel, isCreating, error
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm">
-      <div className="w-full max-w-md rounded-2xl border border-border bg-card p-6 shadow-xl">
-        <h2 className="mb-4 text-lg font-semibold text-foreground">Nowy zestaw</h2>
+      <div className="border-border bg-card w-full max-w-md rounded-2xl border p-6 shadow-xl">
+        <h2 className="text-foreground mb-4 text-lg font-semibold">Nowy zestaw</h2>
         <form onSubmit={handleSubmit}>
           <input
             type="text"
             value={name}
-            onChange={(e) => setName(e.target.value)}
+            onChange={(e) => {
+              setName(e.target.value);
+            }}
             maxLength={200}
             autoFocus
             placeholder="Nazwa zestawu"
-            className="mb-4 w-full rounded-lg border border-border bg-input px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary/50 focus:outline-none"
+            className="border-border bg-input text-foreground placeholder:text-muted-foreground focus:border-primary/50 mb-4 w-full rounded-lg border px-3 py-2 text-sm focus:outline-none"
           />
-          {error && <p className="mb-3 text-sm text-destructive">{error}</p>}
+          {error && <p className="text-destructive mb-3 text-sm">{error}</p>}
           <div className="flex gap-3">
             <button
               type="button"
-              onClick={() => { setName(""); onCancel(); }}
+              onClick={() => {
+                setName("");
+                onCancel();
+              }}
               disabled={isCreating}
-              className="flex-1 rounded-lg border border-border bg-card px-4 py-2 text-sm text-foreground transition-colors hover:bg-accent disabled:opacity-40"
+              className="border-border bg-card text-foreground hover:bg-accent flex-1 rounded-lg border px-4 py-2 text-sm transition-colors disabled:opacity-40"
             >
               Anuluj
             </button>

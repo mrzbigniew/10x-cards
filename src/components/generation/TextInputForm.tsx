@@ -16,10 +16,12 @@ export function TextInputForm({ text, onTextChange, onGenerate, isGenerating, er
   return (
     <div className="space-y-4">
       <div>
-        <label className="mb-2 block text-sm font-medium text-foreground/70">Wklej notatki lub tekst z podręcznika</label>
+        <label className="text-foreground/70 mb-2 block text-sm font-medium">
+          Wklej notatki lub tekst z podręcznika
+        </label>
 
         {errorMessage && (
-          <div className="mb-3 rounded-lg border border-destructive/30 bg-destructive/10 px-4 py-3 text-sm text-destructive">
+          <div className="border-destructive/30 bg-destructive/10 text-destructive mb-3 rounded-lg border px-4 py-3 text-sm">
             {errorMessage}
           </div>
         )}
@@ -33,10 +35,10 @@ export function TextInputForm({ text, onTextChange, onGenerate, isGenerating, er
           rows={12}
           disabled={isGenerating}
           placeholder="Wklej tutaj tekst (do 10 000 znaków)…"
-          className="w-full rounded-lg border border-border bg-input px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary/50 focus:outline-none disabled:opacity-60"
+          className="border-border bg-input text-foreground placeholder:text-muted-foreground focus:border-primary/50 w-full rounded-lg border px-4 py-3 text-sm focus:outline-none disabled:opacity-60"
         />
 
-        <div className="mt-1.5 flex items-center justify-between text-xs text-muted-foreground">
+        <div className="text-muted-foreground mt-1.5 flex items-center justify-between text-xs">
           {tooShort && trimmedLength > 0 ? (
             <span className="text-amber-500">Minimum 50 znaków ({trimmedLength} dotychczas)</span>
           ) : trimmedLength === 0 ? (

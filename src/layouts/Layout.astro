@@ -13,9 +13,9 @@ const { title = "10xCards" } = Astro.props;
   <head>
     <script is:inline>
       (function () {
-        const s = localStorage.getItem('theme');
-        const dark = s ? s === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches;
-        if (dark) document.documentElement.classList.add('dark');
+        const s = localStorage.getItem("theme");
+        const dark = s ? s === "dark" : window.matchMedia("(prefers-color-scheme: dark)").matches;
+        if (dark) document.documentElement.classList.add("dark");
       })();
     </script>
     <meta charset="UTF-8" />

@@ -18,7 +18,7 @@ export default function ThemeToggle() {
   return (
     <button
       onClick={toggle}
-      className="rounded p-1 text-foreground/60 transition-colors hover:text-foreground"
+      className="text-foreground/60 hover:text-foreground rounded p-1 transition-colors"
       aria-label={isDark ? "Przełącz na jasny motyw" : "Przełącz na ciemny motyw"}
     >
       {isDark ? <Sun className="size-4" /> : <Moon className="size-4" />}

@@ -123,7 +123,9 @@ export async function applyRating(
   if (updateError) throw new Error(updateError.message);
 
   // Best-effort: log insert failure is non-fatal — SR state is already persisted
-  const { error: logError } = await supabase.from("review_logs").insert(reviewLogToDbInsert(result.log, cardId, userId));
+  const { error: logError } = await supabase
+    .from("review_logs")
+    .insert(reviewLogToDbInsert(result.log, cardId, userId));
   if (logError) console.error("[review_logs] insert failed:", logError.message);
 
   return update;

@@ -9,7 +9,7 @@ interface Props {
 
 export function CardList({ cards, onUpdate, onDelete }: Props) {
   if (cards.length === 0) {
-    return <p className="text-sm text-muted-foreground">Brak fiszek — dodaj pierwszą fiszkę.</p>;
+    return <p className="text-muted-foreground text-sm">Brak fiszek — dodaj pierwszą fiszkę.</p>;
   }
 
   return (

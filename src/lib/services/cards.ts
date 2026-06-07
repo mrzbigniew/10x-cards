@@ -61,11 +61,7 @@ export async function resetCardSRState(supabase: SupabaseClientType, userId: str
   }
 }
 
-export async function resetDeckProgress(
-  supabase: SupabaseClientType,
-  userId: string,
-  deckId: string,
-): Promise<void> {
+export async function resetDeckProgress(supabase: SupabaseClientType, userId: string, deckId: string): Promise<void> {
   const { data, error: fetchError } = await supabase
     .from("cards")
     .select("id")

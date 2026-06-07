@@ -15,18 +15,18 @@ export function ResetProgressModal({ isOpen, deckName, cardCount, onConfirm, onC
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm">
-      <div className="w-full max-w-md rounded-2xl border border-border bg-card p-6 shadow-xl">
-        <h2 className="mb-2 text-lg font-semibold text-foreground">Resetuj postępy</h2>
-        <p className="mb-4 text-sm text-muted-foreground">
+      <div className="border-border bg-card w-full max-w-md rounded-2xl border p-6 shadow-xl">
+        <h2 className="text-foreground mb-2 text-lg font-semibold">Resetuj postępy</h2>
+        <p className="text-muted-foreground mb-4 text-sm">
           Zresetować postępy dla {cardCount} {cardCount === 1 ? "fiszki" : "fiszek"} w zestawie{" "}
-          <span className="font-semibold text-foreground">{deckName}</span>? Nie można cofnąć.
+          <span className="text-foreground font-semibold">{deckName}</span>? Nie można cofnąć.
         </p>
-        {error && <p className="mb-3 text-sm text-destructive">{error}</p>}
+        {error && <p className="text-destructive mb-3 text-sm">{error}</p>}
         <div className="flex gap-3">
           <button
             onClick={onCancel}
             disabled={isResetting}
-            className="flex-1 rounded-lg border border-border bg-card px-4 py-2 text-sm text-foreground transition-colors hover:bg-accent disabled:opacity-40"
+            className="border-border bg-card text-foreground hover:bg-accent flex-1 rounded-lg border px-4 py-2 text-sm transition-colors disabled:opacity-40"
           >
             Anuluj
           </button>

@@ -34,17 +34,19 @@ export function FormField({
 }: FormFieldProps) {
   return (
     <div>
-      <label htmlFor={id} className="mb-1 block text-sm text-foreground/80">
+      <label htmlFor={id} className="text-foreground/80 mb-1 block text-sm">
         {label}
       </label>
       <div className="relative">
-        <span className="absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground">{icon}</span>
+        <span className="text-muted-foreground absolute top-1/2 left-3 size-4 -translate-y-1/2">{icon}</span>
         <input
           id={id}
           name={name ?? id}
           type={type}
           value={value}
-          onChange={(e) => onChange(e.target.value)}
+          onChange={(e) => {
+            onChange(e.target.value);
+          }}
           placeholder={placeholder}
           className={cn(
             inputBase,
@@ -54,7 +56,7 @@ export function FormField({
         {endContent}
       </div>
       {error ? (
-        <p className="mt-1 flex items-center gap-1 text-xs text-destructive">
+        <p className="text-destructive mt-1 flex items-center gap-1 text-xs">
           <CircleAlert className="size-3" />
           {error}
         </p>

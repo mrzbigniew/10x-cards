@@ -19,13 +19,13 @@ export function DeleteDeckModal({ isOpen, deckName, onConfirm, onCancel, isDelet
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm">
-      <div className="w-full max-w-md rounded-2xl border border-border bg-card p-6 shadow-xl">
-        <h2 className="mb-2 text-lg font-semibold text-foreground">Usuń zestaw</h2>
-        <p className="mb-4 text-sm text-muted-foreground">
+      <div className="border-border bg-card w-full max-w-md rounded-2xl border p-6 shadow-xl">
+        <h2 className="text-foreground mb-2 text-lg font-semibold">Usuń zestaw</h2>
+        <p className="text-muted-foreground mb-4 text-sm">
           Ta operacja jest nieodwracalna. Wszystkie fiszki w zestawie zostaną usunięte.
         </p>
-        <p className="mb-2 text-sm text-foreground/80">
-          Wpisz <span className="font-mono font-semibold text-foreground">{deckName}</span>, aby potwierdzić:
+        <p className="text-foreground/80 mb-2 text-sm">
+          Wpisz <span className="text-foreground font-mono font-semibold">{deckName}</span>, aby potwierdzić:
         </p>
         <input
           type="text"
@@ -33,17 +33,17 @@ export function DeleteDeckModal({ isOpen, deckName, onConfirm, onCancel, isDelet
           onChange={(e) => {
             setInputValue(e.target.value);
           }}
-          className="mb-4 w-full rounded-lg border border-border bg-input px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:border-destructive/50 focus:outline-none"
+          className="border-border bg-input text-foreground placeholder:text-muted-foreground focus:border-destructive/50 mb-4 w-full rounded-lg border px-3 py-2 text-sm focus:outline-none"
           placeholder={deckName}
           autoFocus
         />
-        {error && <p className="mb-3 text-sm text-destructive">{error}</p>}
+        {error && <p className="text-destructive mb-3 text-sm">{error}</p>}
 
         <div className="flex gap-3">
           <button
             onClick={onCancel}
             disabled={isDeleting}
-            className="flex-1 rounded-lg border border-border bg-card px-4 py-2 text-sm text-foreground transition-colors hover:bg-accent disabled:opacity-40"
+            className="border-border bg-card text-foreground hover:bg-accent flex-1 rounded-lg border px-4 py-2 text-sm transition-colors disabled:opacity-40"
           >
             Anuluj
           </button>
