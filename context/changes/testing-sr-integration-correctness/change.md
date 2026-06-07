@@ -4,6 +4,7 @@ title: SR integration correctness — prove review service schedules and persist
 status: implementing
 created: 2026-06-07
 updated: 2026-06-07
+
 archived_at: null
 ---
 
