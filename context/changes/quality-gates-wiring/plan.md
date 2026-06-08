@@ -277,13 +277,13 @@ All existing tests continue to pass unmodified — no production code changes in
 
 #### Automated
 
-- [ ] 2.1 `npm run check` exits 0
-- [ ] 2.2 `npm run test` exits 0
+- [x] 2.1 `npm run check` exits 0 — a5dae57
+- [x] 2.2 `npm run test` exits 0 — a5dae57
 
 #### Manual
 
-- [ ] 2.3 `git commit` triggers lint-staged + astro check
-- [ ] 2.4 `git push --dry-run` triggers Vitest
+- [x] 2.3 `git commit` triggers lint-staged + astro check — a5dae57
+- [x] 2.4 `git push --dry-run` triggers Vitest — a5dae57
 
 ### Phase 3: CI Pipeline
 
