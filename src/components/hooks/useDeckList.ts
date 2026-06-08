@@ -68,13 +68,17 @@ export function useDeckList() {
     [refresh],
   );
 
-  const resetDeckProgress = useCallback(async (id: string) => {
-    const res = await fetch(`/api/decks/${id}/reset-progress`, { method: "POST" });
-    if (!res.ok) {
-      const data = (await res.json()) as { error?: string };
-      throw new Error(data.error ?? "Failed to reset deck progress");
-    }
-  }, []);
+  const resetDeckProgress = useCallback(
+    async (id: string) => {
+      const res = await fetch(`/api/decks/${id}/reset-progress`, { method: "POST" });
+      if (!res.ok) {
+        const data = (await res.json()) as { error?: string };
+        throw new Error(data.error ?? "Failed to reset deck progress");
+      }
+      refresh();
+    },
+    [refresh],
+  );
 
   return { decks, loading, error, createDeck, deleteDeck, resetDeckProgress, refresh };
 }

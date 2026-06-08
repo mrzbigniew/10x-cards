@@ -26,7 +26,7 @@ export function GenerationModal({ isOpen, onClose, preselectedDeckId }: Props) {
   }, [toastVisible]);
 
   const handleCloseRequest = useCallback(() => {
-    if (phase === "reviewing") {
+    if (phase === "reviewing" || phase === "generating") {
       setShowCloseGuard(true);
     } else {
       reset();

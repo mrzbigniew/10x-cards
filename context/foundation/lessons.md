@@ -9,11 +9,11 @@
 - **Rule**: All text presented to the user must be written in Polish. Never introduce English user-facing strings; new UI copy, labels, messages, and errors are authored in Polish.
 - **Applies to**: plan, implement, impl-review
 
-## All modals must use a react-doom portal
+## All modals must use a react-dom portal
 
 - **Context**: Any modal/dialog component in the codebase.
 - **Problem**: Modals rendered inline may be clipped or hidden by parent stacking contexts, causing z-index issues.
-- **Rule**: All modals must be rendered using a portal from react-doom. Never render modal/dialog components inline in the DOM tree.
+- **Rule**: All modals must be rendered using `createPortal` from `react-dom`. Never render modal/dialog components inline in the DOM tree.
 - **Applies to**: all
 
 ## Always use LF line endings when creating files
