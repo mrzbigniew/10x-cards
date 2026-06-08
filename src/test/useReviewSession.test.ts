@@ -101,7 +101,7 @@ describe("useReviewSession — logika kolejki", () => {
 
     const { result } = renderHook(() => useReviewSession(DECK_ID));
 
-    await act(async () => {});
+    await act(() => Promise.resolve());
 
     await act(async () => {
       await result.current.rate(1);
@@ -133,7 +133,7 @@ describe("useReviewSession — logika kolejki", () => {
 
     const { result } = renderHook(() => useReviewSession(DECK_ID));
 
-    await act(async () => {});
+    await act(() => Promise.resolve());
 
     await act(async () => {
       await result.current.rate(3);
@@ -163,7 +163,7 @@ describe("useReviewSession — logika kolejki", () => {
       } as unknown as Response);
 
     const { result } = renderHook(() => useReviewSession(DECK_ID));
-    await act(async () => {});
+    await act(() => Promise.resolve());
 
     await act(async () => {
       await result.current.rate(3);
@@ -190,7 +190,7 @@ describe("useReviewSession — logika kolejki", () => {
 
     const { result } = renderHook(() => useReviewSession(DECK_ID));
 
-    await act(async () => {});
+    await act(() => Promise.resolve());
 
     await act(async () => {
       await result.current.rate(3);

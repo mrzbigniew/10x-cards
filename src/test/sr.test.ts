@@ -219,6 +219,7 @@ describe("applyRating", () => {
   });
 
   it("błąd wstawiania review_log nie jest propagowany — applyRating rozwiązuje się pomyślnie", async () => {
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
     const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => {});
     const expectedUpdate = fsrsCardToDbUpdate(scheduler.next(buildCard(INITIAL_CARD_ROW), TEST_NOW, 3).card);
 

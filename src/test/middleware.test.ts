@@ -7,6 +7,7 @@ vi.mock("astro:middleware", () => ({
 const mockGetUser = vi.fn();
 const mockCreateClient = vi.fn();
 vi.mock("@/lib/supabase", () => ({
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
   createClient: (...args: unknown[]) => mockCreateClient(...args),
 }));
 
