@@ -316,25 +316,25 @@ No schema or API changes.
 
 #### Automated
 
-- [x] 1.1 All existing tests pass: `npm run test`
-- [x] 1.2 New GenerationModal tests pass: `npm run test -- GenerationModal`
-- [x] 1.3 New useDeckList tests pass: `npm run test -- useDeckList`
-- [x] 1.4 TypeScript passes: `npm run typecheck`
-- [x] 1.5 Lint passes: `npm run lint`
+- [x] 1.1 All existing tests pass: `npm run test` — f7dea9b
+- [x] 1.2 New GenerationModal tests pass: `npm run test -- GenerationModal` — f7dea9b
+- [x] 1.3 New useDeckList tests pass: `npm run test -- useDeckList` — f7dea9b
+- [x] 1.4 TypeScript passes: `npm run typecheck` — f7dea9b
+- [x] 1.5 Lint passes: `npm run lint` — f7dea9b
 
 #### Manual
 
-- [x] 1.6 Dismissing modal during generation shows confirmation dialog, not immediate close
-- [x] 1.7 Cancelling guard dialog resumes generation; confirming closes modal
-- [x] 1.8 Resetting deck progress immediately updates deck list without page reload
+- [x] 1.6 Dismissing modal during generation shows confirmation dialog, not immediate close — f7dea9b
+- [x] 1.7 Cancelling guard dialog resumes generation; confirming closes modal — f7dea9b
+- [x] 1.8 Resetting deck progress immediately updates deck list without page reload — f7dea9b
 
 ### Phase 2: review-requeue-depth
 
 #### Automated
 
-- [ ] 2.1 All tests pass (including Phase 1 tests): `npm run test`
-- [ ] 2.2 TypeScript passes: `npm run typecheck`
-- [ ] 2.3 Lint passes: `npm run lint`
+- [x] 2.1 All tests pass (including Phase 1 tests): `npm run test`
+- [x] 2.2 TypeScript passes: `npm run typecheck`
+- [x] 2.3 Lint passes: `npm run lint`
 
 #### Manual
 

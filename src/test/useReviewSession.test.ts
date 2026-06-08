@@ -199,3 +199,130 @@ describe("useReviewSession — logika kolejki", () => {
     expect(result.current.error).toBe("Błąd serwera");
   });
 });
+
+describe("useReviewSession — głębokość ponownego kolejkowania", () => {
+  it("pojedyncza karta: Raz jeszcze → Raz jeszcze → dobra → finished === true", async () => {
+    const fetchSpy = vi.spyOn(globalThis, "fetch");
+    fetchSpy
+      .mockResolvedValueOnce({
+        ok: true,
+        json: vi.fn().mockResolvedValue({ cards: [CARD_A] }),
+      } as unknown as Response)
+      .mockResolvedValueOnce({
+        ok: true,
+        json: vi.fn().mockResolvedValue({ sr: UPDATED_SR_A }),
+      } as unknown as Response)
+      .mockResolvedValueOnce({
+        ok: true,
+        json: vi.fn().mockResolvedValue({ sr: UPDATED_SR_A }),
+      } as unknown as Response)
+      .mockResolvedValueOnce({
+        ok: true,
+        json: vi.fn().mockResolvedValue({ sr: UPDATED_SR_A }),
+      } as unknown as Response);
+
+    const { result } = renderHook(() => useReviewSession(DECK_ID));
+
+    await act(() => Promise.resolve());
+
+    await act(async () => {
+      await result.current.rate(1);
+    });
+
+    expect(result.current.current?.id).toBe(CARD_A.id);
+    expect(result.current.finished).toBe(false);
+
+    await act(async () => {
+      await result.current.rate(1);
+    });
+
+    expect(result.current.current?.id).toBe(CARD_A.id);
+    expect(result.current.finished).toBe(false);
+
+    await act(async () => {
+      await result.current.rate(3);
+    });
+
+    expect(result.current.finished).toBe(true);
+    expect(result.current.current).toBeNull();
+  });
+
+  it("wiele kart: wszystkie Raz jeszcze, potem wszystkie dobra → sesja kończy się na końcu", async () => {
+    const fetchSpy = vi.spyOn(globalThis, "fetch");
+    fetchSpy
+      .mockResolvedValueOnce({
+        ok: true,
+        json: vi.fn().mockResolvedValue({ cards: [CARD_A, CARD_B] }),
+      } as unknown as Response)
+      .mockResolvedValueOnce({
+        ok: true,
+        json: vi.fn().mockResolvedValue({ sr: UPDATED_SR_A }),
+      } as unknown as Response)
+      .mockResolvedValueOnce({
+        ok: true,
+        json: vi.fn().mockResolvedValue({ sr: UPDATED_SR_B }),
+      } as unknown as Response)
+      .mockResolvedValueOnce({
+        ok: true,
+        json: vi.fn().mockResolvedValue({ sr: UPDATED_SR_A }),
+      } as unknown as Response)
+      .mockResolvedValueOnce({
+        ok: true,
+        json: vi.fn().mockResolvedValue({ sr: UPDATED_SR_B }),
+      } as unknown as Response);
+
+    const { result } = renderHook(() => useReviewSession(DECK_ID));
+
+    await act(() => Promise.resolve());
+
+    await act(async () => {
+      await result.current.rate(1);
+    });
+
+    expect(result.current.current?.id).toBe(CARD_B.id);
+    expect(result.current.finished).toBe(false);
+
+    await act(async () => {
+      await result.current.rate(1);
+    });
+
+    expect(result.current.current?.id).toBe(CARD_A.id);
+    expect(result.current.finished).toBe(false);
+
+    await act(async () => {
+      await result.current.rate(3);
+    });
+
+    expect(result.current.current?.id).toBe(CARD_B.id);
+    expect(result.current.finished).toBe(false);
+
+    await act(async () => {
+      await result.current.rate(3);
+    });
+
+    expect(result.current.finished).toBe(true);
+  });
+
+  it("remaining > 0 kiedy ponownie kolejkowane karty są w kolejce", async () => {
+    const fetchSpy = vi.spyOn(globalThis, "fetch");
+    fetchSpy
+      .mockResolvedValueOnce({
+        ok: true,
+        json: vi.fn().mockResolvedValue({ cards: [CARD_A, CARD_B] }),
+      } as unknown as Response)
+      .mockResolvedValueOnce({
+        ok: true,
+        json: vi.fn().mockResolvedValue({ sr: UPDATED_SR_A }),
+      } as unknown as Response);
+
+    const { result } = renderHook(() => useReviewSession(DECK_ID));
+
+    await act(() => Promise.resolve());
+
+    await act(async () => {
+      await result.current.rate(1);
+    });
+
+    expect(result.current.remaining).toBe(1);
+  });
+});

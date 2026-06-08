@@ -37,14 +37,17 @@ terms, not test names. The Source column cites the _evidence that surfaced
 this risk_ — never a specific file as "where the failure lives" (that is
 research's job, see §1 principle #3).
 
-| #   | Risk (failure scenario)                                                                                                                                                      | Impact | Likelihood | Source (evidence — not anchor)                                                                                                                            |
-| --- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------ | ---------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 1   | AI generation returns malformed or empty proposals — user pastes text, clicks Generate, gets zero usable cards (LLM returns invalid JSON, parser rejects, or array is empty) | High   | Medium     | PRD US-01, FR-006, FR-007; interview Q1 ("core functionality"); hot-spot dir `src/components/generation` (20 commits/30d)                                 |
-| 2   | Deck-save writes partially — deck created but cards missing — user accepts proposals, clicks Save, gets success, but deck is empty because bulk card insert failed silently  | High   | Medium     | PRD guardrail (durability of flashcards); archive first-gated-generation/plan.md (bulk insert + trigger dependency); interview Q2 (Supabase config burns) |
-| 3   | SR scheduling error — due cards not shown or shown when not due — student trusts the algorithm; a bug in due-date filtering or rating persistence means they study wrong     | High   | Low        | PRD guardrail (SR algorithm correctness); archive review-session/plan.md (ts-fsrs integration, due_before contract)                                       |
-| 4   | Cross-user data access via RLS gap — user A reads or modifies user B's decks/cards by manipulating IDs in API requests                                                       | High   | Low        | PRD NFR (user data isolation); interview Q2 (burned on Supabase config); hot-spot dir `src/lib/services` (10 commits/30d)                                 |
-| 5   | Generation flow drops pasted text on API error — AI call times out, student's pasted notes disappear from the UI, requiring re-paste                                         | Medium | Medium     | PRD FR-007 (preserve input on error); US-01 AC (error recovery); interview Q1                                                                             |
-| 6   | Auth gate regression — unauthenticated user reaches product routes — a change to middleware exposes dashboard/generation/deck pages to anonymous users                       | High   | Low        | PRD FR-005 (redirect non-signed-in); hot-spot dir `src/pages` (14 commits/30d)                                                                            |
+| #   | Risk (failure scenario)                                                                                                                                                                           | Impact | Likelihood | Source (evidence — not anchor)                                                                                                                            |
+| --- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------ | ---------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1   | AI generation returns malformed or empty proposals — user pastes text, clicks Generate, gets zero usable cards (LLM returns invalid JSON, parser rejects, or array is empty)                      | High   | Medium     | PRD US-01, FR-006, FR-007; interview Q1 ("core functionality"); hot-spot dir `src/components/generation` (20 commits/30d)                                 |
+| 2   | Deck-save writes partially — deck created but cards missing — user accepts proposals, clicks Save, gets success, but deck is empty because bulk card insert failed silently                       | High   | Medium     | PRD guardrail (durability of flashcards); archive first-gated-generation/plan.md (bulk insert + trigger dependency); interview Q2 (Supabase config burns) |
+| 3   | SR scheduling error — due cards not shown or shown when not due — student trusts the algorithm; a bug in due-date filtering or rating persistence means they study wrong                          | High   | Low        | PRD guardrail (SR algorithm correctness); archive review-session/plan.md (ts-fsrs integration, due_before contract)                                       |
+| 4   | Cross-user data access via RLS gap — user A reads or modifies user B's decks/cards by manipulating IDs in API requests                                                                            | High   | Low        | PRD NFR (user data isolation); interview Q2 (burned on Supabase config); hot-spot dir `src/lib/services` (10 commits/30d)                                 |
+| 5   | Generation flow drops pasted text on API error — AI call times out, student's pasted notes disappear from the UI, requiring re-paste                                                              | Medium | Medium     | PRD FR-007 (preserve input on error); US-01 AC (error recovery); interview Q1                                                                             |
+| 6   | Auth gate regression — unauthenticated user reaches product routes — a change to middleware exposes dashboard/generation/deck pages to anonymous users                                            | High   | Low        | PRD FR-005 (redirect non-signed-in); hot-spot dir `src/pages` (14 commits/30d)                                                                            |
+| R-A | Modal generation lifecycle — user dismisses generation modal while AI is in flight; pasted text is silently discarded because the generating-phase dismiss guard was absent                       | High   | Medium     | Change brief + research: `context/changes/test-plan-refresh-2026-06-08/`                                                                                  |
+| R-B | `resetDeckProgress` stale UI after reset — after a successful progress reset the deck list is not refreshed, leaving the UI showing stale card counts                                             | Medium | High       | Change brief + research: `context/changes/test-plan-refresh-2026-06-08/`                                                                                  |
+| R-C | Again-requeue depth — repeated Again ratings may cause the session to end prematurely or never reach `finished === true`, because the Again→Again chain and session-end condition were not tested | High   | Medium     | Change brief + research: `context/changes/test-plan-refresh-2026-06-08/`                                                                                  |
 
 ### Risk Response Guidance
 
@@ -69,18 +72,19 @@ orchestrator updates Status as artifacts appear on disk.
 | 2   | sr-integration-correctness | Prove the review service schedules and persists ratings correctly                           | #3            | unit               | done   | context/archive/2026-06-07-testing-sr-integration-correctness/ |
 | 3   | auth-and-access-control    | Prove no unauthenticated or cross-user access is possible through the app's routes          | #4, #6        | integration        | done   | context/archive/2026-06-07-auth-and-access-control/            |
 | 4   | quality-gates-wiring       | Lock the floor: wire lint + typecheck + test into CI so no commit can regress silently      | cross-cutting | CI gates           | done   | context/changes/quality-gates-wiring/                          |
+| 5   | modal-and-hook-gaps        | Fix generating-phase guard + resetDeckProgress bug; add GenerationModal + useDeckList tests | R-A, R-B      | unit + component   | done   | context/changes/test-plan-refresh-2026-06-08/                  |
+| 6   | review-requeue-depth       | Extend useReviewSession tests for Again-requeue depth; refresh test-plan docs               | R-C           | unit               | done   | context/changes/test-plan-refresh-2026-06-08/                  |
 
 ## 4. Stack
 
-The classic test base for this project. No test infrastructure exists yet —
-Phase 1 bootstraps the runner.
+The classic test base for this project. Vitest and MSW are installed and wired into CI.
 
-| Layer               | Tool                                   | Version                        | Notes                                                                                    |
-| ------------------- | -------------------------------------- | ------------------------------ | ---------------------------------------------------------------------------------------- |
-| unit + integration  | Vitest                                 | latest (to install in Phase 1) | Vite-native; zero-config with Astro projects; supports TypeScript and JSX out of the box |
-| API/service mocking | MSW (Mock Service Worker)              | latest (to install in Phase 1) | Intercepts at the network level; mocks OpenRouter responses without touching internals   |
-| e2e                 | none yet — see §3 Phase 3 if warranted | —                              | e2e only if cheaper layers cannot cover the interaction risk                             |
-| accessibility       | none planned                           | —                              | Baseline a11y is a non-goal per PRD (no WCAG-AA audit in MVP)                            |
+| Layer               | Tool                                   | Version | Notes                                                                                    |
+| ------------------- | -------------------------------------- | ------- | ---------------------------------------------------------------------------------------- |
+| unit + integration  | Vitest                                 | ^4.1.8  | Vite-native; zero-config with Astro projects; supports TypeScript and JSX out of the box |
+| API/service mocking | MSW (Mock Service Worker)              | ^2.14.6 | Intercepts at the network level; mocks OpenRouter responses without touching internals   |
+| e2e                 | none yet — see §3 Phase 3 if warranted | —       | e2e only if cheaper layers cannot cover the interaction risk                             |
+| accessibility       | none planned                           | —       | Baseline a11y is a non-goal per PRD (no WCAG-AA audit in MVP)                            |
 
 **Stack grounding tools (current session):**
 
@@ -149,7 +153,27 @@ Pattern established in §3 Phase 3. Canonical examples: `src/test/middleware.tes
 
 ### 6.5 Per-rollout-phase notes
 
-(Filled in as phases ship.)
+**Phase 5 — modal-and-hook-gaps**
+
+- **Pessimistic mutation contract**: `useDeckList` mutations (createDeck, deleteDeck,
+  resetDeckProgress) are pessimistic — no optimistic writes. The test oracle is:
+  error path → mutation throws + `fetchSpy` call count stays at 1 (no refresh);
+  success path → mutation resolves + call count becomes 2 (initial load + post-success refresh).
+  The `resetDeckProgress` success case is the regression guard for the missing-refresh bug.
+- **Guard extension pattern**: `handleCloseRequest` in `GenerationModal` conditions on
+  `phase === "reviewing" || phase === "generating"` to show a confirmation dialog. Tests mock
+  `useGeneration` to control `phase` and `GenerationFlow` as `() => null` to isolate the guard
+  logic from child rendering.
+
+**Phase 6 — review-requeue-depth**
+
+- **Scenario-table pattern for Again-requeue**: every scenario in the
+  `useReviewSession — głębokość ponownego kolejkowania` describe block asserts `finished`
+  at the terminal step. No test ends on an intermediate state assertion alone — this avoids
+  a confirmed anti-pattern where a test passes even if the session ends prematurely.
+- **Fetch mock discipline**: one `mockResolvedValueOnce` per fetch call (initial load + one
+  per `rate()` call). Mocks are consumed in order; the count must match exactly or the test
+  will assert against the wrong response.
 
 ## 7. What We Deliberately Don't Test
 
@@ -172,4 +196,5 @@ Refresh (`/10x-test-plan --refresh`) when:
 - a new top-3 risk surfaces from the roadmap or archive,
 - a recommended tool's `checked:` date is older than three months,
 - the project's tech stack changes (new framework, new test runner),
-- §7 negative-space no longer matches what the team believes.
+- §7 negative-space no longer matches what the team believes,
+- F-02 (i18n) ships — review §2 Risk Map for new text-handling risks in generation and deck management flows.
