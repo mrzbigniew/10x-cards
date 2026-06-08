@@ -13,15 +13,15 @@
 Tests follow three non-negotiable principles for this project:
 
 1. **Cost × signal.** The cheapest test that gives a real signal for the
-  risk wins. Do not promote to e2e because e2e "feels safer." Do not put a
+   risk wins. Do not promote to e2e because e2e "feels safer." Do not put a
    vision model on top of a deterministic visual diff that already catches
    the regression.
 2. **User concerns are first-class evidence.** Risks anchored in "the
-  team is worried about X, and the failure would surface somewhere in
+   team is worried about X, and the failure would surface somewhere in
    area" carry the same weight as PRD lines or hot-spot data.
-3. **Risks are scenarios, not code locations.** This plan documents *what
-  could fail* and *why we believe it's likely* — drawn from documents,
-   interview, and codebase *signal* (churn, structure, test base). It does
+3. **Risks are scenarios, not code locations.** This plan documents _what
+   could fail_ and _why we believe it's likely_ — drawn from documents,
+   interview, and codebase _signal_ (churn, structure, test base). It does
    NOT claim to know which line owns the failure. That knowledge is
    produced by `/10x-research` during each rollout phase. If the plan and
    research disagree about where the failure lives, research is the
@@ -33,10 +33,9 @@ Hot-spot scope used for likelihood weighting: `src/`, `supabase/` (37 commits/30
 
 The top failure scenarios this project must protect against, ordered by
 risk = impact × likelihood. Risks are failure scenarios in user / business
-terms, not test names. The Source column cites the *evidence that surfaced
-this risk* — never a specific file as "where the failure lives" (that is
+terms, not test names. The Source column cites the _evidence that surfaced
+this risk_ — never a specific file as "where the failure lives" (that is
 research's job, see §1 principle #3).
-
 
 | #   | Risk (failure scenario)                                                                                                                                                      | Impact | Likelihood | Source (evidence — not anchor)                                                                                                                            |
 | --- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------ | ---------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -47,9 +46,7 @@ research's job, see §1 principle #3).
 | 5   | Generation flow drops pasted text on API error — AI call times out, student's pasted notes disappear from the UI, requiring re-paste                                         | Medium | Medium     | PRD FR-007 (preserve input on error); US-01 AC (error recovery); interview Q1                                                                             |
 | 6   | Auth gate regression — unauthenticated user reaches product routes — a change to middleware exposes dashboard/generation/deck pages to anonymous users                       | High   | Low        | PRD FR-005 (redirect non-signed-in); hot-spot dir `src/pages` (14 commits/30d)                                                                            |
 
-
 ### Risk Response Guidance
-
 
 | Risk | What would prove protection                                                                                                                                              | Must challenge                                                                                     | Context `/10x-research` must ground                                                                   | Likely cheapest layer                                                     | Anti-pattern to avoid                                                                      |
 | ---- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
@@ -60,27 +57,23 @@ research's job, see §1 principle #3).
 | #5   | After an API error, the generation UI still displays the original pasted text and a retry option                                                                         | "Text is in React state, it can't disappear" — a re-render, unmount, or navigation clears it       | Error handling in the generation hook, what triggers unmount, error-state interaction with text state | Unit test (React hook with mocked fetch returning errors)                 | Testing only the happy path and assuming error recovery works                              |
 | #6   | An unauthenticated request to any product route returns redirect (pages) or 401 (API) — never 200 with content                                                           | "Middleware covers all routes" — a new route added outside the protection array is unguarded       | Middleware implementation, route registration, how new routes join the protected set                  | Integration test (unauthenticated fetch against protected route patterns) | Hardcoding the route list in the test — becomes stale when a new route is added            |
 
-
 ## 3. Phased Rollout
 
 Each row is a discrete rollout phase that will open its own change folder
 via `/10x-new`. Status moves left-to-right through the values below; the
 orchestrator updates Status as artifacts appear on disk.
 
-
-| #   | Phase name                      | Goal (one line)                                                                             | Risks covered | Test types         | Status      | Change folder                                                      |
-| --- | ------------------------------- | ------------------------------------------------------------------------------------------- | ------------- | ------------------ | ----------- | ------------------------------------------------------------------ |
-| 1   | critical-path-coverage          | Bootstrap Vitest; prove generation service produces valid output and save-to-deck is atomic | #1, #2, #5    | unit + integration | done        | context/archive/2026-06-06-testing-critical-path-coverage/        |
-| 2   | sr-integration-correctness      | Prove the review service schedules and persists ratings correctly                           | #3            | unit               | done        | context/archive/2026-06-07-testing-sr-integration-correctness/    |
-| 3   | auth-and-access-control         | Prove no unauthenticated or cross-user access is possible through the app's routes          | #4, #6        | integration        | not started | —                                                                  |
-| 4   | quality-gates-wiring            | Lock the floor: wire lint + typecheck + test into CI so no commit can regress silently      | cross-cutting | CI gates           | not started | —                                                                  |
-
+| #   | Phase name                 | Goal (one line)                                                                             | Risks covered | Test types         | Status      | Change folder                                                  |
+| --- | -------------------------- | ------------------------------------------------------------------------------------------- | ------------- | ------------------ | ----------- | -------------------------------------------------------------- |
+| 1   | critical-path-coverage     | Bootstrap Vitest; prove generation service produces valid output and save-to-deck is atomic | #1, #2, #5    | unit + integration | done        | context/archive/2026-06-06-testing-critical-path-coverage/     |
+| 2   | sr-integration-correctness | Prove the review service schedules and persists ratings correctly                           | #3            | unit               | done        | context/archive/2026-06-07-testing-sr-integration-correctness/ |
+| 3   | auth-and-access-control    | Prove no unauthenticated or cross-user access is possible through the app's routes          | #4, #6        | integration        | done        | context/archive/2026-06-07-auth-and-access-control/            |
+| 4   | quality-gates-wiring       | Lock the floor: wire lint + typecheck + test into CI so no commit can regress silently      | cross-cutting | CI gates           | not started | —                                                              |
 
 ## 4. Stack
 
 The classic test base for this project. No test infrastructure exists yet —
 Phase 1 bootstraps the runner.
-
 
 | Layer               | Tool                                   | Version                        | Notes                                                                                    |
 | ------------------- | -------------------------------------- | ------------------------------ | ---------------------------------------------------------------------------------------- |
@@ -88,7 +81,6 @@ Phase 1 bootstraps the runner.
 | API/service mocking | MSW (Mock Service Worker)              | latest (to install in Phase 1) | Intercepts at the network level; mocks OpenRouter responses without touching internals   |
 | e2e                 | none yet — see §3 Phase 3 if warranted | —                              | e2e only if cheaper layers cannot cover the interaction risk                             |
 | accessibility       | none planned                           | —                              | Baseline a11y is a non-goal per PRD (no WCAG-AA audit in MVP)                            |
-
 
 **Stack grounding tools (current session):**
 
@@ -103,14 +95,12 @@ The full set of gates that must pass before a change reaches production.
 "Required after §3 Phase N" means the gate is enforced once that rollout
 phase lands; before that, the gate is `planned`.
 
-
 | Gate                                      | Where                         | Required?                                            | Catches                                         |
 | ----------------------------------------- | ----------------------------- | ---------------------------------------------------- | ----------------------------------------------- |
 | lint (ESLint) + typecheck (`astro check`) | local (husky pre-commit) + CI | required                                             | syntactic / type drift                          |
 | unit + integration tests                  | local + CI                    | required after §3 Phase 1                            | logic regressions in generation, save, SR, auth |
 | e2e on critical flows                     | CI on PR                      | optional — add only if unit+integration leaves a gap | broken cross-layer user paths                   |
 | post-edit hook (run affected tests)       | local (agent loop)            | recommended after §3 Phase 4                         | regressions at edit time before commit          |
-
 
 ## 6. Cookbook Patterns
 
@@ -133,7 +123,7 @@ Pattern established in §3 Phase 1. Canonical example: `src/test/generation.test
 Pattern established in §3 Phase 1. Canonical example: `src/test/decks.test.ts`. Full integration test (real DB) is deferred to §3 Phase 3.
 
 - **Mock setup**: build a typed fluent-builder stub that matches the shape of the injected client (`SupabaseClientType = NonNullable<ReturnType<typeof createClient>>`). Expose `vi.fn()` references only at terminal async operations (`.single()`, bare `.insert()`); intermediate chain methods return the same stub object.
-- **Oracle source**: expected behavior comes from the service contract (what `createDeckWithCards` must guarantee: atomicity, compensating delete on failure). The oracle is the *outcome* — error thrown, delete called, card table untouched — not the internal sequence.
+- **Oracle source**: expected behavior comes from the service contract (what `createDeckWithCards` must guarantee: atomicity, compensating delete on failure). The oracle is the _outcome_ — error thrown, delete called, card table untouched — not the internal sequence.
 - **Assertion style**: assert error messages with `.rejects.toThrow()`, assert side-effects with `expect(fn).toHaveBeenCalledOnce()` or `not.toHaveBeenCalled()` on the exposed `vi.fn()` terminals.
 - **Partial failure coverage**: hermetic stubs let you trigger the second-step failure (card insert fails after deck insert succeeds) that real infra cannot easily produce. This is the main value of the layer — do not replace it with an integration test just to get a "real DB" feel.
 - **Deferred placeholder**: add a `describe.skip` block with `it.todo` for deferred integration assertions (e.g., `"deck row count = N after successful save"`) so the intent is preserved without blocking the test run.
@@ -150,7 +140,12 @@ Pattern established in §3 Phase 1. Canonical example: `src/test/useGeneration.t
 
 ### 6.4 Adding a test for a new API endpoint
 
-TBD — see §3 Phase 3 for the auth-guard verification pattern that new routes should follow.
+Pattern established in §3 Phase 3. Canonical examples: `src/test/middleware.test.ts` (auth gate) and `src/test/access-control.test.ts` (cross-user isolation).
+
+- **Auth gate coverage**: mock `astro:middleware` as an identity function and `@/lib/supabase.createClient` to return a stub with a controllable `auth.getUser()`. Call `onRequest` directly — no server spin-up needed. Verify that any non-whitelisted path returns 401 (API) or redirect (page) when `getUser` returns `null`.
+- **Coverage check for new routes**: the middleware uses a whitelist with default-deny (`PUBLIC_API_ROUTES`, `PUBLIC_ROUTES`). New routes added under `src/pages/api/` are protected automatically — no test update needed. New _public_ routes must be added to the whitelist and covered by a pass-through test scenario.
+- **Prefix guard**: the public API prefix is `"/api/auth/"` (with trailing slash). If you add a new public route prefix, write a boundary test: one case that matches, one that almost-matches but should be blocked.
+- **Cross-user coverage for new service functions**: add a `describe` block in `src/test/access-control.test.ts` with a fresh fluent-builder stub scoped to the function under test. Stub the terminal (`.order()` for list operations, `.single()` for single-row operations) to return `{ data: null/[], error: { message: "..." } }` and assert the service returns empty or throws. Use `USER_B_ID` + a `USER_A_*_ID` constant to make the cross-user intent explicit.
 
 ### 6.5 Per-rollout-phase notes
 
@@ -162,13 +157,13 @@ Exclusions agreed during the rollout (Phase 2 interview, Q5). Future
 contributors should respect these unless the underlying assumption changes.
 
 - **Cloudflare Workers infrastructure** — deployment config, edge runtime behavior, Workers-specific APIs. Re-evaluate if the app moves off Cloudflare or a Workers-specific bug surfaces. (Source: interview Q5.)
-- **Supabase platform integration/configuration** — auth SDK internals, RLS engine behavior in isolation, migration tooling. We test our *queries through* RLS (risk #4), not Supabase itself. Re-evaluate if migrating off Supabase. (Source: interview Q5.)
+- **Supabase platform integration/configuration** — auth SDK internals, RLS engine behavior in isolation, migration tooling. We test our _queries through_ RLS (risk #4), not Supabase itself. Re-evaluate if migrating off Supabase. (Source: interview Q5.)
 - **Pure UI styling** — pixel-level visual appearance, spacing, colors. The user changes UI often (Q3) but wants logic correctness, not snapshot enforcement. Re-evaluate if visual regression becomes a top-3 risk. (Source: interview Q3 context.)
 - **Rate limiting / resource abuse** — generation endpoint spam protection. This is Cloudflare/infrastructure territory per Q5. Re-evaluate if abuse becomes a real incident. (Source: interview Q5, challenger pass.)
 
 ## 8. Freshness Ledger
 
-- Strategy (§1–§5) last reviewed: 2026-06-06
+- Strategy (§1–§5) last reviewed: 2026-06-08
 - Stack versions last verified: 2026-06-06
 - AI-native tool references last verified: 2026-06-06 (none recommended in this rollout)
 
@@ -178,4 +173,3 @@ Refresh (`/10x-test-plan --refresh`) when:
 - a recommended tool's `checked:` date is older than three months,
 - the project's tech stack changes (new framework, new test runner),
 - §7 negative-space no longer matches what the team believes.
-

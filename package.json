@@ -14,7 +14,9 @@
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
     "gen-types": "supabase gen types typescript --local > src/lib/database.types.ts",
-    "test:mutation": "stryker run --mutate \"src/lib/services/generation.ts\""
+    "test:mutation": "stryker run --mutate \"src/lib/services/generation.ts\"",
+    "prepare": "husky",
+    "check": "astro check"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.9",
