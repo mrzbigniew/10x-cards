@@ -53,6 +53,7 @@ export function TextInputForm({ text, onTextChange, onGenerate, isGenerating, er
       <button
         onClick={onGenerate}
         disabled={!canSubmit}
+        data-testid="btn-generate"
         className="flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-purple-600 to-blue-600 px-4 py-3 text-base font-semibold text-white shadow-lg transition-all hover:from-purple-500 hover:to-blue-500 hover:shadow-purple-500/25 disabled:cursor-not-allowed disabled:opacity-40"
       >
         {isGenerating ? (
