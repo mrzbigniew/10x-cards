@@ -332,13 +332,13 @@ No schema or API changes.
 
 #### Automated
 
-- [x] 2.1 All tests pass (including Phase 1 tests): `npm run test`
-- [x] 2.2 TypeScript passes: `npm run typecheck`
-- [x] 2.3 Lint passes: `npm run lint`
+- [x] 2.1 All tests pass (including Phase 1 tests): `npm run test` — 1c4ee83
+- [x] 2.2 TypeScript passes: `npm run typecheck` — 1c4ee83
+- [x] 2.3 Lint passes: `npm run lint` — 1c4ee83
 
 #### Manual
 
-- [ ] 2.4 test-plan.md §4 no longer says "no test infrastructure exists yet"
-- [ ] 2.5 test-plan.md §3 table includes phases 5 and 6 with correct metadata
-- [ ] 2.6 test-plan.md §6.5 has substantive per-phase notes for both new phases
-- [ ] 2.7 test-plan.md §8 freshness date is current and F-02 watch item appears
+- [x] 2.4 test-plan.md §4 no longer says "no test infrastructure exists yet"
+- [x] 2.5 test-plan.md §3 table includes phases 5 and 6 with correct metadata
+- [x] 2.6 test-plan.md §6.5 has substantive per-phase notes for both new phases
+- [x] 2.7 test-plan.md §8 freshness date is current and F-02 watch item appears
