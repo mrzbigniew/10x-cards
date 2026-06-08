@@ -301,8 +301,8 @@ All existing tests continue to pass unmodified — no production code changes in
 
 #### Automated
 
-- [x] 4.1 `test-plan.md` renders correctly (no broken markdown table)
+- [x] 4.1 `test-plan.md` renders correctly (no broken markdown table) — ffd83ea
 
 #### Manual
 
-- [ ] 4.2 Phase 4 row in §3 shows `done` and correct change folder
+- [x] 4.2 Phase 4 row in §3 shows `done` and correct change folder — ffd83ea
