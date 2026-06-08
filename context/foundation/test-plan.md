@@ -63,12 +63,12 @@ Each row is a discrete rollout phase that will open its own change folder
 via `/10x-new`. Status moves left-to-right through the values below; the
 orchestrator updates Status as artifacts appear on disk.
 
-| #   | Phase name                 | Goal (one line)                                                                             | Risks covered | Test types         | Status      | Change folder                                                  |
-| --- | -------------------------- | ------------------------------------------------------------------------------------------- | ------------- | ------------------ | ----------- | -------------------------------------------------------------- |
-| 1   | critical-path-coverage     | Bootstrap Vitest; prove generation service produces valid output and save-to-deck is atomic | #1, #2, #5    | unit + integration | done        | context/archive/2026-06-06-testing-critical-path-coverage/     |
-| 2   | sr-integration-correctness | Prove the review service schedules and persists ratings correctly                           | #3            | unit               | done        | context/archive/2026-06-07-testing-sr-integration-correctness/ |
-| 3   | auth-and-access-control    | Prove no unauthenticated or cross-user access is possible through the app's routes          | #4, #6        | integration        | done        | context/archive/2026-06-07-auth-and-access-control/            |
-| 4   | quality-gates-wiring       | Lock the floor: wire lint + typecheck + test into CI so no commit can regress silently      | cross-cutting | CI gates           | not started | —                                                              |
+| #   | Phase name                 | Goal (one line)                                                                             | Risks covered | Test types         | Status | Change folder                                                  |
+| --- | -------------------------- | ------------------------------------------------------------------------------------------- | ------------- | ------------------ | ------ | -------------------------------------------------------------- |
+| 1   | critical-path-coverage     | Bootstrap Vitest; prove generation service produces valid output and save-to-deck is atomic | #1, #2, #5    | unit + integration | done   | context/archive/2026-06-06-testing-critical-path-coverage/     |
+| 2   | sr-integration-correctness | Prove the review service schedules and persists ratings correctly                           | #3            | unit               | done   | context/archive/2026-06-07-testing-sr-integration-correctness/ |
+| 3   | auth-and-access-control    | Prove no unauthenticated or cross-user access is possible through the app's routes          | #4, #6        | integration        | done   | context/archive/2026-06-07-auth-and-access-control/            |
+| 4   | quality-gates-wiring       | Lock the floor: wire lint + typecheck + test into CI so no commit can regress silently      | cross-cutting | CI gates           | done   | context/changes/quality-gates-wiring/                          |
 
 ## 4. Stack
 

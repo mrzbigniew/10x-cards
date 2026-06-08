@@ -289,19 +289,19 @@ All existing tests continue to pass unmodified — no production code changes in
 
 #### Automated
 
-- [ ] 3.1 GitHub Actions run on `main` passes all five steps
-- [ ] 3.2 CI log shows `npm run check` and `npm run test` in order
+- [x] 3.1 GitHub Actions run on `main` passes all five steps — 4d1b7a3
+- [x] 3.2 CI log shows `npm run check` and `npm run test` in order — 4d1b7a3
 
 #### Manual
 
-- [ ] 3.3 Build step shows no spurious failures (secrets intact)
-- [ ] 3.4 Workflow triggers on `main`, not `master`
+- [x] 3.3 Build step shows no spurious failures (secrets intact) — 4d1b7a3
+- [x] 3.4 Workflow triggers on `main`, not `master` — 4d1b7a3
 
 ### Phase 4: Bookkeeping
 
 #### Automated
 
-- [ ] 4.1 `test-plan.md` renders correctly (no broken markdown table)
+- [x] 4.1 `test-plan.md` renders correctly (no broken markdown table)
 
 #### Manual
 
