@@ -1,10 +1,10 @@
 ---
 change_id: quality-gates-wiring
 title: Quality gates wiring
-status: implemented
+status: archived
 created: 2026-06-08
 updated: 2026-06-08
-archived_at: null
+archived_at: 2026-06-08T19:27:16Z
 ---
 
 ## Notes
