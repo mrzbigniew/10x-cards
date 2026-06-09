@@ -324,5 +324,6 @@ describe("useReviewSession — głębokość ponownego kolejkowania", () => {
     });
 
     expect(result.current.remaining).toBe(1);
+    expect(result.current.finished).toBe(false);
   });
 });

@@ -53,8 +53,8 @@ export function GenerationModal({ isOpen, onClose, preselectedDeckId }: Props) {
 
   function handleDone() {
     reset();
-    onClose();
     setToastVisible(true);
+    onClose();
   }
 
   const toast = toastVisible
@@ -105,6 +105,7 @@ export function GenerationModal({ isOpen, onClose, preselectedDeckId }: Props) {
                   </button>
                   <button
                     onClick={handleConfirmClose}
+                    aria-label="Potwierdź zamknięcie"
                     className="rounded-lg bg-red-600 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-red-500"
                   >
                     Zamknij

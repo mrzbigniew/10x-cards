@@ -61,12 +61,13 @@ describe("GenerationModal — handleCloseRequest", () => {
 
   it('faza "input" → zamyka bezpośrednio', () => {
     const onClose = vi.fn();
-    setupMock("input");
+    const { reset } = setupMock("input");
 
     render(<GenerationModal isOpen onClose={onClose} />);
     fireEvent.click(screen.getByRole("button", { name: "Zamknij" }));
 
     expect(screen.queryByText(/Zamknąć/)).toBeNull();
     expect(onClose).toHaveBeenCalledOnce();
+    expect(reset).toHaveBeenCalledOnce();
   });
 });

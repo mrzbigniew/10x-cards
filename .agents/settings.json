@@ -17,12 +17,7 @@
       "Edit",
       "Write"
     ],
-    "ask": [
-      "Bash(curl *)",
-      "Bash(wget *)",
-      "Bash(git push *)",
-      "Bash(git push)"
-    ],
+    "ask": ["Bash(curl *)", "Bash(wget *)", "Bash(git push *)", "Bash(git push)"],
     "deny": [
       "Bash(rm -rf *)",
       "Read(./.env)",
