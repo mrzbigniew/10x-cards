@@ -1,10 +1,10 @@
 ---
 change_id: tests-data-testid
 title: Add data-testid attributes to interactive elements for Playwright test targeting
-status: impl_reviewed
+status: archived
 created: 2026-06-09
 updated: 2026-06-10
-archived_at: null
+archived_at: 2026-06-09T22:09:25Z
 ---
 
 ## Notes
