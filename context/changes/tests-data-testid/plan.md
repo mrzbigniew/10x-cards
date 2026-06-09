@@ -244,13 +244,13 @@ No new test files are added in this change. All verification is:
 
 #### Automated
 
-- [x] 2.1 TypeScript passes: `npm run typecheck`
-- [x] 2.2 Lint passes: `npm run lint`
-- [x] 2.3 Existing Vitest unit tests pass: `npm test`
-- [x] 2.4 Existing Playwright tests pass: `npx playwright test`
+- [x] 2.1 TypeScript passes: `npm run typecheck` — 816b4e5
+- [x] 2.2 Lint passes: `npm run lint` — 816b4e5
+- [x] 2.3 Existing Vitest unit tests pass: `npm test` — 816b4e5
+- [x] 2.4 Existing Playwright tests pass: `npx playwright test` — 816b4e5
 
 #### Manual
 
-- [x] 2.5 RatingButtons carry correct `data-testid` values
-- [x] 2.6 DeckDetailHeader rename input carries `data-testid="deck-header-input-name"` when in edit mode
-- [x] 2.7 GenerationFlow phase wrappers carry correct `generation-phase-*` testids at each phase
+- [x] 2.5 RatingButtons carry correct `data-testid` values — 816b4e5
+- [x] 2.6 DeckDetailHeader rename input carries `data-testid="deck-header-input-name"` when in edit mode — 816b4e5
+- [x] 2.7 GenerationFlow phase wrappers carry correct `generation-phase-*` testids at each phase — 816b4e5
