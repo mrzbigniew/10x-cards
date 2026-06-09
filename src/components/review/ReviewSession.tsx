@@ -93,6 +93,7 @@ export function ReviewSession({
         >
           {/* Front face */}
           <div
+            data-testid="review-card-flipper"
             className="flip-card-face border-border bg-card cursor-pointer rounded-xl border p-6 backdrop-blur-sm"
             onClick={() => {
               if (!showAnswer && !submitting && cardId) setFlippedCardId(cardId);

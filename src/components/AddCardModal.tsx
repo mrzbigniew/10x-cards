@@ -35,7 +35,10 @@ export function AddCardModal({ isOpen, onClose, onAdd }: Props) {
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm">
+    <div
+      data-testid="modal-add-card"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm"
+    >
       <div className="border-border bg-card w-full max-w-md rounded-2xl border p-6 shadow-xl">
         <h2 className="text-foreground mb-4 text-lg font-semibold">Dodaj fiszkę</h2>
         <form onSubmit={(e) => void handleSubmit(e)} className="space-y-4">

@@ -68,12 +68,14 @@ export function ProposalRow({ proposal, onUpdate }: Props) {
             <button
               onClick={handleConfirmEdit}
               disabled={!editFront.trim() || !editBack.trim()}
+              data-testid="proposal-row-btn-confirm-edit"
               className="rounded bg-green-600/80 px-3 py-1 text-xs font-medium text-white transition-colors hover:bg-green-500 disabled:opacity-40"
             >
               Potwierdź
             </button>
             <button
               onClick={handleCancelEdit}
+              data-testid="proposal-row-btn-cancel-edit"
               className="border-border text-foreground/70 hover:text-foreground rounded border px-3 py-1 text-xs transition-colors"
             >
               Anuluj
@@ -97,6 +99,7 @@ export function ProposalRow({ proposal, onUpdate }: Props) {
                   onClick={() => {
                     onUpdate(proposal.id, { status: "accepted" });
                   }}
+                  data-testid="proposal-row-btn-accept"
                   className="rounded bg-green-600/70 px-2.5 py-1 text-xs font-medium text-white transition-colors hover:bg-green-500"
                 >
                   Akceptuj
@@ -104,6 +107,7 @@ export function ProposalRow({ proposal, onUpdate }: Props) {
               )}
               <button
                 onClick={handleEdit}
+                data-testid="proposal-row-btn-edit"
                 className="border-border text-foreground/70 hover:text-foreground rounded border px-2.5 py-1 text-xs transition-colors"
               >
                 Edytuj
@@ -112,6 +116,7 @@ export function ProposalRow({ proposal, onUpdate }: Props) {
                 onClick={() => {
                   onUpdate(proposal.id, { status: "rejected" });
                 }}
+                data-testid="proposal-row-btn-reject"
                 className="border-destructive/30 text-destructive/80 hover:border-destructive hover:text-destructive rounded border px-2.5 py-1 text-xs transition-colors"
               >
                 Odrzuć
@@ -123,6 +128,7 @@ export function ProposalRow({ proposal, onUpdate }: Props) {
               onClick={() => {
                 onUpdate(proposal.id, { status: "pending" });
               }}
+              data-testid="proposal-row-btn-undo"
               className="text-muted-foreground hover:text-foreground shrink-0 text-xs transition-colors"
             >
               Cofnij

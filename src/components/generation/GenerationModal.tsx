@@ -75,7 +75,10 @@ export function GenerationModal({ isOpen, onClose, preselectedDeckId }: Props) {
   return (
     <>
       {createPortal(
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm">
+        <div
+          data-testid="modal-generation"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm"
+        >
           <div
             className="border-border bg-card flex w-full max-w-3xl flex-col rounded-2xl border shadow-xl"
             style={{ maxHeight: "90vh" }}

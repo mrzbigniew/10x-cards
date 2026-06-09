@@ -51,7 +51,10 @@ export function ReviewModal({ deckId, onClose }: Props) {
   }, [handleCloseRequest]);
 
   return createPortal(
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm">
+    <div
+      data-testid="modal-review"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm"
+    >
       <div
         className="border-border bg-card flex w-full max-w-2xl flex-col rounded-2xl border shadow-xl"
         style={{ maxHeight: "90vh" }}

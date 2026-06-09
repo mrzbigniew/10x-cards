@@ -18,7 +18,10 @@ export function DeleteDeckModal({ isOpen, deckName, onConfirm, onCancel, isDelet
   const confirmed = inputValue === deckName;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm">
+    <div
+      data-testid="modal-delete-deck"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm"
+    >
       <div className="border-border bg-card w-full max-w-md rounded-2xl border p-6 shadow-xl">
         <h2 className="text-foreground mb-2 text-lg font-semibold">Usuń zestaw</h2>
         <p className="text-muted-foreground mb-4 text-sm">

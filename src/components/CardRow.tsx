@@ -67,6 +67,7 @@ export function CardRow({ card, onUpdate, onDelete }: Props) {
           <button
             onClick={() => void handleDelete()}
             disabled={deleting}
+            data-testid="card-row-btn-confirm-delete"
             className="rounded bg-red-600 px-3 py-1 text-xs font-semibold text-white transition-colors hover:bg-red-500 disabled:opacity-40"
           >
             {deleting ? "Usuwanie…" : "Tak, usuń"}
@@ -76,6 +77,7 @@ export function CardRow({ card, onUpdate, onDelete }: Props) {
               setMode("view");
             }}
             disabled={deleting}
+            data-testid="card-row-btn-cancel-delete"
             className="border-border text-foreground/70 hover:text-foreground rounded border px-3 py-1 text-xs transition-colors disabled:opacity-40"
           >
             Anuluj
@@ -139,6 +141,7 @@ export function CardRow({ card, onUpdate, onDelete }: Props) {
           <button
             onClick={() => void handleSave()}
             disabled={saving || !editFront.trim() || !editBack.trim()}
+            data-testid="card-row-btn-save"
             className="rounded bg-purple-600 px-3 py-1 text-xs font-semibold text-white transition-colors hover:bg-purple-500 disabled:opacity-40"
           >
             {saving ? "Zapisywanie…" : "Zapisz"}
@@ -148,6 +151,7 @@ export function CardRow({ card, onUpdate, onDelete }: Props) {
               setMode("view");
             }}
             disabled={saving}
+            data-testid="card-row-btn-cancel-edit"
             className="border-border text-foreground/70 hover:text-foreground rounded border px-3 py-1 text-xs transition-colors disabled:opacity-40"
           >
             Anuluj
@@ -166,6 +170,7 @@ export function CardRow({ card, onUpdate, onDelete }: Props) {
       <div className="flex shrink-0 gap-1.5">
         <button
           onClick={startEdit}
+          data-testid="card-row-btn-edit"
           className="border-border text-foreground/70 hover:text-foreground rounded border px-2.5 py-1 text-xs transition-colors"
         >
           Edytuj
@@ -174,6 +179,7 @@ export function CardRow({ card, onUpdate, onDelete }: Props) {
           onClick={() => {
             setMode("deleting");
           }}
+          data-testid="card-row-btn-delete"
           className="border-destructive/30 text-destructive/80 hover:border-destructive hover:text-destructive rounded border px-2.5 py-1 text-xs transition-colors"
         >
           Usuń

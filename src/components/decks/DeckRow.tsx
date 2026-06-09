@@ -27,6 +27,7 @@ export function DeckCard({ deck, onDeleteRequest, onResetProgressRequest, onGene
             onReviewRequest(deck);
           }}
           title="Powtórz"
+          data-testid="deck-row-btn-review"
           className="rounded-lg p-2 text-green-600 transition-colors hover:bg-green-500/10 hover:text-green-500"
         >
           <Play className="size-4" />
@@ -37,6 +38,7 @@ export function DeckCard({ deck, onDeleteRequest, onResetProgressRequest, onGene
               onGenerateRequest(deck);
             }}
             title="Generuj fiszki"
+            data-testid="deck-row-btn-generate"
             className="rounded-lg p-2 text-purple-500 transition-colors hover:bg-purple-500/10 hover:text-purple-400"
           >
             <Sparkles className="size-4" />
@@ -47,6 +49,7 @@ export function DeckCard({ deck, onDeleteRequest, onResetProgressRequest, onGene
             onResetProgressRequest(deck);
           }}
           title="Resetuj postępy"
+          data-testid="deck-row-btn-reset-progress"
           className="text-foreground/50 hover:bg-accent hover:text-foreground rounded-lg p-2 transition-colors"
         >
           <RotateCcw className="size-4" />
@@ -56,6 +59,7 @@ export function DeckCard({ deck, onDeleteRequest, onResetProgressRequest, onGene
             onDeleteRequest(deck);
           }}
           title="Usuń"
+          data-testid="deck-row-btn-delete"
           className="rounded-lg p-2 text-red-500 transition-colors hover:bg-red-500/10 hover:text-red-400"
         >
           <Trash2 className="size-4" />

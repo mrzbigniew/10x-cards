@@ -20,7 +20,10 @@ export function CreateDeckModal({ isOpen, onConfirm, onCancel, isCreating, error
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm">
+    <div
+      data-testid="modal-create-deck"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm"
+    >
       <div className="border-border bg-card w-full max-w-md rounded-2xl border p-6 shadow-xl">
         <h2 className="text-foreground mb-4 text-lg font-semibold">Nowy zestaw</h2>
         <form onSubmit={handleSubmit}>
