@@ -9,24 +9,28 @@ const BUTTONS = [
   {
     rating: 1 as const,
     label: "Raz jeszcze",
+    testId: "rating-btn-again",
     style:
       "border-red-300 bg-red-50 text-red-700 hover:bg-red-100 dark:border-red-500/40 dark:bg-red-600/20 dark:text-red-300 dark:hover:bg-red-600/30",
   },
   {
     rating: 2 as const,
     label: "Trudna",
+    testId: "rating-btn-hard",
     style:
       "border-orange-300 bg-orange-50 text-orange-700 hover:bg-orange-100 dark:border-orange-500/40 dark:bg-orange-600/20 dark:text-orange-300 dark:hover:bg-orange-600/30",
   },
   {
     rating: 3 as const,
     label: "Dobra",
+    testId: "rating-btn-good",
     style:
       "border-green-300 bg-green-50 text-green-700 hover:bg-green-100 dark:border-green-500/40 dark:bg-green-600/20 dark:text-green-300 dark:hover:bg-green-600/30",
   },
   {
     rating: 4 as const,
     label: "Łatwa",
+    testId: "rating-btn-easy",
     style:
       "border-blue-300 bg-blue-50 text-blue-700 hover:bg-blue-100 dark:border-blue-500/40 dark:bg-blue-600/20 dark:text-blue-300 dark:hover:bg-blue-600/30",
   },
@@ -35,9 +39,10 @@ const BUTTONS = [
 export function RatingButtons({ onRate, disabled = false }: Props) {
   return (
     <div className="flex gap-2">
-      {BUTTONS.map(({ rating, label, style }) => (
+      {BUTTONS.map(({ rating, label, testId, style }) => (
         <button
           key={rating}
+          data-testid={testId}
           disabled={disabled}
           onClick={() => void onRate(rating)}
           className={cn(

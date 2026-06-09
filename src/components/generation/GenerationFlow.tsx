@@ -40,7 +40,7 @@ export function GenerationFlow({
 
   if (phase === "done") {
     return (
-      <div className="py-16 text-center">
+      <div data-testid="generation-phase-done" className="py-16 text-center">
         <div className="mb-3 text-4xl">✓</div>
         <h2 className="text-foreground mb-2 text-xl font-semibold">Zestaw zapisany!</h2>
         <p className="text-muted-foreground mb-6 text-sm">Twoje fiszki są gotowe do nauki.</p>
@@ -58,7 +58,7 @@ export function GenerationFlow({
 
   if (phase === "reviewing" || phase === "saving") {
     return (
-      <div className="space-y-8">
+      <div data-testid="generation-phase-reviewing" className="space-y-8">
         <ProposalList
           proposals={proposals}
           onUpdate={updateProposal}
@@ -79,14 +79,16 @@ export function GenerationFlow({
   }
 
   return (
-    <TextInputForm
-      text={text}
-      onTextChange={setText}
-      onGenerate={() => {
-        generate();
-      }}
-      isGenerating={phase === "generating"}
-      errorMessage={errorMessage}
-    />
+    <div data-testid="generation-phase-input">
+      <TextInputForm
+        text={text}
+        onTextChange={setText}
+        onGenerate={() => {
+          generate();
+        }}
+        isGenerating={phase === "generating"}
+        errorMessage={errorMessage}
+      />
+    </div>
   );
 }

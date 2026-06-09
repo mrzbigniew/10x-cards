@@ -151,16 +151,16 @@ Add testids to elements that are currently unambiguous but would benefit from a 
 
 **Intent**: Add testids to the 4 rating buttons so review-session E2E tests remain stable if the Polish button labels change.
 
-**Contract**: Add `data-testid` props to the 4 buttons at lines ~39–50:
+**Contract**: The 4 buttons are rendered via a single `<button>` inside `BUTTONS.map(...)` (line ~38). Add a `testId` field to each entry in the `BUTTONS` array and pass it as `data-testid={testId}` on the rendered `<button>`. Required mappings:
 
-- "Raz jeszcze": `data-testid="rating-btn-again"`
-- "Trudna": `data-testid="rating-btn-hard"`
-- "Dobra": `data-testid="rating-btn-good"`
-- "Łatwa": `data-testid="rating-btn-easy"`
+- rating 1 "Raz jeszcze": `data-testid="rating-btn-again"`
+- rating 2 "Trudna": `data-testid="rating-btn-hard"`
+- rating 3 "Dobra": `data-testid="rating-btn-good"`
+- rating 4 "Łatwa": `data-testid="rating-btn-easy"`
 
 #### 2. DeckDetailHeader rename input
 
-**File**: `src/components/decks/DeckDetailHeader.tsx`
+**File**: `src/components/DeckDetailHeader.tsx`
 
 **Intent**: Add a testid to the conditional inline rename input so E2E deck-rename tests have a stable, explicit anchor rather than relying on "only textbox on the page."
 
@@ -229,28 +229,28 @@ No new test files are added in this change. All verification is:
 
 #### Automated
 
-- [x] 1.1 TypeScript passes: `npm run typecheck`
-- [x] 1.2 Lint passes: `npm run lint`
-- [x] 1.3 Existing Vitest unit tests pass: `npm test`
-- [x] 1.4 Existing Playwright tests pass: `npx playwright test`
+- [x] 1.1 TypeScript passes: `npm run typecheck` — 69d3220
+- [x] 1.2 Lint passes: `npm run lint` — 69d3220
+- [x] 1.3 Existing Vitest unit tests pass: `npm test` — 69d3220
+- [x] 1.4 Existing Playwright tests pass: `npx playwright test` — 69d3220
 
 #### Manual
 
-- [x] 1.5 DeckRow buttons carry correct `data-testid` values in browser DevTools
-- [x] 1.6 Modal root `<div>` carries correct `data-testid` in browser DevTools
-- [x] 1.7 ReviewSession flip-card div carries `data-testid="review-card-flipper"`
+- [x] 1.5 DeckRow buttons carry correct `data-testid` values in browser DevTools — 69d3220
+- [x] 1.6 Modal root `<div>` carries correct `data-testid` in browser DevTools — 69d3220
+- [x] 1.7 ReviewSession flip-card div carries `data-testid="review-card-flipper"` — 69d3220
 
 ### Phase 2: Supplementary Testids
 
 #### Automated
 
-- [ ] 2.1 TypeScript passes: `npm run typecheck`
-- [ ] 2.2 Lint passes: `npm run lint`
-- [ ] 2.3 Existing Vitest unit tests pass: `npm test`
-- [ ] 2.4 Existing Playwright tests pass: `npx playwright test`
+- [x] 2.1 TypeScript passes: `npm run typecheck`
+- [x] 2.2 Lint passes: `npm run lint`
+- [x] 2.3 Existing Vitest unit tests pass: `npm test`
+- [x] 2.4 Existing Playwright tests pass: `npx playwright test`
 
 #### Manual
 
-- [ ] 2.5 RatingButtons carry correct `data-testid` values
-- [ ] 2.6 DeckDetailHeader rename input carries `data-testid="deck-header-input-name"` when in edit mode
-- [ ] 2.7 GenerationFlow phase wrappers carry correct `generation-phase-*` testids at each phase
+- [x] 2.5 RatingButtons carry correct `data-testid` values
+- [x] 2.6 DeckDetailHeader rename input carries `data-testid="deck-header-input-name"` when in edit mode
+- [x] 2.7 GenerationFlow phase wrappers carry correct `generation-phase-*` testids at each phase

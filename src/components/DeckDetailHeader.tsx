@@ -65,6 +65,7 @@ export function DeckDetailHeader({ deck, onRename }: Props) {
                 if (e.key === "Escape") cancelEdit();
               }}
               maxLength={200}
+              data-testid="deck-header-input-name"
               className="border-primary/50 bg-input text-foreground w-full rounded border px-3 py-1 text-2xl font-bold focus:outline-none"
             />
           ) : (
