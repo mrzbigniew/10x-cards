@@ -42,3 +42,6 @@ playwright/.auth/
 /blob-report/
 /playwright/.cache/
 /playwright/.auth/
+
+// Zed
+.zed/
