@@ -5,11 +5,19 @@ import react from "@astrojs/react";
 import sitemap from "@astrojs/sitemap";
 import tailwindcss from "@tailwindcss/vite";
 import cloudflare from "@astrojs/cloudflare";
+import sentry from "@sentry/astro";
 
-// https://astro.build/config
 export default defineConfig({
   output: "server",
-  integrations: [react(), sitemap()],
+  integrations: [
+    react(),
+    sitemap(),
+    sentry({
+      project: "10x-cards",
+      org: "zsoft-zbigniew-jedraczka",
+      authToken: process.env.SENTRY_AUTH_TOKEN,
+    }),
+  ],
   vite: {
     plugins: [tailwindcss()],
   },

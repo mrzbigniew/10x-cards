@@ -14,7 +14,7 @@ const storageState = { storageState: "./playwright/.auth/user.json" };
  * See https://playwright.dev/docs/test-configuration.
  */
 export default defineConfig({
-  testDir: "./tests",
+  testDir: "./e2e",
   /* Run tests in files in parallel */
   fullyParallel: true,
   /* Fail the build on CI if you accidentally left test.only in the source code. */
@@ -36,23 +36,39 @@ export default defineConfig({
 
   /* Configure projects for major browsers */
   projects: [
-    { name: "setup", testMatch: /auth\.setup\.ts/ },
+    {
+      name: "setup",
+      testDir: "./tests",
+      testMatch: /setup\.ts/,
+      teardown: "teardown",
+    },
+    {
+      name: "teardown",
+      testDir: "./tests",
+      testMatch: /teardown\.ts/,
+    },
+    {
+      name: "login",
+      testDir: "./tests",
+      dependencies: ["setup"],
+      testMatch: /login\.setup\.ts/,
+    },
     {
       name: "chromium",
       use: { ...devices["Desktop Chrome"], ...storageState },
-      dependencies: ["setup"],
+      dependencies: ["login"],
     },
 
     {
       name: "firefox",
       use: { ...devices["Desktop Firefox"], ...storageState },
-      dependencies: ["setup"],
+      dependencies: ["login"],
     },
 
     {
       name: "webkit",
       use: { ...devices["Desktop Safari"], ...storageState },
-      dependencies: ["setup"],
+      dependencies: ["login"],
     },
 
     /* Test against mobile viewports. */

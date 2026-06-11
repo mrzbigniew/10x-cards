@@ -19,7 +19,7 @@ export default getViteConfig(
         "@": "/src",
       },
       passWithNoTests: true,
-      exclude: ["tests/**", "node_modules/**"],
+      exclude: ["tests/**", "node_modules/**", "e2e/**"],
     },
   },
   {

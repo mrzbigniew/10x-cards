@@ -46,6 +46,7 @@ export default function SignInForm({ serverError }: Props) {
         type="email"
         label="Email"
         value={email}
+        data-testid="email"
         onChange={(v) => {
           setEmail(v);
           clearError("email");
