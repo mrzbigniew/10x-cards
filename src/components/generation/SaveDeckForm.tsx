@@ -16,16 +16,19 @@ export function SaveDeckForm({ text, proposals, isSaving, onSave, preselectedDec
   const [selectedDeckId, setSelectedDeckId] = useState<string>(preselectedDeckId ?? "new");
   const [newDeckName, setNewDeckName] = useState(autoName);
   const [confirmSkip, setConfirmSkip] = useState(false);
+  const [deckFetchError, setDeckFetchError] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
     fetch("/api/decks")
-      .then((res) => (res.ok ? (res.json() as Promise<DeckWithCount[]>) : Promise.resolve([])))
+      .then((res) =>
+        res.ok ? (res.json() as Promise<DeckWithCount[]>) : Promise.reject(new Error(`HTTP ${res.status}`)),
+      )
       .then((data) => {
         if (!cancelled) setDecks(data);
       })
       .catch(() => {
-        /* silently fall back to new-deck-only */
+        if (!cancelled) setDeckFetchError(true);
       });
     return () => {
       cancelled = true;
@@ -51,6 +54,12 @@ export function SaveDeckForm({ text, proposals, isSaving, onSave, preselectedDec
   return (
     <div className="border-border bg-card rounded-xl border p-6">
       <h3 className="text-foreground mb-4 text-base font-semibold">Zapisz fiszki</h3>
+
+      {deckFetchError && !preselectedDeckId && (
+        <div className="mb-4 rounded-lg border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-600 dark:text-red-400">
+          Nie udało się załadować istniejących zestawów. Możesz tylko utworzyć nowy zestaw.
+        </div>
+      )}
 
       {!preselectedDeckId && (
         <div className="mb-4">
