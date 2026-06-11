@@ -22,3 +22,10 @@
 - **Problem**: Agents on Windows can emit files with CRLF line endings, producing noisy mixed-EOL diffs, inconsistent formatting, and lint/tooling churn against the rest of the LF-based codebase.
 - **Rule**: Always write files with LF (`\n`) line endings. Never create or save files with CRLF (`\r\n`).
 - **Applies to**: implement, impl-review
+
+## Never swallow errors
+
+- **Context**: All error-handling code
+- **Problem**: Silent failures — errors are swallowed; callers get 200 OK or no feedback; bugs become invisible in production.
+- **Rule**: Never swallow errors — always propagate them to the API caller or surface them to the user. A `catch` block that only logs to console or does nothing is forbidden; either rethrow, return an error response, or show UI feedback.
+- **Applies to**: all
