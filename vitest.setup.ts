@@ -10,6 +10,7 @@ vi.mock("astro:env/server", () => ({
   OPENROUTER_API_KEY: "test-openrouter-key",
   SUPABASE_URL: "http://localhost:54321",
   SUPABASE_KEY: "test-supabase-key",
+  SUPABASE_SERVICE_ROLE_KEY: "test-service-role-key",
 }));
 
 afterEach(() => {
