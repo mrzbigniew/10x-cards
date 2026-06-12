@@ -3,7 +3,7 @@ project: "10xCards"
 version: 1
 status: draft
 created: 2026-05-25
-updated: 2026-06-04
+updated: 2026-06-12
 prd_version: 1
 main_goal: speed
 top_blocker: time
@@ -27,28 +27,29 @@ top_blocker: time
 
 ## At a glance
 
-| ID    | Change ID               | Outcome (user can …)                                                                    | Prerequisites     | PRD refs                                          | Status   |
-| ----- | ----------------------- | --------------------------------------------------------------------------------------- | ----------------- | ------------------------------------------------- | -------- |
-| F-01  | db-schema-rls           | (foundation) Supabase schema migrations + RLS in place for all app data                 | —                 | NFR (isolation, durability), FR-001, FR-002, FR-003, FR-005 | done     |
-| S-01  | first-gated-generation  | paste text, review AI proposals (accept/edit/reject, bulk actions), save to new deck    | F-01              | US-01, FR-006, FR-007, FR-008, FR-009, FR-013     | done     |
-| S-02  | deck-management         | view deck list, create/rename a deck, delete with confirmation, save to existing deck   | F-01              | US-01, US-02, FR-009, FR-013, FR-017              | done     |
-| S-05  | password-reset          | reset a forgotten password via email link and recover all decks + SR state              | F-01              | US-04, FR-004                                     | done     |
-| S-04  | manual-card-crud        | add a card manually, edit any card (with optional SR reset), delete any card            | F-01, S-02        | US-02, US-05, FR-010, FR-011, FR-012              | done     |
-| S-03  | review-session          | run a per-deck review, rate each due card (SR library scale), persist SR state          | F-01, S-01, S-02  | US-03, FR-014, FR-015, FR-016                     | done     |
-| S-06  | ui-polish               | use a branded shared header, a redesigned dashboard intro, bulk-reset a deck's progress, and a flip-card review | F-01, S-02, S-03, S-04 | FR-011, FR-015, UX refinement | done     |
-| F-02  | i18n-foundation         | (foundation) i18n infrastructure in place, enabling localized UI slices       | —                 | —                                                 | proposed |
-| S-07  | modal-generate-flashcards | user can open flashcard generation in a modal without leaving the page       | S-01, S-06        | UX refinement                                     | done     |
-| S-08  | modal-review-session    | user can run a review session in a modal without leaving the deck list        | S-03, S-06        | UX refinement                                     | done     |
+| ID   | Change ID                 | Outcome (user can …)                                                                                            | Prerequisites          | PRD refs                                                    | Status   |
+| ---- | ------------------------- | --------------------------------------------------------------------------------------------------------------- | ---------------------- | ----------------------------------------------------------- | -------- |
+| F-01 | db-schema-rls             | (foundation) Supabase schema migrations + RLS in place for all app data                                         | —                      | NFR (isolation, durability), FR-001, FR-002, FR-003, FR-005 | done     |
+| S-01 | first-gated-generation    | paste text, review AI proposals (accept/edit/reject, bulk actions), save to new deck                            | F-01                   | US-01, FR-006, FR-007, FR-008, FR-009, FR-013               | done     |
+| S-02 | deck-management           | view deck list, create/rename a deck, delete with confirmation, save to existing deck                           | F-01                   | US-01, US-02, FR-009, FR-013, FR-017                        | done     |
+| S-05 | password-reset            | reset a forgotten password via email link and recover all decks + SR state                                      | F-01                   | US-04, FR-004                                               | done     |
+| S-04 | manual-card-crud          | add a card manually, edit any card (with optional SR reset), delete any card                                    | F-01, S-02             | US-02, US-05, FR-010, FR-011, FR-012                        | done     |
+| S-03 | review-session            | run a per-deck review, rate each due card (SR library scale), persist SR state                                  | F-01, S-01, S-02       | US-03, FR-014, FR-015, FR-016                               | done     |
+| S-06 | ui-polish                 | use a branded shared header, a redesigned dashboard intro, bulk-reset a deck's progress, and a flip-card review | F-01, S-02, S-03, S-04 | FR-011, FR-015, UX refinement                               | done     |
+| F-02 | i18n-foundation           | (foundation) i18n infrastructure in place, enabling localized UI slices                                         | —                      | —                                                           | proposed |
+| S-07 | modal-generate-flashcards | user can open flashcard generation in a modal without leaving the page                                          | S-01, S-06             | UX refinement                                               | done     |
+| S-08 | modal-review-session      | user can run a review session in a modal without leaving the deck list                                          | S-03, S-06             | UX refinement                                               | done     |
+| S-09 | account-deletion          | permanently delete their account and all related data (decks, cards, SR state)                                  | F-01                   | NFR (GDPR baseline)                                         | proposed |
 
 ## Streams
 
 Navigation aid — groups items that share a Prerequisites chain. Canonical ordering still lives in the dependency graph below; this table is the proposed reading order across parallel tracks.
 
-| Stream | Theme                    | Chain                    | Note                                                                                              |
-| ------ | ------------------------ | ------------------------ | ------------------------------------------------------------------------------------------------- |
-| A      | Core generation loop     | `F-01` → `S-01` → `S-03` | North-star path; S-03 joins Stream B at S-02 (requires S-02 complete before S-03 can run).       |
-| B      | Deck and card management | `S-02` → `S-04`          | Requires F-01 (Stream A head); provides the deck context that both S-03 (Stream A) and S-04 need. |
-| C      | Auth completeness        | `S-05`                   | Requires F-01 (Stream A head); independent of A and B; runs in parallel with S-01 and S-02.      |
+| Stream | Theme                    | Chain                    | Note                                                                                                                             |
+| ------ | ------------------------ | ------------------------ | -------------------------------------------------------------------------------------------------------------------------------- |
+| A      | Core generation loop     | `F-01` → `S-01` → `S-03` | North-star path; S-03 joins Stream B at S-02 (requires S-02 complete before S-03 can run).                                       |
+| B      | Deck and card management | `S-02` → `S-04`          | Requires F-01 (Stream A head); provides the deck context that both S-03 (Stream A) and S-04 need.                                |
+| C      | Auth completeness        | `S-05`                   | Requires F-01 (Stream A head); independent of A and B; runs in parallel with S-01 and S-02.                                      |
 | D      | UX polish                | `S-06`                   | Cross-cutting refinement; requires the deck (S-02/S-04) and review (S-03) surfaces to already exist before they can be polished. |
 
 ## Baseline
@@ -200,20 +201,33 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Risk:** embedding the full review loop (question → flip → rate) inside a modal may introduce focus-trap and keyboard navigation issues; verify keyboard-only navigation before shipping.
 - **Status:** done
 
+### S-09: Account deletion
+
+- **Outcome:** user can permanently delete their account, removing all related data (decks, cards, SR state) with a hard confirmation
+- **Change ID:** account-deletion
+- **PRD refs:** NFR (GDPR-baseline compliance — right to erasure)
+- **Prerequisites:** F-01
+- **Parallel with:** F-02
+- **Blockers:** —
+- **Unknowns:** —
+- **Risk:** deletion is irreversible and spans auth + app data: deleting the auth user without cascading app rows (or vice versa) leaves orphaned data — verify FK cascades and require a hard confirmation (e.g. password re-entry or typed phrase).
+- **Status:** proposed
+
 ## Backlog Handoff
 
-| Roadmap ID | Change ID               | Suggested issue title                                                       | Ready for `/10x-plan` | Notes                         |
-| ---------- | ----------------------- | --------------------------------------------------------------------------- | --------------------- | ----------------------------- |
-| F-01       | db-schema-rls           | Set up Supabase migrations: decks, cards, SR-state tables + RLS policies    | yes                   | Run `/10x-plan db-schema-rls` |
-| S-01       | first-gated-generation  | AI generation flow: paste text → proposals → review → save to new deck      | no                    | Needs F-01 done               |
-| S-02       | deck-management         | Deck management: list / create / rename / delete + existing-deck save path  | no                    | Needs F-01 done               |
-| S-05       | password-reset          | Password reset: forgot-password + email link + new-password pages           | no                    | Needs F-01 done               |
-| S-04       | manual-card-crud        | Manual flashcard CRUD: add / edit (SR-reset option) / delete                | no                    | Needs S-02 done               |
-| S-03       | review-session          | Review session: SR-scheduled cards, rating loop, state persistence          | no                    | Needs S-01 + S-02 done        |
-| S-06       | ui-polish               | UI polish: branded header + dark/light toggle, dashboard intro, per-deck bulk reset, flip-card review | no                    | Needs S-02 + S-03 + S-04 done |
-| F-02       | i18n-foundation         | Set up i18n infrastructure: library, locale files, language switcher        | yes                   | Run /10x-plan i18n-foundation |
-| S-07       | modal-generate-flashcards | Move flashcard generation flow into a modal dialog                        | yes                   | Run /10x-plan modal-generate-flashcards |
-| S-08       | modal-review-session    | Move training/review session into a modal dialog                            | yes                   | Run /10x-plan modal-review-session |
+| Roadmap ID | Change ID                 | Suggested issue title                                                                                 | Ready for `/10x-plan` | Notes                                              |
+| ---------- | ------------------------- | ----------------------------------------------------------------------------------------------------- | --------------------- | -------------------------------------------------- |
+| F-01       | db-schema-rls             | Set up Supabase migrations: decks, cards, SR-state tables + RLS policies                              | yes                   | Run `/10x-plan db-schema-rls`                      |
+| S-01       | first-gated-generation    | AI generation flow: paste text → proposals → review → save to new deck                                | no                    | Needs F-01 done                                    |
+| S-02       | deck-management           | Deck management: list / create / rename / delete + existing-deck save path                            | no                    | Needs F-01 done                                    |
+| S-05       | password-reset            | Password reset: forgot-password + email link + new-password pages                                     | no                    | Needs F-01 done                                    |
+| S-04       | manual-card-crud          | Manual flashcard CRUD: add / edit (SR-reset option) / delete                                          | no                    | Needs S-02 done                                    |
+| S-03       | review-session            | Review session: SR-scheduled cards, rating loop, state persistence                                    | no                    | Needs S-01 + S-02 done                             |
+| S-06       | ui-polish                 | UI polish: branded header + dark/light toggle, dashboard intro, per-deck bulk reset, flip-card review | no                    | Needs S-02 + S-03 + S-04 done                      |
+| F-02       | i18n-foundation           | Set up i18n infrastructure: library, locale files, language switcher                                  | yes                   | Run /10x-plan i18n-foundation                      |
+| S-07       | modal-generate-flashcards | Move flashcard generation flow into a modal dialog                                                    | yes                   | Run /10x-plan modal-generate-flashcards            |
+| S-08       | modal-review-session      | Move training/review session into a modal dialog                                                      | yes                   | Run /10x-plan modal-review-session                 |
+| S-09       | account-deletion          | Account deletion: remove account + all related data with hard confirmation                            | yes                   | F-01 already done — run /10x-plan account-deletion |
 
 ## Open Roadmap Questions
 
