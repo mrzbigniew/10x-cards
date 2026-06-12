@@ -9,6 +9,13 @@
 - **Shared types**: `src/types.ts`.
 - **No Next.js directives** (`"use client"` etc.) — this is not Next.js.
 - **All pages are server-rendered** - API routes must export `const prerender = false`.
+- **Commands**:
+  - `npm run dev`: start the development server
+  - `npm run test`: run tests
+  - `npm run build`: build the project
+  - `npx playwright test`: run Playwright tests
+  - `npx wrangler deploy`: deploy Cloudflare Worker
+  - `npx supabase push`: push Supabase schema changes
 
 ## Mutation testing
 
@@ -21,7 +28,6 @@ assertion only when the mutant represents a user-visible or business-relevant bu
 ## Commit message
 
 You are an expert at writing Git commit messages. Your job is to write a clear and concise commit message that accurately summarizes the changes.
-
 Follow the Conventional Commits specification:
 
 ```
@@ -52,17 +58,11 @@ Rules:
   - build: build system or dependency changes
   - ci: CI/CD changes
   - style: formatting or non-functional code style changes
-
 - Include a scope when it can be determined from the changes.
-
 - Use lowercase for the type and scope.
-
 - Use the imperative mood in the description.
-
 - Keep the description concise and ideally under 50 characters.
-
 - Do not end the description with punctuation.
-
 - Do not capitalize the first word of the description unless it is a proper noun or acronym.
 
 Message body:
