@@ -6,21 +6,25 @@
 - **API routes**: use named exports `GET`, `POST`, etc.; validate input with Zod.
 - **React hooks**: extract to `src/components/hooks/`.
 - **Services/helpers**: `src/lib/` or `src/lib/services/` for business logic.
-- **Shared types**: `src/types.ts`.
+- **Shared types**: Zod schemas in `src/lib/schemas/`; generated DB types in `src/lib/database.types.ts`.
 - **No Next.js directives** (`"use client"` etc.) — this is not Next.js.
 - **All pages are server-rendered** - API routes must export `const prerender = false`.
 - **Commands**:
   - `npm run dev`: start the development server
   - `npm run test`: run tests
+  - `npm run lint`: run ESLint
+  - `npm run typecheck`: run `astro check`
   - `npm run build`: build the project
   - `npx playwright test`: run Playwright tests
   - `npx wrangler deploy`: deploy Cloudflare Worker
-  - `npx supabase push`: push Supabase schema changes
+  - `npx supabase db push`: push Supabase schema changes
+  - `npm run gen-types`: regenerate `src/lib/database.types.ts` after schema changes
+- **Quality gates**: CI (@.github/workflows/ci.yml) runs lint → typecheck → test → build on push/PR to `main`. Husky pre-commit runs lint-staged + typecheck; pre-push runs tests.
 
 ## Mutation testing
 
 Repo uses Stryker for selective mutation testing on risk-critical modules.
-Run it only for code covered by the current change or a risk from test-plan.md,
+Run it only for code covered by the current change or a risk from context/foundation/test-plan.md,
 prefer narrowed scope with --mutate "path/to/file.ts:start-end", and do not chase
 100% mutation score. Survived mutants should be reviewed one by one: add an
 assertion only when the mutant represents a user-visible or business-relevant bug.
