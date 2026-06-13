@@ -334,31 +334,31 @@ None material — deletion is a single admin API call; cascades run in one DB tr
 
 #### Automated
 
-- [x] 2.1 Type checking passes: `npm run typecheck`
-- [x] 2.2 Linting passes: `npm run lint`
-- [x] 2.3 Build succeeds: `npm run build`
+- [x] 2.1 Type checking passes: `npm run typecheck` — d9fdcee
+- [x] 2.2 Linting passes: `npm run lint` — d9fdcee
+- [x] 2.3 Build succeeds: `npm run build` — d9fdcee
 
 #### Manual
 
-- [x] 2.4 `/settings` renders email, disabled "Zmień hasło" + "Wkrótce", "Usuń konto"; unauthenticated access redirects
-- [x] 2.5 Confirm button gated on exact `USUŃ KONTO` phrase
-- [x] 2.6 Full delete flow: redirect to signin with notice; deleted credentials rejected
-- [x] 2.7 API error shown in Polish inside the dialog; dialog stays open
+- [x] 2.4 `/settings` renders email, disabled "Zmień hasło" + "Wkrótce", "Usuń konto"; unauthenticated access redirects — d9fdcee
+- [x] 2.5 Confirm button gated on exact `USUŃ KONTO` phrase — d9fdcee
+- [x] 2.6 Full delete flow: redirect to signin with notice; deleted credentials rejected — d9fdcee
+- [x] 2.7 API error shown in Polish inside the dialog; dialog stays open — d9fdcee
 
 ### Phase 3: Topbar avatar menu
 
 #### Automated
 
-- [ ] 3.1 Type checking passes: `npm run typecheck`
-- [ ] 3.2 Linting passes: `npm run lint`
-- [ ] 3.3 Unit tests pass: `npm run test`
-- [ ] 3.4 Existing E2E suite passes (login chain intact): `npx playwright test`
+- [x] 3.1 Type checking passes: `npm run typecheck` — 04a8240
+- [x] 3.2 Linting passes: `npm run lint` — 04a8240
+- [x] 3.3 Unit tests pass: `npm run test` — 04a8240
+- [x] 3.4 Existing E2E suite passes (login chain intact): `npx playwright test` — 04a8240
 
 #### Manual
 
-- [ ] 3.5 Avatar menu opens; "Ustawienia" navigates; "Wyloguj" signs out
-- [ ] 3.6 Menu closes on Escape/outside click; signed-out topbar unchanged
-- [ ] 3.7 Works in both themes
+- [x] 3.5 Avatar menu opens; "Ustawienia" navigates; "Wyloguj" signs out — 04a8240
+- [x] 3.6 Menu closes on Escape/outside click; signed-out topbar unchanged — 04a8240
+- [x] 3.7 Works in both themes — 04a8240
 
 ### Phase 4: E2E deletion spec
 

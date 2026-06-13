@@ -1,6 +1,7 @@
 ---
 import { BrainCircuit } from "lucide-react";
 import ThemeToggle from "./ThemeToggle";
+import UserMenu from "./UserMenu";
 
 const { user } = Astro.locals;
 ---
@@ -16,11 +17,7 @@ const { user } = Astro.locals;
   {
     user ? (
       <div class="flex items-center gap-3">
-        <form method="POST" action="/api/auth/signout">
-          <button type="submit" class="text-foreground/60 hover:text-foreground font-medium transition-colors">
-            Wyloguj
-          </button>
-        </form>
+        <UserMenu client:load />
         <ThemeToggle client:load />
       </div>
     ) : (

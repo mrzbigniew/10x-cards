@@ -48,27 +48,21 @@ export default defineConfig({
       testMatch: /teardown\.ts/,
     },
     {
-      name: "login",
-      testDir: "./tests",
-      dependencies: ["setup"],
-      testMatch: /login\.setup\.ts/,
-    },
-    {
       name: "chromium",
       use: { ...devices["Desktop Chrome"], ...storageState },
-      dependencies: ["login"],
+      dependencies: ["setup"],
     },
 
     {
       name: "firefox",
       use: { ...devices["Desktop Firefox"], ...storageState },
-      dependencies: ["login"],
+      dependencies: ["setup"],
     },
 
     {
       name: "webkit",
       use: { ...devices["Desktop Safari"], ...storageState },
-      dependencies: ["login"],
+      dependencies: ["setup"],
     },
 
     /* Test against mobile viewports. */
