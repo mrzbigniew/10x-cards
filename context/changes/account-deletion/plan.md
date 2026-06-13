@@ -334,16 +334,16 @@ None material — deletion is a single admin API call; cascades run in one DB tr
 
 #### Automated
 
-- [ ] 2.1 Type checking passes: `npm run typecheck`
-- [ ] 2.2 Linting passes: `npm run lint`
-- [ ] 2.3 Build succeeds: `npm run build`
+- [x] 2.1 Type checking passes: `npm run typecheck`
+- [x] 2.2 Linting passes: `npm run lint`
+- [x] 2.3 Build succeeds: `npm run build`
 
 #### Manual
 
-- [ ] 2.4 `/settings` renders email, disabled "Zmień hasło" + "Wkrótce", "Usuń konto"; unauthenticated access redirects
-- [ ] 2.5 Confirm button gated on exact `USUŃ KONTO` phrase
-- [ ] 2.6 Full delete flow: redirect to signin with notice; deleted credentials rejected
-- [ ] 2.7 API error shown in Polish inside the dialog; dialog stays open
+- [x] 2.4 `/settings` renders email, disabled "Zmień hasło" + "Wkrótce", "Usuń konto"; unauthenticated access redirects
+- [x] 2.5 Confirm button gated on exact `USUŃ KONTO` phrase
+- [x] 2.6 Full delete flow: redirect to signin with notice; deleted credentials rejected
+- [x] 2.7 API error shown in Polish inside the dialog; dialog stays open
 
 ### Phase 3: Topbar avatar menu
 
