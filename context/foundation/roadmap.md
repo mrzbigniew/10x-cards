@@ -3,7 +3,7 @@ project: "10xCards"
 version: 1
 status: draft
 created: 2026-05-25
-updated: 2026-06-12
+updated: 2026-06-14
 prd_version: 1
 main_goal: speed
 top_blocker: time
@@ -39,7 +39,7 @@ top_blocker: time
 | F-02 | i18n-foundation           | (foundation) i18n infrastructure in place, enabling localized UI slices                                         | —                      | —                                                           | proposed |
 | S-07 | modal-generate-flashcards | user can open flashcard generation in a modal without leaving the page                                          | S-01, S-06             | UX refinement                                               | done     |
 | S-08 | modal-review-session      | user can run a review session in a modal without leaving the deck list                                          | S-03, S-06             | UX refinement                                               | done     |
-| S-09 | account-deletion          | permanently delete their account and all related data (decks, cards, SR state)                                  | F-01                   | NFR (GDPR baseline)                                         | proposed |
+| S-09 | account-deletion          | permanently delete their account and all related data (decks, cards, SR state)                                  | F-01                   | NFR (GDPR baseline)                                         | done     |
 
 ## Streams
 
@@ -211,7 +211,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Blockers:** —
 - **Unknowns:** —
 - **Risk:** deletion is irreversible and spans auth + app data: deleting the auth user without cascading app rows (or vice versa) leaves orphaned data — verify FK cascades and require a hard confirmation (e.g. password re-entry or typed phrase).
-- **Status:** proposed
+- **Status:** done
 
 ## Backlog Handoff
 
@@ -272,3 +272,4 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **S-06: across the whole app the user sees a single branded header — a clickable "10xCards" mark (icon + wordmark) that links to the dashboard, with the old standalone "Dashboard" link gone, the "Generuj fiszki" + "Wyloguj" actions kept but enlarged, and a dark/light mode toggle switch; on the dashboard the old "Dashboard" welcome card is replaced by a short intro paragraph followed by a primary "Nowy zestaw" button; each deck offers a "Resetuj postępy" action (behind a confirmation dialog) that resets the SR state of every card in that deck; and the review card flips with a 3D animation on click to reveal its answer (no separate "Show answer" button).** — Archived 2026-06-03 → `context/archive/2026-06-02-ui-polish/`. Lesson: —.
 - **S-07: user can open the flashcard generation flow in a modal dialog, paste text, review AI proposals, and save to a deck without navigating away from the current page** — Archived 2026-06-04 → `context/archive/2026-06-03-modal-generate-flashcards/`. Lesson: —.
 - **S-08: user can run a review session in a modal without leaving the deck list** — Archived 2026-06-04 → `context/archive/2026-06-04-modal-review-session/`. Lesson: —.
+- **S-09: user can permanently delete their account, removing all related data (decks, cards, SR state) with a hard confirmation** — Archived 2026-06-14 → `context/archive/2026-06-12-account-deletion/`. Lesson: —.

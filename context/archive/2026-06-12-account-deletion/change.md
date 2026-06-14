@@ -1,10 +1,10 @@
 ---
 change_id: account-deletion
 title: Account deletion via new settings page behind an avatar menu
-status: impl_reviewed
+status: archived
 created: 2026-06-12
 updated: 2026-06-14
-archived_at: null
+archived_at: 2026-06-14T10:42:09Z
 ---
 
 ## Notes
