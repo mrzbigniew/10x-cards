@@ -1,17 +1,39 @@
 import { test, expect } from "@playwright/test";
 import { config } from "dotenv";
 import path from "node:path";
+import { createClient as createSupabaseClient } from "@supabase/supabase-js";
 
 config({ path: path.resolve(process.cwd(), "./.env") });
 
 test.use({ storageState: { cookies: [], origins: [] } });
+
+let disposableEmail = "";
+
+test.afterAll(async () => {
+  if (!disposableEmail) return;
+  const url = process.env.SUPABASE_URL;
+  const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if (!url || !serviceKey) return;
+  const admin = createSupabaseClient(url, serviceKey, {
+    auth: { autoRefreshToken: false, persistSession: false },
+  });
+  const { data } = await admin.auth.admin.listUsers();
+  const zombie = data.users.find((u) => u.email === disposableEmail);
+  if (zombie) {
+    try {
+      await admin.auth.admin.deleteUser(zombie.id);
+    } catch {
+      // best-effort cleanup — ignore failures
+    }
+  }
+});
 
 test("pełny przepływ usunięcia konta: rejestracja → usuń konto → zablokowanie", async ({ page }) => {
   await page.context().clearCookies();
   const baseEmail = String(process.env.PLAYWRIGHT_USER);
   const password = String(process.env.PLAYWRIGHT_USER_PASS);
   const [localPart, domain] = baseEmail.split("@");
-  const disposableEmail = `${localPart}+delete-${Date.now()}@${domain}`;
+  disposableEmail = `${localPart}+delete-${Date.now()}@${domain}`;
 
   // Rejestracja konta jednorazowego
   await page.goto("/auth/signup");

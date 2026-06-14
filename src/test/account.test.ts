@@ -121,13 +121,14 @@ describe("DELETE /api/account: macierz statusów", () => {
     expect(json.error).toBe("Baza danych nie jest skonfigurowana");
   });
 
-  it("zwraca 503 gdy klient sesyjny nie jest skonfigurowany", async () => {
+  it("zwraca 200 gdy klient sesyjny nie jest skonfigurowany — usuwa konto, pomija signOut", async () => {
     mockCreateClient.mockReturnValueOnce(null);
 
     const res = await DELETE(makeContext({ user: { id: USER_ID }, body: { confirmation: CONFIRMATION } }));
 
-    expect(res.status).toBe(503);
-    expect(deleteUserFn).not.toHaveBeenCalled();
+    expect(res.status).toBe(200);
+    expect(deleteUserFn).toHaveBeenCalledWith(USER_ID);
+    expect(signOutFn).not.toHaveBeenCalled();
   });
 
   it("zwraca 500 z komunikatem błędu gdy usunięcie użytkownika się nie powiedzie", async () => {

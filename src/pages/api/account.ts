@@ -32,8 +32,7 @@ export const DELETE: APIRoute = async (context) => {
   }
 
   const admin = createAdminClient();
-  const supabase = createClient(context.request.headers, context.cookies);
-  if (!admin || !supabase) {
+  if (!admin) {
     return Response.json({ error: "Baza danych nie jest skonfigurowana" }, { status: 503 });
   }
 
@@ -45,13 +44,16 @@ export const DELETE: APIRoute = async (context) => {
     return Response.json({ error: message }, { status: 500 });
   }
 
-  try {
-    await supabase.auth.signOut();
-  } catch {
-    // Deliberate exception to the never-swallow-errors rule: the auth user is
-    // already deleted, so signOut() may fail on a dead session. Deletion has
-    // succeeded; stale cookies are harmless — middleware's getUser() returns
-    // null for a deleted user, so the next navigation is treated as signed-out.
+  const supabase = createClient(context.request.headers, context.cookies);
+  if (supabase) {
+    try {
+      await supabase.auth.signOut();
+    } catch {
+      // Deliberate exception to the never-swallow-errors rule: the auth user is
+      // already deleted, so signOut() may fail on a dead session. Deletion has
+      // succeeded; stale cookies are harmless — middleware's getUser() returns
+      // null for a deleted user, so the next navigation is treated as signed-out.
+    }
   }
 
   return Response.json({});
