@@ -364,11 +364,11 @@ None material — deletion is a single admin API call; cascades run in one DB tr
 
 #### Automated
 
-- [ ] 4.1 New spec passes: `npx playwright test e2e/account-deletion.spec.ts`
-- [ ] 4.2 Full suite passes: `npx playwright test`
-- [ ] 4.3 Lint/typecheck pass: `npm run lint`, `npm run typecheck`
+- [x] 4.1 New spec passes: `npx playwright test e2e/account-deletion.spec.ts`
+- [x] 4.2 Full suite passes: `npx playwright test`
+- [x] 4.3 Lint/typecheck pass: `npm run lint`, `npm run typecheck`
 
 #### Manual
 
-- [ ] 4.4 `PLAYWRIGHT_USER` still exists and signs in after the run
-- [ ] 4.5 No disposable-user residue in Supabase
+- [x] 4.4 `PLAYWRIGHT_USER` still exists and signs in after the run
+- [x] 4.5 No disposable-user residue in Supabase
