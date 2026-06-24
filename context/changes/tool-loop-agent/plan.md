@@ -238,20 +238,20 @@ The public API is preserved: `model`, `reviewCode`, `ReviewSchema`, `Review` rem
 
 #### Automated
 
-- [x] 1.1 Dependencies installed: `npm install` completes
-- [x] 1.2 Type checking passes: `npm run typecheck`
-- [x] 1.3 New files exist: `src/schemas/review.ts`, `src/prompts/review.ts`, `src/tools/get-lines.ts`
+- [x] 1.1 Dependencies installed: `npm install` completes — 68c50c7
+- [x] 1.2 Type checking passes: `npm run typecheck` — 68c50c7
+- [x] 1.3 New files exist: `src/schemas/review.ts`, `src/prompts/review.ts`, `src/tools/get-lines.ts` — 68c50c7
 
 #### Manual
 
-- [x] 1.4 Modules export documented names; `get_lines` reads code from `experimental_context`
+- [x] 1.4 Modules export documented names; `get_lines` reads code from `experimental_context` — 68c50c7
 
 ### Phase 2: Build the Reviewer Agent Module
 
 #### Automated
 
-- [ ] 2.1 Type checking passes: `npm run typecheck`
-- [ ] 2.2 `src/agent/reviewer.ts` exports `model`, `reviewer`, `reviewCode`, `Review`, `ReviewSchema`
+- [x] 2.1 Type checking passes: `npm run typecheck`
+- [x] 2.2 `src/agent/reviewer.ts` exports `model`, `reviewer`, `reviewCode`, `Review`, `ReviewSchema`
 
 #### Manual
 
