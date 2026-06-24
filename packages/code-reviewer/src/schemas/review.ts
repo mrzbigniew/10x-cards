@@ -6,7 +6,10 @@ export const ReviewSchema = z.object({
     z.object({
       severity: z.enum(["error", "warning", "info"]),
       message: z.string(),
-      line: z.number().optional(),
+      // OpenAI strict structured-output mode requires every property in
+      // `required`, so optionality is expressed as nullable (number | null)
+      // rather than optional. `null` means "issue not tied to a line".
+      line: z.number().nullable(),
     }),
   ),
   score: z.number().min(0).max(10),

@@ -1,39 +1,19 @@
-import { createOpenRouter } from "@openrouter/ai-sdk-provider";
-import { generateText, Output } from "ai";
-import { z } from "zod";
+import { fileURLToPath } from "node:url";
+import process from "node:process";
 
-const openrouter = createOpenRouter({
-  apiKey: process.env.OPENROUTER_API_KEY,
-});
+// Public surface — safe to import without side effects.
+export { model, reviewer, reviewCode, ReviewSchema, type Review } from "./agent/reviewer";
+export { REVIEW_SYSTEM_PROMPT, buildReviewPrompt } from "./prompts/review";
+export { getLinesTool } from "./tools/get-lines";
 
-export const model = openrouter("openai/gpt-4o-mini");
+// Smoke test: runs only when this file is the invoked entrypoint (e.g.
+// `npm run dev`), never on import. Fires a live model call, so it must stay
+// behind the main-module guard to keep the package import-safe for evals.
+const isMain = process.argv[1] === fileURLToPath(import.meta.url);
 
-export const ReviewSchema = z.object({
-  summary: z.string(),
-  issues: z.array(
-    z.object({
-      severity: z.enum(["error", "warning", "info"]),
-      message: z.string(),
-      line: z.number().optional(),
-    }),
-  ),
-  score: z.number().min(0).max(10),
-});
-
-export type Review = z.infer<typeof ReviewSchema>;
-
-export async function reviewCode(code: string): Promise<Review> {
-  const { output } = await generateText({
-    model,
-    output: Output.object({ schema: ReviewSchema }),
-    prompt: `Review this code and return structured feedback:\n\n${code}`,
-  });
-  return output;
+if (isMain) {
+  const { reviewCode } = await import("./agent/reviewer");
+  const sample = ["function add(a, b) {", "  const unused = 42;", "  return a + b;", "}"].join("\n");
+  const review = await reviewCode(sample);
+  console.log(JSON.stringify(review, null, 2));
 }
-
-// Smoke test when run directly
-const { text } = await generateText({
-  model,
-  prompt: 'Say "AI SDK + OpenRouter + Zod ready!" in one sentence.',
-});
-console.log(text);

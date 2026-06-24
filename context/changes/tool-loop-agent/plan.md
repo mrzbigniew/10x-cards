@@ -250,23 +250,23 @@ The public API is preserved: `model`, `reviewCode`, `ReviewSchema`, `Review` rem
 
 #### Automated
 
-- [x] 2.1 Type checking passes: `npm run typecheck`
-- [x] 2.2 `src/agent/reviewer.ts` exports `model`, `reviewer`, `reviewCode`, `Review`, `ReviewSchema`
+- [x] 2.1 Type checking passes: `npm run typecheck` — 29f2715
+- [x] 2.2 `src/agent/reviewer.ts` exports `model`, `reviewer`, `reviewCode`, `Review`, `ReviewSchema` — 29f2715
 
 #### Manual
 
-- [ ] 2.3 `reviewer.generate(...)` output conforms to `ReviewSchema`
-- [ ] 2.4 Agent invokes `get_lines` and populates `issues[].line`
+- [x] 2.3 `reviewer.generate(...)` output conforms to `ReviewSchema`
+- [x] 2.4 Agent invokes `get_lines` and populates `issues[].line`
 
 ### Phase 3: Rewire index.ts as Public Barrel + Guarded Smoke Test
 
 #### Automated
 
-- [ ] 3.1 Type checking passes: `npm run typecheck`
-- [ ] 3.2 `npm run dev` runs the guarded smoke test and prints output
+- [x] 3.1 Type checking passes: `npm run typecheck`
+- [x] 3.2 `npm run dev` runs the guarded smoke test and prints output
 
 #### Manual
 
-- [ ] 3.3 Importing the package triggers no network call / console output
-- [ ] 3.4 `reviewCode(...)` returns a populated `Review` (summary, issues, score 0–10)
-- [ ] 3.5 No leftover duplicated definitions in `index.ts`
+- [x] 3.3 Importing the package triggers no network call / console output
+- [x] 3.4 `reviewCode(...)` returns a populated `Review` (summary, issues, score 0–10)
+- [x] 3.5 No leftover duplicated definitions in `index.ts`
