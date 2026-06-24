@@ -1,10 +1,10 @@
 ---
 change_id: tool-loop-agent
 title: Convert code-reviewer to modular ToolLoopAgent with exportable reviewer
-status: impl_reviewed
+status: archived
 created: 2026-06-23
 updated: 2026-06-24
-archived_at: null
+archived_at: 2026-06-24T13:55:30Z
 ---
 
 ## Notes
