@@ -11,6 +11,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - id: review
-        uses: mrzbigniew/reviewer@<sha>
+        uses: ./.github/actions/reviewer
         with:
           api_key: ${{ secrets.LLM_PROVIDER_API_KEY  }}
