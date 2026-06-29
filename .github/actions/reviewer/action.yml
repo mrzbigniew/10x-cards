@@ -1,6 +1,6 @@
 # reviewer action
 name: reviewer
-description: Runs an AI review on the codebase
+description: Runs an AI review on a pull request
 
 # Github marketplace - branding
 branding:
@@ -10,22 +10,61 @@ branding:
 # Entry params
 inputs:
   api_key:
-    description: Api key
+    description: OpenRouter API key for the review model
     required: true
+  pr-title:
+    description: Pull request title
+    required: false
+    default: ""
+  pr-body:
+    description: Pull request description
+    required: false
+    default: ""
+  diff-path:
+    description: Path to the file containing the PR unified diff
+    required: true
+  threshold:
+    description: Minimum score (0-10) for a passing verdict
+    required: false
+    default: "7"
 
 # Return values
 outputs:
   verdict:
-    description: Pass/fail cerdict from agent
+    description: Pass/fail verdict from the agent
     value: ${{ steps.reviewer.outputs.verdict }}
+  score:
+    description: Numeric review score (0-10)
+    value: ${{ steps.reviewer.outputs.score }}
+  comment_path:
+    description: Path to the rendered markdown comment body
+    value: ${{ steps.reviewer.outputs.comment_path }}
 
 # Actions steps injected to run the reviewer
 runs:
   using: "composite"
   steps:
+    - name: Set up Node
+      uses: actions/setup-node@v4
+      with:
+        node-version: 22
+        cache: npm
+        cache-dependency-path: packages/code-reviewer/package-lock.json
+
+    - name: Install dependencies
+      run: npm ci
+      shell: bash
+      working-directory: packages/code-reviewer
+
     - name: Run reviewer
       id: reviewer
-      run: node ${{ github.action_path }}/reviewer.js
+      run: npx tsx src/ci/review-pr.ts
       shell: bash
+      working-directory: packages/code-reviewer
       env:
+        OPENROUTER_API_KEY: ${{ inputs.api_key }}
         LLM_PROVIDER_API_KEY: ${{ inputs.api_key }}
+        PR_TITLE: ${{ inputs.pr-title }}
+        PR_BODY: ${{ inputs.pr-body }}
+        DIFF_PATH: ${{ inputs.diff-path }}
+        SCORE_THRESHOLD: ${{ inputs.threshold }}

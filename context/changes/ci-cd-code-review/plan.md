@@ -373,21 +373,21 @@ confirmed there is no caller).
 
 #### Automated
 
-- [x] 1.1 Package typechecks: `npm run typecheck`
-- [x] 1.2 Unit tests pass: `npx vitest run src/ci/render.test.ts`
-- [x] 1.3 Root lint passes: `npm run lint`
+- [x] 1.1 Package typechecks: `npm run typecheck` — 5dc182f
+- [x] 1.2 Unit tests pass: `npx vitest run src/ci/render.test.ts` — 5dc182f
+- [x] 1.3 Root lint passes: `npm run lint` — 5dc182f
 
 #### Manual
 
-- [x] 1.4 `tsx src/ci/review-pr.ts` against a sample diff prints a sane verdict and writes review.md
-- [x] 1.5 Rendered comment reads clearly and cites line numbers
+- [x] 1.4 `tsx src/ci/review-pr.ts` against a sample diff prints a sane verdict and writes review.md — 5dc182f
+- [x] 1.5 Rendered comment reads clearly and cites line numbers — 5dc182f
 
 ### Phase 2: Composite action contract
 
 #### Automated
 
-- [ ] 2.1 `action.yml` passes `actionlint`
-- [ ] 2.2 `packages/code-reviewer/package-lock.json` exists
+- [x] 2.1 `action.yml` passes `actionlint`
+- [x] 2.2 `packages/code-reviewer/package-lock.json` exists
 
 #### Manual
 
