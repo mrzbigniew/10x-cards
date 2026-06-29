@@ -1,0 +1,16 @@
+name: AI Code Review
+
+on:
+  pull_request:
+    branches: [main]
+  workflow_call:
+
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - id: review
+        uses: mrzbigniew/reviewer@<sha>
+        with:
+          api_key: ${{ secrets.LLM_PROVIDER_API_KEY  }}

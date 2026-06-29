@@ -1,0 +1,32 @@
+# reviewer action
+name: reviewer
+description: Runs an AI review on the codebase
+
+# Github marketplace - branding
+branding:
+  icon: robot
+  color: blue
+
+# Entry params
+inputs:
+  api_key:
+    description: Api key
+    required: true
+    type: string
+
+# Return values
+outputs:
+  verdict:
+    description: Pass/fail cerdict from agent
+    value: ${{ steps.reviewer.outputs.verdict }}
+
+# Actions steps injected to run the reviewer
+runs:
+  using: "composite"
+  steps:
+    - name: Run reviewer
+      id: reviewer
+      run: node ${{ github.action_path }}/reviewer.js
+      shell: bash
+      env:
+        LLM_PROVIDER_API_KEY: ${{ inputs.api_key }}

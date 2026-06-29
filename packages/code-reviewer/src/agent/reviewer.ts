@@ -9,7 +9,7 @@ const openrouter = createOpenRouter({
   apiKey: process.env.OPENROUTER_API_KEY,
 });
 
-export const model = openrouter("openai/gpt-4o-mini");
+export const model = openrouter("z-ai/glm-5.1i");
 
 /** Per-call options the reviewer accepts; carries the code under review. */
 const callOptionsSchema = z.object({
