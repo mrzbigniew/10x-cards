@@ -20,7 +20,9 @@ Three layers exist; only the engine is complete:
 - **Engine (done)** — `packages/code-reviewer/` exposes `reviewCode(code): Promise<Review>`,
   where `Review = { summary: string, issues: { severity: "error"|"warning"|"info",
 message: string, line: number | null }[], score: number(0–10) }`
-  (`src/schemas/review.ts:3-16`). Provider is OpenRouter (`z-ai/glm-5.1i`), reading
+  (`src/schemas/review.ts:3-16`). Provider is OpenRouter (model `z-ai/glm-5.2` as
+  implemented in `src/agent/reviewer.ts:12`; research/earlier notes referenced
+  `z-ai/glm-5.1i` — the code is authoritative), reading
   `process.env.OPENROUTER_API_KEY` (`src/agent/reviewer.ts:8-12`). The package is **not** a
   root workspace member (no `workspaces` in root `package.json`) and has its own deps
   (`ai@^6`, `@openrouter/ai-sdk-provider@^2.9.1`, `zod@^4`) plus `tsx` as a devDependency.
@@ -338,12 +340,46 @@ be fully verified on a live PR.
 - End-to-end on a scratch PR: diff extraction → action run → comment + label. (Manual; GHA
   side-effects are not unit-testable.)
 
-### Manual Testing Steps:
+### Manual Testing Steps (live-PR verification checklist):
 
-1. Open a PR to `main` with a small code change; confirm a comment + one verdict label.
-2. Push another commit; confirm a new comment and the label reflects the latest verdict.
-3. Add `ai-cr:review`; confirm a fresh run, then the label is auto-removed.
-4. Inspect repo labels — all three exist with the expected colors.
+These close out the remaining manual Progress items (2.3, 3.3–3.6). They require a live PR
+and cannot be unit-tested.
+
+**Prerequisite — repo secret:**
+
+0. In repo settings → Secrets and variables → Actions, confirm `LLM_PROVIDER_API_KEY` exists
+   and holds a valid OpenRouter key. The `review` job fails at the reviewer step without it.
+   (`gh secret list` to verify the name is present.)
+
+**Happy path (covers 2.3, 3.3, 3.6):**
+
+1. Create a branch with a small code change and open a PR to `main`.
+2. Watch the Actions run: the `Set up Node` → `Install dependencies` (`npm ci`) →
+   `Run reviewer` (`tsx`) steps complete, and `Run reviewer` exposes non-empty
+   `verdict`/`score`/`comment_path` (visible in the step log / job summary) → **2.3**.
+3. On the PR, confirm exactly one summary comment appears and exactly one of
+   `ai-cr:passed` / `ai-cr:failed` is applied (the opposite is absent) → **3.3**.
+4. In repo → Labels, confirm all three `ai-cr:*` labels now exist with expected colors
+   (passed = green `0e8a16`, failed = red `d73a4a`, review = yellow `fbca04`) → **3.6**.
+
+**Re-push (covers 3.4):**
+
+5. Push another commit to the PR branch. Confirm a new comment is posted (fresh, not
+   upserted) and the verdict label reflects the latest run → **3.4**.
+
+**On-demand retry (covers 3.5):**
+
+6. Add the `ai-cr:review` label to the PR. Confirm the workflow re-runs (a fresh comment +
+   verdict label), and that `ai-cr:review` is automatically removed afterward.
+7. Re-add `ai-cr:review`; confirm it re-fires the workflow again (proving removal restores
+   the trigger) → **3.5**.
+
+**Threshold sanity (optional):** open a PR whose change is intentionally weak; confirm it
+scores below 7 and receives `ai-cr:failed`, and a clean change scores ≥ 7 and gets
+`ai-cr:passed`.
+
+**Note on fork PRs:** if the test PR is from a fork, the comment/label steps will fail
+(read-only `GITHUB_TOKEN`) — run the checklist from a branch in this repo, not a fork.
 
 ## Performance Considerations
 
@@ -355,6 +391,13 @@ and comment go through files, so payload size is not bounded by step-output limi
 The labels are created idempotently on first run — no manual setup. `workflow_call` is
 removed; confirm no other workflow references `review.yml` before deleting (research Q5
 confirmed there is no caller).
+
+**Fork-PR limitation**: the workflow triggers on `pull_request` (not
+`pull_request_target`), so for PRs opened from forks `GITHUB_TOKEN` is read-only —
+`createComment`/`addLabels`/`createLabel` will fail. This is acceptable for an internal
+repo where PRs come from branches, not forks. Switching to `pull_request_target` to support
+forks would run the workflow with the base repo's secrets against untrusted head code and is
+deliberately out of scope.
 
 ## References
 
@@ -397,8 +440,8 @@ confirmed there is no caller).
 
 #### Automated
 
-- [x] 3.1 `review.yml` passes `actionlint`
-- [x] 3.2 No dangling `steps.diff.outputs.value` reference remains
+- [x] 3.1 `review.yml` passes `actionlint` — 738dc5b
+- [x] 3.2 No dangling `steps.diff.outputs.value` reference remains — 738dc5b
 
 #### Manual
 
