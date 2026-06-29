@@ -4,7 +4,7 @@ description: Runs an AI review on the codebase
 
 # Github marketplace - branding
 branding:
-  icon: robot
+  icon: check-circle
   color: blue
 
 # Entry params
@@ -12,7 +12,6 @@ inputs:
   api_key:
     description: Api key
     required: true
-    type: string
 
 # Return values
 outputs:

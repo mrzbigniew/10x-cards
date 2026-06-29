@@ -3,9 +3,10 @@ import process from "node:process";
 import { reviewCode } from "./agent/reviewer";
 
 // Public surface — safe to import without side effects.
-export { model, reviewer, reviewCode, ReviewSchema, type Review } from "./agent/reviewer";
-export { REVIEW_SYSTEM_PROMPT, buildReviewPrompt } from "./prompts/review";
+export { model, reviewer, reviewCode, reviewPullRequest, ReviewSchema, type Review } from "./agent/reviewer";
+export { REVIEW_SYSTEM_PROMPT, buildReviewPrompt, buildPullRequestPrompt } from "./prompts/review";
 export { getLinesTool } from "./tools/get-lines";
+export { renderComment, verdictFor, type Verdict } from "./ci/render";
 
 // Smoke test: runs only when this file is the invoked entrypoint (e.g.
 // `npm run dev`), never on import. Fires a live model call, so it must stay
