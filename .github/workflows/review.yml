@@ -3,17 +3,104 @@ name: AI Code Review
 on:
   pull_request:
     branches: [main]
-  workflow_call:
+    types: [opened, synchronize, reopened, labeled]
+
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
 
 jobs:
   review:
     runs-on: ubuntu-latest
+    # Run on normal PR events unconditionally; for `labeled` events only when the
+    # retry label is added, so other label changes don't re-fire the review.
+    if: github.event_name != 'pull_request' || github.event.action != 'labeled' || github.event.label.name == 'ai-cr:review'
     steps:
       - uses: actions/checkout@v4
+
+      - id: diff
+        name: Extract PR diff
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh pr diff ${{ github.event.pull_request.number }} --patch > "$RUNNER_TEMP/pr.diff"
+          echo "path=$RUNNER_TEMP/pr.diff" >> "$GITHUB_OUTPUT"
+
       - id: review
         uses: ./.github/actions/reviewer
         with:
-          api_key: ${{ secrets.LLM_PROVIDER_API_KEY  }}
+          api-key: ${{ secrets.LLM_PROVIDER_API_KEY }}
           pr-title: ${{ github.event.pull_request.title }}
           pr-body: ${{ github.event.pull_request.body }}
-          diff: ${{ steps.diff.outputs.value }}
+          diff-path: ${{ steps.diff.outputs.path }}
+
+      - name: Post review comment
+        uses: actions/github-script@v7
+        env:
+          COMMENT_PATH: ${{ steps.review.outputs.comment_path }}
+        with:
+          script: |
+            const fs = require("fs");
+            const body = fs.readFileSync(process.env.COMMENT_PATH, "utf8");
+            await github.rest.issues.createComment({
+              ...context.repo,
+              issue_number: context.issue.number,
+              body,
+            });
+
+      - name: Ensure and apply verdict labels
+        uses: actions/github-script@v7
+        env:
+          VERDICT: ${{ steps.review.outputs.verdict }}
+        with:
+          script: |
+            const labels = [
+              { name: "ai-cr:passed", color: "0e8a16", description: "AI code review passed" },
+              { name: "ai-cr:failed", color: "d73a4a", description: "AI code review failed" },
+              { name: "ai-cr:review", color: "fbca04", description: "Re-run the AI code review" },
+            ];
+            // Idempotently ensure the labels exist; ignore "already_exists" (422).
+            for (const label of labels) {
+              try {
+                await github.rest.issues.createLabel({ ...context.repo, ...label });
+              } catch (error) {
+                if (error.status !== 422) throw error;
+              }
+            }
+
+            const applied = process.env.VERDICT === "passed" ? "ai-cr:passed" : "ai-cr:failed";
+            const opposite = process.env.VERDICT === "passed" ? "ai-cr:failed" : "ai-cr:passed";
+
+            await github.rest.issues.addLabels({
+              ...context.repo,
+              issue_number: context.issue.number,
+              labels: [applied],
+            });
+            // Remove the opposite verdict label; ignore "not found" (404).
+            try {
+              await github.rest.issues.removeLabel({
+                ...context.repo,
+                issue_number: context.issue.number,
+                name: opposite,
+              });
+            } catch (error) {
+              if (error.status !== 404) throw error;
+            }
+
+      - name: Remove retry label after a retry run
+        if: github.event.action == 'labeled' && github.event.label.name == 'ai-cr:review'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            // Remove the retry label so re-adding it reliably re-fires the workflow.
+            try {
+              await github.rest.issues.removeLabel({
+                ...context.repo,
+                issue_number: context.issue.number,
+                name: "ai-cr:review",
+              });
+            } catch (error) {
+              if (error.status !== 404) throw error;
+            }

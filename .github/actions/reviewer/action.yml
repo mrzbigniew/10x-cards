@@ -9,7 +9,7 @@ branding:
 
 # Entry params
 inputs:
-  api_key:
+  api-key:
     description: OpenRouter API key for the review model
     required: true
   pr-title:

@@ -386,8 +386,8 @@ confirmed there is no caller).
 
 #### Automated
 
-- [x] 2.1 `action.yml` passes `actionlint`
-- [x] 2.2 `packages/code-reviewer/package-lock.json` exists
+- [x] 2.1 `action.yml` passes `actionlint` — 1ccf680
+- [x] 2.2 `packages/code-reviewer/package-lock.json` exists — 1ccf680
 
 #### Manual
 
@@ -397,8 +397,8 @@ confirmed there is no caller).
 
 #### Automated
 
-- [ ] 3.1 `review.yml` passes `actionlint`
-- [ ] 3.2 No dangling `steps.diff.outputs.value` reference remains
+- [x] 3.1 `review.yml` passes `actionlint`
+- [x] 3.2 No dangling `steps.diff.outputs.value` reference remains
 
 #### Manual
 
