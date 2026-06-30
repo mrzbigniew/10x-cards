@@ -434,7 +434,7 @@ deliberately out of scope.
 
 #### Manual
 
-- [ ] 2.3 Scratch-PR review step installs deps, runs tsx, exposes non-empty outputs
+- [x] 2.3 Scratch-PR review step installs deps, runs tsx, exposes non-empty outputs
 
 ### Phase 3: Workflow orchestration
 
@@ -445,7 +445,7 @@ deliberately out of scope.
 
 #### Manual
 
-- [ ] 3.3 Test PR triggers workflow; comment + one verdict label appear
-- [ ] 3.4 Re-push posts new comment and updates label
-- [ ] 3.5 `ai-cr:review` re-runs review and is auto-removed afterward
-- [ ] 3.6 All three labels exist in the repo with expected colors
+- [x] 3.3 Test PR triggers workflow; comment + one verdict label appear
+- [x] 3.4 Re-push posts new comment and updates label
+- [x] 3.5 `ai-cr:review` re-runs review and is auto-removed afterward
+- [x] 3.6 All three labels exist in the repo with expected colors
