@@ -18,6 +18,5 @@ setup("Sign up", async ({ page }) => {
   await page.getByRole("textbox", { name: "Email" }).fill(user);
   await page.getByRole("textbox", { name: "Password" }).fill(password);
   await page.getByRole("button", { name: "Sign in" }).click();
-  await page.waitForURL("/dashboard");
   await page.context().storageState({ path: authFile });
 });
