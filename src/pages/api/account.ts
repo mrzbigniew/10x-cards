@@ -58,3 +58,5 @@ export const DELETE: APIRoute = async (context) => {
 
   return Response.json({});
 };
+
+const message = 'It is small change taht will be reviwed in CI PR Review'
